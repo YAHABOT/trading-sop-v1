@@ -5,7 +5,7 @@
   <title>Daily Trading SOP – V1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Basic styling – tweak later -->
+  <!-- Basic styling -->
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -18,7 +18,7 @@
     .container {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 20px 16px 60px;
+      padding: 20px 16px 80px;
     }
 
     h1, h2, h3, h4 {
@@ -185,6 +185,10 @@
       background: #1f2937;
     }
 
+    button.danger {
+      background: #b91c1c;
+    }
+
     button.small {
       padding: 4px 10px;
       font-size: 12px;
@@ -309,10 +313,35 @@
         max-width: 100%;
       }
     }
+
+    /* Undo bar */
+    #undoBar {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111827;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      padding: 6px 12px;
+      font-size: 12px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 9999;
+    }
+
+    #undoBar span {
+      white-space: nowrap;
+    }
+
+    #undoBar button {
+      padding: 3px 10px;
+      font-size: 11px;
+    }
   </style>
 
-  <!-- Hybrid PDF stack: html2canvas + jsPDF (CDN) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- jsPDF only (we're doing structured PDF, no screenshots) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -350,7 +379,7 @@
               <input type="checkbox" class="discipline-item" /> HTF OB / FVG levels marked
             </label>
           </div>
-          <textarea placeholder="Notes on HTF context / key levels"></textarea>
+          <textarea data-label="Levels / HTF context notes" placeholder="Notes on HTF context / key levels"></textarea>
         </div>
 
         <!-- Session Flow -->
@@ -367,7 +396,7 @@
               <input type="checkbox" class="discipline-item" /> Combined Asia→London bias defined
             </label>
           </div>
-          <textarea placeholder="Session flow notes (why bias exists / contradictions / liquidity behaviour)"></textarea>
+          <textarea data-label="Session flow notes" placeholder="Session flow notes (why bias exists / contradictions / liquidity behaviour)"></textarea>
         </div>
 
         <!-- Trend -->
@@ -390,7 +419,7 @@
               <input type="checkbox" class="discipline-item" /> HTF wick behaviour at key levels assessed
             </label>
           </div>
-          <textarea placeholder="Trend notes (HTF → LTF interpretation)"></textarea>
+          <textarea data-label="Trend notes" placeholder="Trend notes (HTF → LTF interpretation)"></textarea>
         </div>
 
         <!-- Confluence prep -->
@@ -410,7 +439,7 @@
               <input type="checkbox" class="discipline-item" /> Fib zones (61.8 / 78.6) noted
             </label>
           </div>
-          <textarea placeholder="Important confluence zones to watch"></textarea>
+          <textarea data-label="Confluence zones" placeholder="Important confluence zones to watch"></textarea>
         </div>
 
         <!-- IF–THEN (collapsible) -->
@@ -448,7 +477,7 @@
           </div>
           <div class="field-row">
             <label>Baseline Emotion:</label>
-            <select class="input-inline">
+            <select class="input-inline" id="baselineEmotion">
               <option value="">Select...</option>
               <option>Neutral</option>
               <option>Confident</option>
@@ -461,13 +490,13 @@
               <option>Excited</option>
             </select>
           </div>
-          <textarea placeholder="Notes on emotional state before session"></textarea>
+          <textarea data-label="Pre-market emotional notes" placeholder="Notes on emotional state before session"></textarea>
         </div>
 
         <!-- NY Impulse expectation -->
         <div class="section-group">
           <div class="section-title">7. NY Impulse Expectation</div>
-          <textarea placeholder="Expectation of NY impulse behaviour (optional)"></textarea>
+          <textarea data-label="NY impulse expectation" placeholder="Expectation of NY impulse behaviour (optional)"></textarea>
         </div>
       </div>
     </div>
@@ -501,7 +530,7 @@
               <span>▼</span>
             </div>
             <div class="collapsible-body" id="midNotes">
-              <textarea placeholder="Market behaviour shifts, NY impulse clarity, volatility, emotional shifts..."></textarea>
+              <textarea data-label="Mid-session notes" placeholder="Market behaviour shifts, NY impulse clarity, volatility, emotional shifts..."></textarea>
             </div>
           </div>
         </div>
@@ -550,31 +579,31 @@
         <!-- Session summary -->
         <div class="section-group">
           <div class="section-title">2. Session Summary</div>
-          <textarea placeholder="Type of day, did the market behave as expected, IF–THEN outcomes, NY impulse vs bias, etc."></textarea>
+          <textarea data-label="Session summary" placeholder="Type of day, did the market behave as expected, IF–THEN outcomes, NY impulse vs bias, etc."></textarea>
         </div>
 
         <!-- Emotional review -->
         <div class="section-group">
           <div class="section-title">3. Emotional Review</div>
-          <textarea placeholder="Dominant emotions, influence on actions, what triggered negative/positive states, etc."></textarea>
+          <textarea data-label="Emotional review" placeholder="Dominant emotions, influence on actions, what triggered negative/positive states, etc."></textarea>
         </div>
 
         <!-- Behaviour patterns -->
         <div class="section-group">
           <div class="section-title">4. Behaviour Patterns</div>
-          <textarea placeholder="What behaviour pattern repeated? What did you successfully stop?"></textarea>
+          <textarea data-label="Behaviour patterns" placeholder="What behaviour pattern repeated? What did you successfully stop?"></textarea>
         </div>
 
         <!-- Process review -->
         <div class="section-group">
           <div class="section-title">5. Process Review</div>
-          <textarea placeholder="What did I do well? What must I improve tomorrow? 3 mistakes to avoid, 3 actions to repeat."></textarea>
+          <textarea data-label="Process review" placeholder="What did I do well? What must I improve tomorrow? 3 mistakes to avoid, 3 actions to repeat."></textarea>
         </div>
 
         <!-- Tomorrow -->
         <div class="section-group">
           <div class="section-title">6. Focus for Tomorrow</div>
-          <textarea placeholder="Tomorrow's single main focus."></textarea>
+          <textarea data-label="Focus for tomorrow" placeholder="Tomorrow's single main focus."></textarea>
         </div>
       </div>
     </div>
@@ -585,9 +614,52 @@
     </div>
   </div>
 
+  <!-- Undo bar -->
+  <div id="undoBar">
+    <span id="undoMessage">Item deleted.</span>
+    <button type="button" class="secondary small" id="undoButton">Undo</button>
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Accordion behaviour
+      // ----- Undo system -----
+      const undoBar = document.getElementById("undoBar");
+      const undoButton = document.getElementById("undoButton");
+      let lastDeleted = null;
+      let undoTimeout = null;
+
+      function showUndo(element, parent, nextSibling) {
+        if (undoTimeout) clearTimeout(undoTimeout);
+        lastDeleted = { element, parent, nextSibling };
+        undoBar.style.display = "flex";
+
+        undoTimeout = setTimeout(() => {
+          lastDeleted = null;
+          undoBar.style.display = "none";
+        }, 5000);
+      }
+
+      undoButton.addEventListener("click", () => {
+        if (!lastDeleted) return;
+        const { element, parent, nextSibling } = lastDeleted;
+        if (nextSibling && parent.contains(nextSibling)) {
+          parent.insertBefore(element, nextSibling);
+        } else {
+          parent.appendChild(element);
+        }
+        lastDeleted = null;
+        undoBar.style.display = "none";
+        if (undoTimeout) clearTimeout(undoTimeout);
+      });
+
+      function deleteWithUndo(block) {
+        const parent = block.parentNode;
+        const nextSibling = block.nextSibling;
+        parent.removeChild(block);
+        showUndo(block, parent, nextSibling);
+      }
+
+      // ----- Accordion behaviour -----
       document.querySelectorAll(".accordion-header").forEach(header => {
         header.addEventListener("click", () => {
           const targetId = header.getAttribute("data-target");
@@ -604,7 +676,7 @@
         });
       });
 
-      // Collapsibles
+      // ----- Collapsibles -----
       document.querySelectorAll(".collapsible-header").forEach(ch => {
         ch.addEventListener("click", () => {
           const target = ch.getAttribute("data-c-target");
@@ -614,21 +686,28 @@
         });
       });
 
-      // IF–THEN builder
+      // ----- IF–THEN builder -----
       const ifThenList = document.getElementById("ifThenList");
       const addIfThenBtn = document.getElementById("addIfThenBtn");
+
       addIfThenBtn.addEventListener("click", () => {
         const idx = ifThenList.children.length + 1;
         const wrapper = document.createElement("div");
         wrapper.style.marginBottom = "6px";
         wrapper.innerHTML = `
-          <label style="font-size:12px; display:block; margin-bottom:2px;">Scenario ${idx}</label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+            <label style="font-size:12px;">Scenario ${idx}</label>
+            <button type="button" class="small secondary ifthen-delete">Delete</button>
+          </div>
           <textarea class="ifthen-scenario" placeholder="IF ... THEN ..."></textarea>
         `;
         ifThenList.appendChild(wrapper);
+
+        const delBtn = wrapper.querySelector(".ifthen-delete");
+        delBtn.addEventListener("click", () => deleteWithUndo(wrapper));
       });
 
-      // Trade & missed trade blocks
+      // ----- Trade & missed trade blocks -----
       const tradesContainer = document.getElementById("tradesContainer");
       const missedTradesContainer = document.getElementById("missedTradesContainer");
       const addTradeBtn = document.getElementById("addTradeBtn");
@@ -644,13 +723,17 @@
         block.dataset.tradeBlock = "1";
 
         block.innerHTML = `
-          <div class="section-title">Trade ${tradeCounter}</div>
+          <div class="field-row" style="justify-content:space-between; align-items:center;">
+            <div class="section-title">Trade ${tradeCounter}</div>
+            <button type="button" class="small secondary delete-trade">Delete</button>
+          </div>
+
           <div class="field-row">
-            <label>Trade ID:<input type="text" class="input-inline" /></label>
-            <label>Instrument:<input type="text" class="input-inline" /></label>
-            <label>Date:<input type="date" class="input-inline" /></label>
+            <label>Trade ID:<input type="text" class="input-inline trade-id" /></label>
+            <label>Instrument:<input type="text" class="input-inline trade-instrument" /></label>
+            <label>Date:<input type="date" class="input-inline trade-date" /></label>
             <label>Session:
-              <select class="input-inline">
+              <select class="input-inline trade-session">
                 <option></option>
                 <option>Pre-NY</option>
                 <option>NY Open</option>
@@ -659,7 +742,7 @@
               </select>
             </label>
             <label>Direction:
-              <select class="input-inline">
+              <select class="input-inline trade-direction">
                 <option></option>
                 <option>Long</option>
                 <option>Short</option>
@@ -669,14 +752,14 @@
 
           <div class="field-row">
             <label class="input-inline">Entry Type:
-              <input type="text" placeholder="Pattern + setup description" />
+              <input type="text" class="trade-entry-type" placeholder="Pattern + setup description" />
             </label>
           </div>
 
           <div class="section-title">Trade Result Summary</div>
           <div class="field-row">
             <label>Result:
-              <select class="input-inline">
+              <select class="input-inline trade-result">
                 <option></option>
                 <option>Win</option>
                 <option>Loss</option>
@@ -685,10 +768,10 @@
               </select>
             </label>
             <label>PnL:
-              <input type="number" step="0.01" class="input-inline" placeholder="+/-$" />
+              <input type="number" step="0.01" class="input-inline trade-pnl" placeholder="+/-$" />
             </label>
-            <label>R:R:
-              <input type="number" step="0.1" class="input-inline" placeholder="1:X" />
+            <label>R Multiple:
+              <input type="number" step="0.1" class="input-inline trade-rr" placeholder="R" />
             </label>
             <label>Execution Score (0–5):
               <input type="number" min="0" max="5" step="0.1" class="input-inline execution-score" />
@@ -696,17 +779,17 @@
           </div>
 
           <div class="section-title">Pre-Trade Plan & Narrative</div>
-          <textarea placeholder="Bias, HTF context, expectations, invalidations, confirmations..."></textarea>
+          <textarea class="trade-narrative" placeholder="Bias, HTF context, expectations, invalidations, confirmations..."></textarea>
 
           <div class="section-title">Entry Setup & Technical Details</div>
           <div class="field-row">
-            <label>Entry Price:<input type="number" step="0.01" class="input-inline" /></label>
-            <label>SL:<input type="number" step="0.01" class="input-inline" /></label>
-            <label>Lot Size:<input type="number" step="0.01" class="input-inline" /></label>
-            <label>$ Risk:<input type="number" step="0.01" class="input-inline" /></label>
-            <label>Exit Price:<input type="number" step="0.01" class="input-inline" /></label>
+            <label>Entry Price:<input type="number" step="0.01" class="input-inline trade-entry-price" /></label>
+            <label>SL:<input type="number" step="0.01" class="input-inline trade-sl" /></label>
+            <label>Lot Size:<input type="number" step="0.01" class="input-inline trade-size" /></label>
+            <label>$ Risk:<input type="number" step="0.01" class="input-inline trade-risk" /></label>
+            <label>Exit Price:<input type="number" step="0.01" class="input-inline trade-exit-price" /></label>
           </div>
-          <textarea placeholder="Structure, HTF factors, additional notes..."></textarea>
+          <textarea class="trade-structure-notes" placeholder="Structure, HTF factors, additional notes..."></textarea>
 
           <div class="section-title">Add-On Position (optional)</div>
           <label class="checkbox-inline">
@@ -714,28 +797,28 @@
           </label>
           <div class="addon-fields" style="display:none; margin-top:6px;">
             <div class="field-row">
-              <label>Add-On Entry Price:<input type="number" step="0.01" class="input-inline" /></label>
-              <label>Add-On Risk Model:<input type="text" class="input-inline" /></label>
+              <label>Add-On Entry Price:<input type="number" step="0.01" class="input-inline addon-entry-price" /></label>
+              <label>Add-On Risk Model:<input type="text" class="input-inline addon-risk-model" /></label>
             </div>
-            <textarea placeholder="Add-on reason, confluence, result..."></textarea>
+            <textarea class="addon-notes" placeholder="Add-on reason, confluence, result..."></textarea>
           </div>
 
           <div class="section-title">Risk Model</div>
           <div class="field-row">
             <label class="pill-label">
-              <input type="radio" name="risk-${tradeCounter}" /> Lowest Risk
+              <input type="radio" name="risk-${tradeCounter}" value="Lowest Risk" /> Lowest Risk
             </label>
             <label class="pill-label">
-              <input type="radio" name="risk-${tradeCounter}" /> Mid Risk
+              <input type="radio" name="risk-${tradeCounter}" value="Mid Risk" /> Mid Risk
             </label>
             <label class="pill-label">
-              <input type="radio" name="risk-${tradeCounter}" /> High Risk
+              <input type="radio" name="risk-${tradeCounter}" value="High Risk" /> High Risk
             </label>
             <label class="pill-label">
-              <input type="radio" name="risk-${tradeCounter}" /> Full Risk
+              <input type="radio" name="risk-${tradeCounter}" value="Full Risk" /> Full Risk
             </label>
           </div>
-          <textarea placeholder="Reason for chosen risk model"></textarea>
+          <textarea class="risk-notes" placeholder="Reason for chosen risk model"></textarea>
 
           <div class="collapsible" style="margin-top:10px;">
             <div class="collapsible-header" data-c-target="conf-${tradeCounter}">
@@ -761,7 +844,7 @@
                     "EMA interaction"
                   ].map(label => `
                   <label class="pill-label">
-                    <input type="checkbox" /> ${label}
+                    <input type="checkbox" class="conf-flag" /> ${label}
                   </label>
                 `).join("")
                 }
@@ -778,7 +861,7 @@
                     "EMA supports retest"
                   ].map(label => `
                   <label class="pill-label">
-                    <input type="checkbox" /> ${label}
+                    <input type="checkbox" class="conf-flag" /> ${label}
                   </label>
                 `).join("")
                 }
@@ -800,13 +883,13 @@
                     "NY impulse intact"
                   ].map(label => `
                   <label class="pill-label">
-                    <input type="checkbox" /> ${label}
+                    <input type="checkbox" class="conf-flag" /> ${label}
                   </label>
                 `).join("")
                 }
               </div>
 
-              <textarea placeholder="Additional confluence notes"></textarea>
+              <textarea class="confluence-notes" placeholder="Additional confluence notes"></textarea>
             </div>
           </div>
 
@@ -817,7 +900,7 @@
             <div class="collapsible-body" id="ifthen-${tradeCounter}">
               <p class="tagline">Tick which of your pre-market scenarios this trade followed.</p>
               <div class="ifthen-tags"></div>
-              <textarea placeholder="Notes on how IF–THEN applied"></textarea>
+              <textarea class="ifthen-notes" placeholder="Notes on how IF–THEN applied"></textarea>
             </div>
           </div>
 
@@ -854,7 +937,7 @@
                 }
               </div>
 
-              <textarea placeholder="Emotional notes during / after trade"></textarea>
+              <textarea class="emotion-notes" placeholder="Emotional notes during / after trade"></textarea>
 
               <div class="section-title" style="margin-top:8px;">Behaviour Escalation (if any)</div>
               <textarea class="escalation-trigger" placeholder="Trigger"></textarea>
@@ -870,7 +953,7 @@
                     "Take corrective action","Resume at baseline"
                   ].map(label => `
                   <label class="pill-label">
-                    <input type="checkbox" /> ${label}
+                    <input type="checkbox" class="reset-flag" /> ${label}
                   </label>
                 `).join("")
                 }
@@ -879,29 +962,34 @@
           </div>
 
           <div class="section-title" style="margin-top:8px;">What You Did Right</div>
-          <textarea placeholder="Reinforce correct behaviour"></textarea>
+          <textarea class="did-right" placeholder="Reinforce correct behaviour"></textarea>
 
           <div class="section-title" style="margin-top:8px;">What You Did Wrong</div>
-          <textarea placeholder="Own the mistakes clearly"></textarea>
+          <textarea class="did-wrong" placeholder="Own the mistakes clearly"></textarea>
 
           <div class="section-title" style="margin-top:8px;">Screenshot</div>
           <div class="screenshot-input">
             Paste an image (Ctrl+V) into the notes or upload a file below.
           </div>
-          <input type="file" accept="image/*" />
+          <input type="file" accept="image/*" class="trade-screenshot" />
 
           <div class="section-title" style="margin-top:8px;">Result Notes</div>
-          <textarea placeholder="Extra comments about outcome and management..."></textarea>
+          <textarea class="result-notes" placeholder="Extra comments about outcome and management..."></textarea>
         `;
 
         tradesContainer.appendChild(block);
 
+        // delete button
+        block.querySelector(".delete-trade").addEventListener("click", () => deleteWithUndo(block));
+
+        // addon toggle
         const addonToggle = block.querySelector(".addon-toggle");
         const addonFields = block.querySelector(".addon-fields");
         addonToggle.addEventListener("change", () => {
           addonFields.style.display = addonToggle.checked ? "block" : "none";
         });
 
+        // collapsible inside trade
         block.querySelectorAll(".collapsible-header").forEach(ch => {
           ch.addEventListener("click", () => {
             const target = ch.getAttribute("data-c-target");
@@ -910,6 +998,7 @@
           });
         });
 
+        // IF–THEN tags snapshot
         const ifthenTagsContainer = block.querySelector(".ifthen-tags");
         const currentScenarios = document.querySelectorAll(".ifthen-scenario");
         ifthenTagsContainer.innerHTML = "";
@@ -928,11 +1017,14 @@
         block.className = "section-group";
         block.dataset.missedBlock = "1";
         block.innerHTML = `
-          <div class="section-title">Missed Trade ${missedTradeCounter}</div>
+          <div class="field-row" style="justify-content:space-between; align-items:center;">
+            <div class="section-title">Missed Trade ${missedTradeCounter}</div>
+            <button type="button" class="small secondary delete-missed">Delete</button>
+          </div>
           <div class="field-row">
-            <label>Missed Trade ID:<input type="text" class="input-inline" /></label>
+            <label>Missed Trade ID:<input type="text" class="input-inline missed-id" /></label>
             <label>Setup Category:
-              <select class="input-inline">
+              <select class="input-inline missed-category">
                 <option></option>
                 <option>Reversal at Level</option>
                 <option>Break + Retest</option>
@@ -942,13 +1034,13 @@
           </div>
           <div class="field-row">
             <label>R-Multiples Missed:
-              <input type="number" step="0.1" class="input-inline" />
+              <input type="number" step="0.1" class="input-inline missed-r" />
             </label>
           </div>
-          <textarea placeholder="Reason you missed it (valid or emotional, timing, uncertainty, etc.)"></textarea>
+          <textarea class="missed-reason" placeholder="Reason you missed it (valid or emotional, timing, uncertainty, etc.)"></textarea>
 
           <div class="section-title" style="margin-top:8px;">Emotional State</div>
-          <select class="input-inline">
+          <select class="input-inline missed-emotion">
             <option></option>
             <option>Neutral</option>
             <option>Confident</option>
@@ -962,7 +1054,7 @@
           </select>
 
           <div class="section-title" style="margin-top:8px;">IF–THEN Tagging</div>
-          <div class="chips-row">
+          <div class="chips-row missed-ifthen-tags">
             ${
               Array.from(document.querySelectorAll(".ifthen-scenario"))
                 .map((sc, idx) => {
@@ -979,23 +1071,26 @@
           <div class="screenshot-input">
             Paste chart into notes or upload a file:
           </div>
-          <input type="file" accept="image/*" />
+          <input type="file" accept="image/*" class="missed-screenshot" />
 
           <div class="section-title" style="margin-top:8px;">Valid vs Emotional Miss</div>
           <div class="chips-row">
-            <label class="pill-label"><input type="radio" name="miss-type-${missedTradeCounter}" /> Valid Miss</label>
-            <label class="pill-label"><input type="radio" name="miss-type-${missedTradeCounter}" /> Emotional Miss</label>
+            <label class="pill-label"><input type="radio" name="miss-type-${missedTradeCounter}" value="Valid Miss" /> Valid Miss</label>
+            <label class="pill-label"><input type="radio" name="miss-type-${missedTradeCounter}" value="Emotional Miss" /> Emotional Miss</label>
           </div>
 
           <div class="section-title" style="margin-top:8px;">Lesson</div>
-          <textarea placeholder="How to avoid missing this type of trade next time."></textarea>
+          <textarea class="missed-lesson" placeholder="How to avoid missing this type of trade next time."></textarea>
         `;
         missedTradesContainer.appendChild(block);
+
+        block.querySelector(".delete-missed").addEventListener("click", () => deleteWithUndo(block));
       });
 
-      // Score calculation
+      // ----- Score calculation -----
       const calcScoresBtn = document.getElementById("calcScoresBtn");
-      calcScoresBtn.addEventListener("click", () => {
+
+      function computeAndRenderScores() {
         const disciplineCheckboxes = document.querySelectorAll(".discipline-item");
         let totalDisc = disciplineCheckboxes.length;
         let tickedDisc = 0;
@@ -1041,6 +1136,7 @@
           ? Math.round(100 * tradesWithIfThen / tradeBlocks.length)
           : 100;
 
+        // Render
         document.getElementById("disciplineScore").textContent = disciplineScore + "%";
         document.getElementById("executionScore").textContent = execScore + "%";
         document.getElementById("emotionalScore").textContent = emotionalScore + "%";
@@ -1059,41 +1155,327 @@
 
         ratingTextEl.textContent = overall + "%";
         ratingBadgeEl.textContent = label;
-      });
 
-      // Export PDF
+        return { disciplineScore, execScore, emotionalScore, processScore, overall, label };
+      }
+
+      calcScoresBtn.addEventListener("click", computeAndRenderScores);
+
+      // ----- PDF Export (structured, summary only) -----
       const exportPdfBtn = document.getElementById("exportPdfBtn");
-      exportPdfBtn.addEventListener("click", async () => {
-        const root = document.getElementById("sop-root");
-        document.getElementById("calcScoresBtn").click();
+
+      exportPdfBtn.addEventListener("click", () => {
+        // Compute scores first
+        const scores = computeAndRenderScores();
 
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "pt", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const marginLeft = 40;
+        const maxWidth = pageWidth - marginLeft * 2;
+        let y = 40;
 
-        const canvas = await html2canvas(root, {
-          scale: 2,
-          backgroundColor: "#0b0c10"
-        });
-        const imgData = canvas.toDataURL("image/png");
-        const imgWidth = pdfWidth;
-        const imgHeight = canvas.height * pdfWidth / canvas.width;
-
-        let heightLeft = imgHeight;
-        let position = 0;
-
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pdfHeight;
-
-        while (heightLeft > 0) {
-          pdf.addPage();
-          position = heightLeft - imgHeight;
-          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-          heightLeft -= pdfHeight;
+        function addLine(text, options = {}) {
+          if (!text || !text.trim()) return;
+          const fontSize = options.fontSize || 10;
+          const indent = options.indent || 0;
+          pdf.setFontSize(fontSize);
+          const lines = pdf.splitTextToSize(text, maxWidth - indent);
+          lines.forEach(line => {
+            if (y > 780) {
+              pdf.addPage();
+              y = 40;
+            }
+            pdf.text(line, marginLeft + indent, y);
+            y += fontSize + 2;
+          });
         }
 
-        pdf.save("trading_sop_" + new Date().toISOString().slice(0,10) + ".pdf");
+        function addSection(title) {
+          if (y > 760) {
+            pdf.addPage();
+            y = 40;
+          }
+          pdf.setFontSize(12);
+          pdf.setFont(undefined, "bold");
+          pdf.text(title, marginLeft, y);
+          y += 14;
+          pdf.setFont(undefined, "normal");
+        }
+
+        // Header
+        pdf.setFontSize(16);
+        pdf.setFont(undefined, "bold");
+        pdf.text("Daily Trading SOP – Session Report", marginLeft, y);
+        y += 20;
+        pdf.setFont(undefined, "normal");
+
+        const today = new Date().toISOString().slice(0, 10);
+
+        const tradeBlocks = document.querySelectorAll("[data-trade-block='1']");
+        const missedBlocks = document.querySelectorAll("[data-missed-block='1']");
+
+        const firstTrade = tradeBlocks[0];
+        const headerInstrument = firstTrade ? firstTrade.querySelector(".trade-instrument")?.value || "" : "";
+        const headerSession = firstTrade ? firstTrade.querySelector(".trade-session")?.value || "" : "";
+        const headerDate = firstTrade ? firstTrade.querySelector(".trade-date")?.value || today : today;
+
+        addLine(`Date: ${headerDate}   Instrument: ${headerInstrument || "N/A"}   Session: ${headerSession || "N/A"}`);
+        addLine(`Total Trades: ${tradeBlocks.length}   Missed Trades: ${missedBlocks.length}`);
+        addLine(`Scores – Discipline: ${scores.disciplineScore}%, Execution: ${scores.execScore}%, Emotional: ${scores.emotionalScore}%, Process: ${scores.processScore}%`);
+        addLine(`Overall Rating: ${scores.overall}% (${scores.label})`);
+        y += 6;
+
+        // Pre-Market Summary
+        addSection("Pre-Market Summary");
+
+        const preMarket = document.getElementById("preMarket");
+        const preTextareas = preMarket.querySelectorAll("textarea[data-label]");
+        preTextareas.forEach(t => {
+          const val = t.value.trim();
+          if (val) {
+            addLine(`${t.dataset.label}:`, { fontSize: 10 });
+            addLine(val, { indent: 10 });
+          }
+        });
+
+        const baselineEmotion = document.getElementById("baselineEmotion").value;
+        if (baselineEmotion) {
+          addLine(`Baseline emotion: ${baselineEmotion}`, { fontSize: 10 });
+        }
+
+        // IF–THEN scenarios
+        const scenarios = document.querySelectorAll(".ifthen-scenario");
+        const scenarioLines = [];
+        scenarios.forEach((sc, idx) => {
+          const v = sc.value.trim();
+          if (v) scenarioLines.push(`Scenario ${idx + 1}: ${v}`);
+        });
+        if (scenarioLines.length) {
+          addLine("IF–THEN Scenarios:", { fontSize: 10 });
+          scenarioLines.forEach(s => addLine("• " + s, { indent: 10 }));
+        }
+
+        // Trades Summary
+        if (tradeBlocks.length) {
+          y += 6;
+          addSection("Trades");
+
+          tradeBlocks.forEach((tb, index) => {
+            const id = tb.querySelector(".trade-id")?.value.trim();
+            const instrument = tb.querySelector(".trade-instrument")?.value.trim();
+            const date = tb.querySelector(".trade-date")?.value.trim();
+            const session = tb.querySelector(".trade-session")?.value;
+            const direction = tb.querySelector(".trade-direction")?.value;
+            const entryType = tb.querySelector(".trade-entry-type")?.value.trim();
+            const result = tb.querySelector(".trade-result")?.value;
+            const pnl = tb.querySelector(".trade-pnl")?.value;
+            const rr = tb.querySelector(".trade-rr")?.value;
+            const exec = tb.querySelector(".execution-score")?.value;
+
+            const entryPrice = tb.querySelector(".trade-entry-price")?.value;
+            const sl = tb.querySelector(".trade-sl")?.value;
+            const size = tb.querySelector(".trade-size")?.value;
+            const risk = tb.querySelector(".trade-risk")?.value;
+            const exitPrice = tb.querySelector(".trade-exit-price")?.value;
+
+            const narrative = tb.querySelector(".trade-narrative")?.value.trim();
+            const structureNotes = tb.querySelector(".trade-structure-notes")?.value.trim();
+            const riskNotes = tb.querySelector(".risk-notes")?.value.trim();
+
+            const addonUsed = tb.querySelector(".addon-toggle")?.checked;
+            const addonEntry = tb.querySelector(".addon-entry-price")?.value;
+            const addonModel = tb.querySelector(".addon-risk-model")?.value.trim();
+            const addonNotes = tb.querySelector(".addon-notes")?.value.trim();
+
+            const mainEmotion = tb.querySelector(".main-emotion")?.value;
+            const emotionFlags = Array.from(tb.querySelectorAll(".emotion-flag:checked")).map(el => el.parentElement.textContent.trim());
+            const emotionNotes = tb.querySelector(".emotion-notes")?.value.trim();
+
+            const escTrig = tb.querySelector(".escalation-trigger")?.value.trim();
+            const escThought = tb.querySelector(".escalation-thought")?.value.trim();
+            const escAction = tb.querySelector(".escalation-action")?.value.trim();
+            const escCons = tb.querySelector(".escalation-consequence")?.value.trim();
+            const resetFlags = Array.from(tb.querySelectorAll(".reset-flag:checked")).map(el => el.parentElement.textContent.trim());
+
+            const didRight = tb.querySelector(".did-right")?.value.trim();
+            const didWrong = tb.querySelector(".did-wrong")?.value.trim();
+            const resultNotes = tb.querySelector(".result-notes")?.value.trim();
+
+            const riskRadio = tb.querySelector("input[name='risk-" + (index + 1) + "']:checked");
+            const riskModel = riskRadio ? riskRadio.value : "";
+
+            const confFlags = Array.from(tb.querySelectorAll(".conf-flag:checked")).map(el => el.parentElement.textContent.trim());
+            const confNotes = tb.querySelector(".confluence-notes")?.value.trim();
+
+            const ifthenTagsBox = tb.querySelector(".ifthen-tags");
+            const ifthenChecked = ifthenTagsBox
+              ? Array.from(ifthenTagsBox.querySelectorAll("input[type='checkbox']:checked")).map(cb => cb.parentElement.textContent.trim())
+              : [];
+            const ifthenNotes = tb.querySelector(".ifthen-notes")?.value.trim();
+
+            // Only include trade if it has at least ID or result or narrative
+            const hasContent = id || result || narrative || didRight || didWrong;
+            if (!hasContent) return;
+
+            addLine(`Trade ${index + 1}${id ? " – ID: " + id : ""}`, { fontSize: 11 });
+            const headerParts = [];
+            if (instrument) headerParts.push(`Instrument: ${instrument}`);
+            if (date) headerParts.push(`Date: ${date}`);
+            if (session) headerParts.push(`Session: ${session}`);
+            if (direction) headerParts.push(`Direction: ${direction}`);
+            if (entryType) headerParts.push(`Entry: ${entryType}`);
+            if (headerParts.length) addLine(headerParts.join("   "), { indent: 10 });
+
+            const resultParts = [];
+            if (result) resultParts.push(`Result: ${result}`);
+            if (pnl) resultParts.push(`PnL: ${pnl}`);
+            if (rr) resultParts.push(`R: ${rr}`);
+            if (exec) resultParts.push(`Exec: ${exec}/5`);
+            if (resultParts.length) addLine(resultParts.join("   "), { indent: 10 });
+
+            const priceLineParts = [];
+            if (entryPrice) priceLineParts.push(`Entry: ${entryPrice}`);
+            if (sl) priceLineParts.push(`SL: ${sl}`);
+            if (exitPrice) priceLineParts.push(`Exit: ${exitPrice}`);
+            if (size) priceLineParts.push(`Size: ${size}`);
+            if (risk) priceLineParts.push(`$Risk: ${risk}`);
+            if (priceLineParts.length) addLine(priceLineParts.join("   "), { indent: 10 });
+
+            if (riskModel || riskNotes) {
+              let txt = riskModel ? `Risk model: ${riskModel}` : "Risk model:";
+              if (riskNotes) txt += ` – ${riskNotes}`;
+              addLine(txt, { indent: 10 });
+            }
+
+            if (addonUsed && (addonEntry || addonModel || addonNotes)) {
+              let txt = "Add-on: ";
+              const bits = [];
+              if (addonEntry) bits.push(`Entry ${addonEntry}`);
+              if (addonModel) bits.push(addonModel);
+              if (addonNotes) bits.push(addonNotes);
+              txt += bits.join(" | ");
+              addLine(txt, { indent: 10 });
+            }
+
+            if (confFlags.length || confNotes) {
+              addLine("Confluence:", { indent: 10 });
+              if (confFlags.length) addLine("• " + confFlags.join(", "), { indent: 18 });
+              if (confNotes) addLine(confNotes, { indent: 18 });
+            }
+
+            if (ifthenChecked.length || ifthenNotes) {
+              addLine("IF–THEN:", { indent: 10 });
+              if (ifthenChecked.length) addLine("Matched: " + ifthenChecked.join(", "), { indent: 18 });
+              if (ifthenNotes) addLine(ifthenNotes, { indent: 18 });
+            }
+
+            if (mainEmotion || emotionFlags.length || emotionNotes) {
+              addLine("Emotions:", { indent: 10 });
+              const emoParts = [];
+              if (mainEmotion) emoParts.push(`Main: ${mainEmotion}`);
+              if (emotionFlags.length) emoParts.push(`Flags: ${emotionFlags.join(", ")}`);
+              if (emoParts.length) addLine(emoParts.join("   "), { indent: 18 });
+              if (emotionNotes) addLine(emotionNotes, { indent: 18 });
+            }
+
+            if (escTrig || escThought || escAction || escCons || resetFlags.length) {
+              addLine("Behaviour Escalation:", { indent: 10 });
+              if (escTrig) addLine("Trigger: " + escTrig, { indent: 18 });
+              if (escThought) addLine("Thought: " + escThought, { indent: 18 });
+              if (escAction) addLine("Action: " + escAction, { indent: 18 });
+              if (escCons) addLine("Consequence: " + escCons, { indent: 18 });
+              if (resetFlags.length) addLine("Reset steps: " + resetFlags.join(", "), { indent: 18 });
+            }
+
+            if (didRight) {
+              addLine("Did well:", { indent: 10 });
+              addLine(didRight, { indent: 18 });
+            }
+
+            if (didWrong) {
+              addLine("Did wrong:", { indent: 10 });
+              addLine(didWrong, { indent: 18 });
+            }
+
+            if (resultNotes) {
+              addLine("Result notes:", { indent: 10 });
+              addLine(resultNotes, { indent: 18 });
+            }
+
+            y += 4;
+          });
+        }
+
+        // Missed trades
+        if (missedBlocks.length) {
+          y += 6;
+          addSection("Missed Trades");
+
+          missedBlocks.forEach((mb, index) => {
+            const id = mb.querySelector(".missed-id")?.value.trim();
+            const category = mb.querySelector(".missed-category")?.value;
+            const rMissed = mb.querySelector(".missed-r")?.value;
+            const reason = mb.querySelector(".missed-reason")?.value.trim();
+            const emo = mb.querySelector(".missed-emotion")?.value;
+            const lesson = mb.querySelector(".missed-lesson")?.value.trim();
+            const ifthenTags = Array.from(mb.querySelectorAll(".missed-ifthen-tags input[type='checkbox']:checked"))
+              .map(cb => cb.parentElement.textContent.trim());
+            const missTypeRadio = mb.querySelector("input[type='radio']:checked");
+            const missType = missTypeRadio ? missTypeRadio.value : "";
+
+            const hasContent = id || category || rMissed || reason || lesson;
+            if (!hasContent) return;
+
+            addLine(`Missed Trade ${index + 1}${id ? " – ID: " + id : ""}`, { fontSize: 11 });
+            const meta = [];
+            if (category) meta.push(`Category: ${category}`);
+            if (rMissed) meta.push(`R Missed: ${rMissed}`);
+            if (missType) meta.push(missType);
+            if (emo) meta.push(`Emotion: ${emo}`);
+            if (meta.length) addLine(meta.join("   "), { indent: 10 });
+
+            if (ifthenTags.length) {
+              addLine("IF–THEN: " + ifthenTags.join(", "), { indent: 10 });
+            }
+            if (reason) {
+              addLine("Reason:", { indent: 10 });
+              addLine(reason, { indent: 18 });
+            }
+            if (lesson) {
+              addLine("Lesson:", { indent: 10 });
+              addLine(lesson, { indent: 18 });
+            }
+
+            y += 4;
+          });
+        }
+
+        // Mid-session notes
+        const midNotes = document.querySelector("#midNotes textarea[data-label='Mid-session notes']");
+        if (midNotes && midNotes.value.trim()) {
+          y += 6;
+          addSection("Mid-Session Notes");
+          addLine(midNotes.value.trim(), { indent: 10 });
+        }
+
+        // Post-market sections
+        const postMarket = document.getElementById("postMarket");
+        const postTextAreas = postMarket.querySelectorAll("textarea[data-label]");
+
+        postTextAreas.forEach(t => {
+          const val = t.value.trim();
+          if (!val) return;
+          y += 4;
+          addSection(t.dataset.label);
+          addLine(val, { indent: 10 });
+        });
+
+        // Footer
+        y += 10;
+        addLine("Generated: " + new Date().toLocaleString(), { fontSize: 8 });
+
+        pdf.save("trading_sop_" + today + ".pdf");
       });
     });
   </script>
