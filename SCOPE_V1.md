@@ -1,152 +1,218 @@
-# Trading SOP Journal — V1 Scope (Live Testing Edition)
+# Trading SOP Journal — V1 Scope (Muscle Memory Edition)
 
-This document defines the practical boundaries of Version 1:
+This document defines the boundaries of Version 1, the real-world feedback loop through which it evolves, and the first foundational step required to turn strategy execution into automatic “pencil reflex” behavior.
 
-- What the tool MUST do from the start  
-- What it SHOULD evolve into during real-world use  
-- What is intentionally left for later  
-- How we iterate (feedback loop based on live sessions)
+V1 is not a fixed feature list —  
+it is a live prototype that sharpens itself through daily use.
 
-V1 is **not** a frozen feature list — it’s a working prototype that improves through daily use.
+---
+
+# ⭐ Priority #1 — Identify the Fields Required for Automatic Execution
+
+Before ANY V1 feature work, UI upgrades, database work, or PDF polishing,  
+the FIRST objective of this project is:
+
+### 1. Identify the exact behaviors that must be measured  
+to understand:
+- why I hesitate  
+- why I miss valid setups  
+- why I avoid risk  
+- why I overtrade  
+- what breaks my A-game  
+- what supports my A-game  
+- what emotions block execution  
+- what emotions amplify execution  
+- and what must be tracked to turn trading into **muscle memory**
+
+### 2. Compare those behavior-critical fields  
+with the fields the journal is currently tracking.
+
+### 3. Decide:
+- what needs to be **added**  
+- what needs to be **removed**  
+- what needs to be **refined or replaced**
+
+### 4. Ensure the journal captures EVERYTHING  
+required to evolve from deliberate execution → **automatic execution**,  
+the same effortless naturalness as a baby picking up a pencil.
+
+This **behavioral field audit** is Step 0 and must happen BEFORE  
+finalizing the V1 structure.
 
 ---
 
 # 🎯 V1 Core Goals
 
-1. Provide a **fast, structured**, no-BS way to journal a full trading session  
-2. Cover the essential fields for:
+1. Provide a fast, structured, no-BS way to journal a full trading session.
+2. Capture all fields necessary to move my strategy from conscious effort → **reflex**.
+3. Track:
    - Pre-market preparation  
-   - Live session (trades + missed trades)  
+   - Live execution (trades + missed trades)  
    - Post-market reflection  
-3. Generate a **clean structured PDF**  
-4. Be **easy enough** to use every day without friction  
-5. Evolve through real-world feedback (not theory)
+4. Generate a clean, structured PDF that tells the real story of the day.
+5. Evolve through daily real-world usage — no theoretical design, only practical improvements.
 
 ---
 
-# 🧪 How V1 Will Actually Be Built
+# 🧪 How V1 Will Be Built
 
-**We do not guess features.**  
-V1 grows through the daily trading experience:
+V1 evolves through actual trading:
 
-1. Use the tool live  
-2. Notice friction / missing fields / unnecessary fields  
-3. Report it  
-4. I fix it within the scope of V1  
-5. PDF, UI, scoring, workflow — all get tightened over time
+1. Use the journal live  
+2. Notice friction, missing fields, or unnecessary fields  
+3. Report the issues  
+4. The UI, PDF, scoring, and workflow get refined  
+5. Iterate until journaling becomes natural & effortless  
 
-V1 = evolving prototype → refined until it feels “natural.”
+The journal becomes the external mirror that reveals:  
+**what I do**, **what I avoid**, and **what needs calibration**.
+
+V1 ends when the tool feels like a natural extension of my trading process.
 
 ---
 
-# ✔️ MUST-HAVE Features (V1 baseline)
+# ✔️ MUST-HAVE Features (V1 Baseline)
 
 ### Pre-Market
-- Levels marked  
-- Session flow + bias  
-- Trend assessment  
-- Confluence zones  
-- IF–THEN scenario builder (add/delete)  
-- Baseline emotional state  
-- NY impulse expectation (optional)
+- Level marking (PDH/PDL, Asia/London H/L, OB, FVG)
+- Bias + session flow
+- Trend assessment (HTF → LTF)
+- Confluence zones
+- Baseline emotional state
+- NY impulse expectation
+- IF–THEN scenario builder (add/delete)
 
-### During Trading
-#### Trades
-- Add/Delete trade blocks  
-- Trade metadata (ID, instrument, session, direction)  
-- Entry type (strategy-aware)  
-- Result (Win/Loss/BE)  
-- PnL, R-multiple, execution score  
-- Risk model selection  
-- Confluence stack  
-- IF–THEN tagging  
-- Emotional tagging  
-- Behaviour escalation  
-- Reset protocol  
-- Add-on support  
-- Screenshot upload  
-- What went right / wrong
+### During Trading — Trades
+- Add/Delete trade blocks
+- Full metadata (Trade ID, session, direction, entry type)
+- Result, PnL, R-multiple
+- Execution score (0–5)
+- Risk model selection
+- Confluence stack
+- IF–THEN tagging
+- Emotional tagging
+- Behaviour escalation:
+  - Trigger → thought → action → consequence
+- Reset protocol
+- Add-on positions
+- Screenshot upload
+- What went right
+- What went wrong
 
-#### Missed Trades
-- Add/Delete missed trade blocks  
-- Setup type  
-- R missed  
-- Emotional tagging  
-- IF–THEN tagging  
-- Reason + lesson  
-- Screenshot upload  
-- Valid vs Emotional miss
+### During Trading — Missed Trades
+- Add/Delete missed trade blocks
+- Missed ID
+- Setup type (Reversal / B+R / Pullback)
+- R missed
+- IF–THEN tagging
+- Emotional tagging
+- Valid vs emotional miss
+- Screenshot upload
+- Reason + lesson
 
 ### Post-Market
 - Discipline score  
 - Execution score  
 - Emotional stability  
 - Process integrity  
-- Overall grade (A–F)  
-- Session summary  
-- Emotional review  
-- Behaviour patterns  
-- Process review  
+- Overall rating (A–F)
+- Session summary
+- Emotional review
+- Behavior patterns
+- 3 mistakes to avoid
+- 3 wins to repeat
 - Focus for tomorrow
 
 ### PDF Export
-- Clean structured PDF  
-- No screenshots of UI  
-- Only include fields with content  
-- Organised, readable layout
+- Clean structured PDF (NOT screenshots)
+- Only include fields with data
+- Organized section flow
+- Trades & missed trades summarized
+- Confluences, emotions, IF–THEN included
+- Screenshot thumbnails (optional)
 
 ---
 
-# 🟡 SHOULD-HAVE (Added organically during daily use)
+# 🟡 SHOULD-HAVE Features (Added Through Usage)
 
-These will be added only if real trading reveals the need:
+Added only if live sessions reveal the need:
 
-- Better confluence organization  
-- Cleaner tagging UX  
-- More intuitive collapsibles  
-- Smarter scoring tweaks  
-- Screenshot thumbnails  
-- Session type auto-labeling (later)  
-- Micro-optimizations that reduce form friction
-
----
-
-# ⚪ NICE-TO-HAVE (If easy, we add it)
-
-- Emotion color indicators  
-- Dropdown presets  
-- Confluence favorites  
-- UI animations  
-- Light/Dark PDF themes  
+- Better confluence groupings
+- Cleaner tagging UX
+- More intuitive collapsibles
+- Scoring model adjustments
+- Thumbnail previews
+- Session archetype labeling (trend/range/reversal)
+- Low-friction UI optimizations
 
 ---
 
-# ❌ Out of Scope (Future versions)
+# ⚪ NICE-TO-HAVE Features
 
-These belong in V1.5–V2:
-
-- Full backend  
-- Journal history  
-- AI summaries  
-- AI emotional detection  
-- Stats dashboard  
-- Auto-categorization of setup  
-- Multi-user system  
-- Authentication  
-- Cloud sync  
-- Storage layer
+If they are easy, we add:
+- Emotion color indicators
+- Dropdown presets
+- Confluence favorites
+- UI/UX polish
+- Light/Dark PDF themes
 
 ---
 
-# 🧭 How V1 Ends
+# ❌ Out of Scope for V1  
+### (Including new addition: **TradeZella Audit for Advanced Stats Dashboard**)
 
-V1 is “done” when:
+These belong to V1.5 → V2 and WILL NOT be built in V1:
 
-1. The tool feels natural during live trading  
-2. The PDF captures the day clearly  
-3. No major workflow friction remains  
-4. All essential psychological & technical elements are covered  
-5. The system is reliable and predictable  
-6. Improvements slow down because the structure feels right
+- Full backend (Supabase integration)
+- Historical session storage
+- Stats dashboard
+- Setup accuracy analytics
+- Journaling analytics engine
+- AI trade summaries
+- AI emotional pattern detection
+- Screenshot parsing / automatic tagging
+- Auto-categorization of setups
+- Multi-user system
+- Authentication
+- Cloud sync
+- Mobile app
+- Screenshot annotation
 
-This is the “prototype → stable version” moment.
+## 🚨 NEW OUT-OF-SCOPE ADDITION:
+### **Advanced Stats Dashboard (TradeZella-Inspired)**
+
+Before building any analytics:
+
+1. We will perform a **full audit** of TradeZella  
+   (features, UX, stats, insights, behavioral metrics).
+2. Identify which features genuinely help MY workflow.
+3. Discard the ones that don’t serve automatic execution.
+4. Adopt, adapt, or improve only the parts that add value.
+5. Define a custom analytics layer built specifically around:
+   - Execution consistency  
+   - Missed R opportunities  
+   - Emotional pattern tracking  
+   - Confluence reliability  
+   - Setup performance  
+   - A-game vs non-A-game sessions  
+
+This is a MAJOR project — and must NOT be done in V1.  
+It begins after the core journal is stable.
+
+---
+
+# 🧭 How V1 Ends (Definition of Done)
+
+V1 is complete when:
+
+1. The behavioral field audit is complete  
+2. All necessary fields for automaticity are defined  
+3. The tool feels natural and frictionless during live usage  
+4. The PDF accurately tells the story of performance and mindset  
+5. No major workflow friction remains  
+6. Execution patterns (good and bad) become obvious  
+7. Missed setups and emotional loops are visible  
+8. The journal supports progressive **muscle memory development**  
+9. The structure stabilizes and improvements naturally slow down
+
+At that point, we enter V1.5 and begin backend + analytics evolution.
