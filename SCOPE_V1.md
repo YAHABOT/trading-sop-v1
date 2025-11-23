@@ -1,220 +1,267 @@
 # Trading SOP Journal — V1 Scope (Muscle Memory Edition)
 
-This document defines the boundaries of Version 1, the real-world feedback loop through which it evolves, 
-and the foundational step required to turn strategy execution into automatic “pencil reflex” behavior.
+This document defines the boundaries of Version 1, the live feedback loop through which it evolves, 
+and the behavioral architecture required to turn strategy execution into automatic “pencil reflex” behavior.
 
-V1 is a live prototype.  
-It sharpens itself through real usage, not theoretical planning.
+V1 sharpens itself through real usage — not theoretical design.
 
 ---
 
 # ⭐ PRIORITY #1 — Automaticity Field Audit
 
-Before ANY development, UI changes, or backend work, the first mandatory outcome is:
+Before ANY V1 work, we must:
 
 1. Identify every behavior required to understand:
-   - why I hesitate
-   - why I miss valid setups
-   - why I avoid risk
-   - why I overtrade
-   - what breaks A-Game
-   - what supports A-Game
-   - what emotions block execution
-   - what emotions amplify execution
-   - what must be tracked to make execution automatic
+   - hesitation  
+   - missed setups  
+   - fear loops  
+   - execution quality  
+   - emotional spikes  
+   - A-game alignment  
+   - exit behavior  
+   - re-entry discipline  
+   - IF–THEN consistency  
 
-2. Compare required behavioral fields with what the journal currently tracks.
+2. Compare required fields vs current UI fields.
 
-3. Decide:
-   - what needs to be added
-   - what needs to be removed
-   - what needs to be refined or replaced
+3. Add / remove / refine fields until NOTHING important is missing.
 
-This audit defines the V1 skeleton.
+This defines the entire V1 skeleton.
 
 ---
 
-# 🎯 V1 Core Philosophy
+# 🎯 CORE PHILOSOPHY
 
-The journal is built to reveal:
-- hesitation patterns
-- emotional spikes
-- behavior loops
-- broken discipline moments
-- A-Game behaviors
-- execution consistency
+The journal is a mirror that reveals:
+- hesitation patterns  
+- emotional surges  
+- interpretation errors  
+- behavior loops  
+- discipline lapses  
+- A-game behaviors  
+- execution consistency  
+- exit-quality metrics  
 
-And to do it in the simplest possible structure —  
-no clutter, no noise, only what builds muscle memory.
-
----
-
-# 🧪 How V1 Will Be Used
-
-V1 evolves **during live trading**:
-
-1. Fill journal progressively across the session  
-2. Journal reacts to what actually happens (trades + missed trades)  
-3. Identify missing fields or friction  
-4. Update SCOPE + UI accordingly  
-
-V1 ends when journaling becomes **effortless and reflexive**.
+The goal:
+**turn deliberate execution → automatic execution.**
 
 ---
 
-# ✔️ V1 MUST-HAVE Features
+# 🧪 HOW V1 IS USED  
+V1 is filled progressively:
 
-## 1. Session-Long Incremental Journaling  
-The user **does NOT fill the journal at once**.  
-Data is filled throughout the session in small chunks.
+- Not all at once  
+- Across the entire session  
+- As emotions, trades, and misses occur in real-time  
 
-### Requirements:
-- Data persists across refreshes, accidental closes, or crashes
-- All fields autosave on every edit (instant save)
-- Minimum persistence: 12 hours
-- Data is cleared ONLY when the user presses:
-  **“Start New Day / Clear Journal”**
+All fields autosave instantly.  
+No data is lost on refresh or browser restart.  
+Data clears ONLY when pressing **Start New Day / Clear Journal**.
 
-## 2. Pre-Market Module
-- Level marking (PDH/PDL, Asia/London H/L, OB, FVG)
-- Bias + session expectation
-- HTF → LTF alignment
-- Confluence zones
-- **Session-Start Emotional State**
-  - dropdown + free-text
-- NY impulse expectation
+---
+
+# ✔️ V1 MUST-HAVE FEATURES
+
+## 1. Session-Long Incremental Journaling
+- Fill small parts throughout the session  
+- Instant autosave  
+- 12-hour persistence  
+- All fields optional; blank fields do not block PDF  
+
+---
+
+# 2. Pre-Market Module
+- Levels (PDH/PDL, Asia/London H/L, OB, FVG)  
+- Bias + HTF/LTF alignment  
+- NY impulse expectation  
+- Confluences  
+- **Session Start Emotion**  
+  - dropdown + free-text  
+
 - IF–THEN scenario builder
 
-## 3. During Trading — Trades
-- Add/Delete trade cards
-- Trade metadata (direction, entry type, session)
-- Result, PnL, R-multiple
-- Execution score (0–5)
-- Confluence stack
-- Screenshot upload
+---
 
-### Emotional Tracking (expanded):
-- **Pre-trade emotional baseline**
-- **Emotion at signal moment**
-- **Emotion during trade**
-- **Emotion after outcome**
-- **Emotion during opening impulse**
-- Each uses:
-  - dropdown list
-  - optional free-text field
+# 3. NEW CORE LOGIC — Trades/Misses Spawn Through Emotions
 
-### Fear / Hesitation Reasoning (expanded):
-Tickable multi-select:
-- Fear of loss
-- Fear of giving back profit
-- Fear of being wrong
-- Trade felt “too obvious”
-- Wanted more confirmation
-- Custom fear (free-text)
+## A. Pre-Trade Baseline  
+(dropdown + free-text)
 
-## 4. Exit-Behavior Tracking (new core block)
-- What was the planned exit?
-- What was the actual exit?
-- Did I follow the plan?
-- If not, why?
-  - emotional exit  
-  - early exit  
-  - good instinct  
-  - SL would’ve hit  
-  - re-entry opportunity  
-- Re-entry evaluation
+## B. At The Signal  
+(dropdown + free-text)
 
-## 5. Behavior Loop Tracking (expanded)
-Multi-select + free-text:
-- Breaking SOP  
-- Sitting out valid setups  
-- Random trades  
-- Overtrading in chop  
-- Avoiding risk in clean conditions  
-- Trading when bored or tired  
-- Jumping in early  
-- Exiting trades too early  
-- Trading beyond max loss limit  
-- Poor reaction while in profit  
-- Emotional interference  
-- Re-entry emotionality  
-- Re-entry discipline  
+After these two fields:
 
-## 6. Missed Trades
-- Reason for miss
-- Emotional state when watching price move without me
-- Opening impulse reaction
-- Was the miss valid or emotional?
+**System asks → Did you execute or miss?**
 
-## 7. PDF Export
-- Clean structured PDF
-- Only show fields with data
-- Includes:
-  - emotions
-  - execution behavior
-  - hesitation reasons
-  - exit-behavior analysis
-  - missed trade logic
+This spawns either:
+
+### → Executed Trade Block  
+or  
+### → Missed Trade Block  
+
+Every trade/miss begins from emotional state, not manually.
 
 ---
 
-# 🟡 SHOULD-HAVE Features (If live sessions demand them)
+# 4. Executed Trade Flow (Full Branch)
 
-- Additional hesitation fields
-- UI grouping improvements
-- Better emotion presets
-- Improved trade/missed card structure
-- More intuitive confluence grouping
-- Collapse/expand all
+### 1. During Trade Emotion  
+### 2. Execution Layer (multi-select)
+All execution behaviors appear as checkboxes:
+- early  
+- late  
+- overconfirmation  
+- hesitation  
+- reduced size  
+- increased size  
+- jumped early  
+- micromanaged  
+- SL interference  
+- confirmation freeze  
+- etc.
+
+### 3. Exit Behavior Module  
+- Planned exit?  
+  - show text input  
+- Actual exit = planned?  
+  - if no:
+    - dropdown: emotional exit, impatience, good instinct, volatility shift, SL avoidance  
+    - text-box explanation  
+
+### 4. Re-Entry Logic  
+Shown only if:
+- exit ≠ planned  
+- AND re-entry checkbox selected
+
+Dropdown + text explanation.
+
+### 5. Behavior Loop (Trade)
+Shows BOTH good + bad loops (multi-select + free-text).
+
+### 6. IF–THEN Consistency
+Checkbox: “Did this trade follow my IF–THEN?”
+→ reveals list of IF–THENs.
+
+### 7. Update Session Score button  
+Appears at bottom.
 
 ---
 
-# ⚪ NICE-TO-HAVE Features
-- Emotion color indicators
-- Dropdown presets
-- Light/Dark PDF themes
+# 5. Missed Trade Flow (Full Branch)
+
+### 1. Emotional State While Watching Price  
+(dropdown + free text)
+
+### 2. Interpretation/Execution Layer (slimmer set)
+- hesitation  
+- overconfirmation  
+- fear  
+- disbelief  
+- adrenaline  
+- frozen  
+- too fast  
+
+### 3. Behavior Loops (Miss)
+Only BAD loops.
+
+### 4. IF–THEN Miss Logic  
+“Did this missed move follow your IF–THEN?”  
+→ shows scenarios.
+
+### 5. Update Session Score button
+
+---
+
+# 6. While Watching Price (Standalone Module)
+Can be logged at **any time**, independent of trades/misses.
+
+This module includes:
+- emotional tag  
+- free text  
+- **timestamp (auto-filled EST)**  
+- optional interpretation dropdown  
+
+User can add multiple entries.
+
+---
+
+# 7. Interpretation Layer (Expanded)
+Dropdown for:
+- Did I expect this move?
+- Surprised by volatility?
+- Freeze due to confirmation?
+- Felt FOMO?
+- Was move too fast?
+
+These appear inside both:
+- trade flow  
+- miss flow  
+- standalone “watching price” logs  
+
+---
+
+# 8. Post-Market Reflection
+- How shocked were you by the open?  
+- Tired mid-session?  
+- Rushed?  
+- Behind the market?  
+- Pressure to make back?  
+- Did session go as expected?  
+- Did you adapt?  
+- Did market violate expectations?  
+- Did you freeze in chaos?  
+- Did you capitalize on clean conditions?  
+
+---
+
+# 9. PDF Export Rules
+- Only print filled fields  
+- Preserve chronological branching  
+- Include timestamps  
+- Include emotional flows  
+- Include exit/re-entry logic  
+- Include IF–THEN mapping  
+- Include behavior loops  
+
+Blank = simply not shown.
+
+---
+
+# 🟡 SHOULD-HAVE FEATURES
+- better presets  
+- better clusters  
+- collapsibles  
+- emotion colors  
+- intuitive UX grouping  
+
+---
+
+# ⚪ NICE-TO-HAVE FEATURES
+- themes  
+- screenshot grids  
+- auto summaries  
 
 ---
 
 # ❌ OUT OF SCOPE FOR V1
+(V1.5 → V2)
 
-These are explicitly V1.5 → V2:
+### Environmental State  
+sleep, stress, distractions
 
-### (1) Environmental State Tracking  
-- sleep  
-- stress  
-- distractions  
-- time pressure  
-(*Will be added in V2 along with Health → Trading correlations*)
+### Outcome Response System  
+tilt, revenge, spirals
 
-### (2) Outcome Response System  
-- tilt  
-- revenge  
-- avoidance  
-- emotional spiral  
-(*Saved for V2 when AI analysis arrives*)
-
-### (3) Backend / Stats / AI  
-- database storage  
-- cloud sync  
-- analytics dashboards  
-- emotional pattern detection  
-- TradeZella-style insights  
-- automated trade summaries  
-- screenshot parsing  
-- mobile app  
+### Backend & Analytics  
+supabase, dashboards, patterns, replay, AI summaries
 
 ---
 
-# 🧭 V1 Definition of Done
-
-V1 ends when:
-1. All critical automaticity fields are defined
-2. The autosave system is stable
-3. The journal feels effortless during live usage
-4. Emotional + behavior tracking is complete
-5. The PDF reflects the real psychological story
-6. Execution patterns become obvious
-7. The structure stabilizes
-
-At that point we move to V1.5 (backend + analytics).
+# 🧭 V1 DONE WHEN:
+1. Full automaticity field system stable  
+2. Branching logic fully implemented  
+3. PDF prints narrative cleanly  
+4. Journal feels natural and frictionless  
+5. Execution loops become obvious  
+6. No major missing fields  
