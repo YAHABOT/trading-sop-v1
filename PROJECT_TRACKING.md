@@ -680,4 +680,30 @@ Accordion = multiple open allowed (per final answer)
 **Notes:**
 - No autosave, scenario logic, or trade logic added in this build (by design).
 - This build is the clean scaffold for all later logic.
+### Build 003 — IF–THEN Scenario UI (Module 1)  
+**Status:** Done / Passed  
+
+**Scope:**
+1. Add IF–THEN scenario creation UI inside Module 1  
+2. Use a clean vertical layout for each scenario (ID, Title, IF, THEN, Delete)  
+3. Auto-generate Scenario IDs (S1, S2, S3, …) and keep them in page state  
+
+**What Was Implemented:**
+- Added a **Scenario UI block** under `IF–THEN Scenarios` in Module 1:
+  - “Scenarios List” header
+  - `+ Add Scenario` button
+  - Empty state message when no scenarios exist
+- Each scenario is rendered as a separate **vertical card** with:
+  - Scenario ID (S1, S2, S3, …)
+  - Title (single-line input)
+  - IF: textarea
+  - THEN: textarea
+  - Delete button (removes the scenario from the list)
+- Scenario IDs are generated sequentially as S1, S2, S3… using an internal counter.
+
+**Notes / Limitations (by design):**
+- Scenarios are kept in **front-end memory only** for now (no localStorage yet).
+- Refreshing the page clears the scenarios (persistence will be added in Build 004).
+- No linking to trades or post-market yet; this UI is a standalone editor in Module 1.
+
 
