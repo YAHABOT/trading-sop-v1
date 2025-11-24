@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 004</title>
+  <title>Trading SOP Journal — Build 005</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -78,7 +78,7 @@
     }
 
     .open .accordion-content {
-      max-height: 2000px;
+      max-height: 4000px;
       padding: 14px;
     }
 
@@ -135,14 +135,31 @@
       color: #e5e7eb;
     }
 
-    .scenario-add-btn {
+    .scenario-add-btn,
+    .watch-add-btn,
+    .watch-delete-btn {
       font-size: 0.7rem;
       padding: 4px 8px;
       border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .scenario-add-btn {
       border: 1px solid #22c55e;
       background: #052e16;
       color: #bbf7d0;
-      cursor: pointer;
+    }
+
+    .watch-add-btn {
+      border: 1px solid #38bdf8;
+      background: #0b1120;
+      color: #e0f2fe;
+    }
+
+    .watch-delete-btn {
+      border: 1px solid #ef4444;
+      background: #450a0a;
+      color: #fecaca;
     }
 
     .scenario-card {
@@ -177,6 +194,44 @@
       margin-top: -6px;
       margin-bottom: 8px;
     }
+
+    /* Watching Price cards */
+    .watch-card {
+      border: 1px solid #243045;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #020617;
+    }
+
+    .watch-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .watch-row > div {
+      flex: 1;
+    }
+
+    .interp-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 4px 0 6px 0;
+    }
+
+    .interp-options label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: #cbd5f5;
+    }
+
+    .interp-options input[type="checkbox"] {
+      margin: 0;
+    }
   </style>
 </head>
 <body>
@@ -185,9 +240,9 @@
 
     <div class="top-bar">
       <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 004</h1>
+        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 005</h1>
         <p class="small-text">
-          Accordion ✓ • Module 1 UI ✓ • Dark theme ✓ • IF–THEN UI ✓ • Scenario persistence + Reset ✓
+          Accordion ✓ • Module 1 UI ✓ • Dark theme ✓ • IF–THEN UI ✓ • Scenario persistence ✓ • Watching Price UI (Module 2) ✓
         </p>
       </div>
       <div style="text-align:right;">
@@ -228,7 +283,7 @@
         </div>
         <p class="helper-text">
           Each scenario gets an ID (S1, S2, ...) and contains: Title, IF, THEN.
-          Scenarios are now saved locally and cleared with "Reset Day".
+          Scenarios are saved locally and cleared with "Reset Day".
         </p>
         <div id="scenarioList"></div>
 
@@ -248,15 +303,25 @@
     </div>
 
     <!-- MODULE 2 -->
-    <div class="accordion-item">
+    <div class="accordion-item" id="module2">
       <div class="accordion-header">
         <span>Module 2 — During Session (Global)</span>
         <span>▼</span>
       </div>
       <div class="accordion-content">
-        <p class="small-text">
-          Module 2 UI will be built in Phase 3 (Builds 005–007).
+
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Watching Price (Flat State)</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Log moments where you're flat but actively watching price, including your emotion and how the tape/structure looks.
         </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="small-text">Entries</span>
+          <button type="button" id="addWatchBtn" class="watch-add-btn">+ Add Watching Entry</button>
+        </div>
+
+        <div id="watchList"></div>
+
       </div>
     </div>
 
@@ -296,7 +361,7 @@
       });
     });
 
-    // ----------------- BUILD 004: SCENARIO STATE + PERSISTENCE -----------------
+    // ----------------- SCENARIO STATE + PERSISTENCE (Build 004) -----------------
     const STORAGE_KEY = "sop_v1_scenarios_only";
     const statusEl = document.getElementById("statusText");
     const resetDayBtn = document.getElementById("resetDayBtn");
@@ -335,7 +400,6 @@
         }
         const parsed = JSON.parse(raw);
         scenarios = Array.isArray(parsed.scenarios) ? parsed.scenarios : [];
-        // compute next index from existing IDs
         let maxIndex = 0;
         scenarios.forEach(sc => {
           if (sc.id && sc.id.startsWith("S")) {
@@ -364,7 +428,7 @@
       resetDayBtn.addEventListener("click", resetDayScenarios);
     }
 
-    // ----------------- SCENARIO UI (from Build 003, now persistent) -----------------
+    // ----------------- SCENARIO UI -----------------
     const scenarioListEl = document.getElementById("scenarioList");
     const addScenarioBtn = document.getElementById("addScenarioBtn");
 
@@ -394,7 +458,6 @@
         const card = document.createElement("div");
         card.className = "scenario-card";
 
-        // ID row + delete button
         const idRow = document.createElement("div");
         idRow.style.display = "flex";
         idRow.style.justifyContent = "space-between";
@@ -419,7 +482,6 @@
         idRow.appendChild(delBtn);
         card.appendChild(idRow);
 
-        // Title
         const titleLabel = document.createElement("label");
         titleLabel.textContent = "Title";
         titleLabel.style.display = "block";
@@ -436,7 +498,6 @@
         });
         card.appendChild(titleInput);
 
-        // IF
         const ifLabel = document.createElement("label");
         ifLabel.textContent = "IF:";
         ifLabel.style.display = "block";
@@ -453,7 +514,6 @@
         });
         card.appendChild(ifArea);
 
-        // THEN
         const thenLabel = document.createElement("label");
         thenLabel.textContent = "THEN:";
         thenLabel.style.display = "block";
@@ -482,9 +542,8 @@
       });
     }
 
-    // ----------------- PUBLIC HELPERS FOR FUTURE BUILDS -----------------
+    // Expose helpers
     function getAllScenarios() {
-      // return a shallow copy so external code can't mutate internal array directly
       return scenarios.slice();
     }
 
@@ -492,15 +551,170 @@
       return scenarios.find(sc => sc.id === id) || null;
     }
 
-    // Expose to window for future builds (Modules 3 and 4)
     window.SOP_SCENARIOS = {
       getAllScenarios,
       getScenarioById
     };
 
+    // ----------------- BUILD 005: WATCHING PRICE (Module 2) -----------------
+    const watchListEl = document.getElementById("watchList");
+    const addWatchBtn = document.getElementById("addWatchBtn");
+
+    let watchEntries = [];
+
+    function createWatchEntry() {
+      return {
+        time: "",
+        emotion: "",
+        presets: {
+          chop: false,
+          compression: false,
+          sweep: false,
+          displacement: false,
+          indecision: false,
+          stalling: false
+        },
+        customInterp: "",
+        notes: ""
+      };
+    }
+
+    function renderWatchEntries() {
+      watchListEl.innerHTML = "";
+
+      if (!watchEntries.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.75rem";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No watching entries logged yet.";
+        watchListEl.appendChild(empty);
+        return;
+      }
+
+      watchEntries.forEach((entry, index) => {
+        const card = document.createElement("div");
+        card.className = "watch-card";
+
+        const topRow = document.createElement("div");
+        topRow.style.display = "flex";
+        topRow.style.justifyContent = "space-between";
+        topRow.style.alignItems = "center";
+        topRow.style.marginBottom = "4px";
+
+        const label = document.createElement("div");
+        label.style.fontSize = "0.7rem";
+        label.style.color = "#e5e7eb";
+        label.textContent = `Watching Entry #${index + 1}`;
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "watch-delete-btn";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", () => {
+          watchEntries.splice(index, 1);
+          renderWatchEntries();
+        });
+
+        topRow.appendChild(label);
+        topRow.appendChild(delBtn);
+        card.appendChild(topRow);
+
+        const row = document.createElement("div");
+        row.className = "watch-row";
+        row.innerHTML = `
+          <div>
+            <label>Time (EST)</label>
+            <input type="text" placeholder="09:45, 10:10, etc.">
+          </div>
+          <div>
+            <label>Emotion</label>
+            <input type="text" placeholder="calm, hesitant, FOMO, etc.">
+          </div>
+        `;
+        const timeInput = row.querySelectorAll("input")[0];
+        const emoInput = row.querySelectorAll("input")[1];
+        timeInput.value = entry.time || "";
+        emoInput.value = entry.emotion || "";
+
+        timeInput.addEventListener("input", () => {
+          entry.time = timeInput.value;
+        });
+        emoInput.addEventListener("input", () => {
+          entry.emotion = emoInput.value;
+        });
+
+        card.appendChild(row);
+
+        const interpLabel = document.createElement("label");
+        interpLabel.textContent = "Interpretation (how the market looks)";
+        card.appendChild(interpLabel);
+
+        const options = document.createElement("div");
+        options.className = "interp-options";
+        const presets = [
+          ["chop", "Chop"],
+          ["compression", "Compression"],
+          ["sweep", "Sweep"],
+          ["displacement", "Displacement"],
+          ["indecision", "Indecision"],
+          ["stalling", "Stalling"]
+        ];
+        presets.forEach(([key, text]) => {
+          const wrap = document.createElement("label");
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.checked = !!entry.presets[key];
+          cb.addEventListener("change", () => {
+            entry.presets[key] = cb.checked;
+          });
+          const span = document.createElement("span");
+          span.textContent = text;
+          wrap.appendChild(cb);
+          wrap.appendChild(span);
+          options.appendChild(wrap);
+        });
+        card.appendChild(options);
+
+        const customLabel = document.createElement("label");
+        customLabel.textContent = "Custom interpretation tags (manual)";
+        card.appendChild(customLabel);
+
+        const customInput = document.createElement("input");
+        customInput.type = "text";
+        customInput.placeholder = "e.g. liquidity hunt, grind up, fake pump (comma separated if needed)";
+        customInput.value = entry.customInterp || "";
+        customInput.addEventListener("input", () => {
+          entry.customInterp = customInput.value;
+        });
+        card.appendChild(customInput);
+
+        const notesLabel = document.createElement("label");
+        notesLabel.textContent = "Notes";
+        card.appendChild(notesLabel);
+
+        const notesArea = document.createElement("textarea");
+        notesArea.placeholder = "Short description of what you saw and how it influenced your thinking.";
+        notesArea.value = entry.notes || "";
+        notesArea.addEventListener("input", () => {
+          entry.notes = notesArea.value;
+        });
+        card.appendChild(notesArea);
+
+        watchListEl.appendChild(card);
+      });
+    }
+
+    if (addWatchBtn) {
+      addWatchBtn.addEventListener("click", () => {
+        watchEntries.push(createWatchEntry());
+        renderWatchEntries();
+      });
+    }
+
     // ----------------- INIT -----------------
     loadScenarios();
     renderScenarios();
+    renderWatchEntries();
   </script>
 
 </body>
