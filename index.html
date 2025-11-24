@@ -2,1482 +2,776 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Daily Trading SOP – V1</title>
+  <title>Trading SOP Journal — V1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Basic styling -->
   <style>
-    body {
+    :root {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0b0c10;
-      color: #eaeaea;
+      background: #050816;
+      color: #e5e7eb;
+    }
+    body {
       margin: 0;
       padding: 0;
+      background: #020617;
+      color: #e5e7eb;
     }
-
-    .container {
-      max-width: 1100px;
+    .app {
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 20px 16px 80px;
+      padding: 16px;
     }
-
-    h1, h2, h3, h4 {
+    h1, h2, h3 {
       margin: 0 0 8px;
-      font-weight: 600;
     }
-
-    h1 {
-      font-size: 26px;
-      margin-bottom: 16px;
-    }
-
-    h2 {
-      font-size: 20px;
-      margin-top: 12px;
-    }
-
-    h3 {
-      font-size: 16px;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      opacity: 0.7;
-      margin-bottom: 20px;
-    }
-
-    .accordion-item {
-      background: #111217;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #222431;
-      overflow: hidden;
-    }
-
-    .accordion-header {
-      padding: 12px 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #151724;
-    }
-
-    .accordion-header h2, .accordion-header h3 {
-      margin: 0;
-      font-size: 15px;
-    }
-
-    .accordion-header span.chevron {
-      font-size: 18px;
-      transition: transform 0.2s ease;
-    }
-
-    .accordion-header.open span.chevron {
-      transform: rotate(90deg);
-    }
-
-    .accordion-body {
-      display: none;
-      padding: 12px 16px 16px;
-    }
-
-    .accordion-body.open {
-      display: block;
-    }
-
-    .section-group {
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #232535;
-    }
-
-    .section-group:last-child {
-      border-bottom: none;
-    }
-
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .field-row {
+    .modules {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 16px;
-      margin-bottom: 8px;
-      align-items: center;
+      gap: 16px;
     }
-
-    .field-row label {
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .module-card {
+      background: #020817;
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid #1e293b;
+      flex: 1 1 100%;
     }
-
+    @media (min-width: 900px) {
+      .module-card {
+        flex: 1 1 calc(50% - 16px);
+      }
+    }
+    .field-group {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: #9ca3af;
+      margin-bottom: 2px;
+    }
     input[type="text"],
     input[type="number"],
-    input[type="date"],
-    select,
-    textarea {
-      background: #111217;
-      border: 1px solid #2a2c3f;
-      color: #eaeaea;
-      border-radius: 4px;
-      padding: 6px 8px;
-      font-size: 13px;
+    textarea,
+    select {
       width: 100%;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #1f2933;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.9rem;
       box-sizing: border-box;
     }
-
-    input[type="number"] {
-      max-width: 120px;
-    }
-
     textarea {
       min-height: 60px;
       resize: vertical;
     }
-
-    .input-inline {
-      max-width: 220px;
-    }
-
-    .checkbox-inline {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
-    }
-
-    .pill-label {
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      background: #1e2030;
-      border: 1px solid #34364c;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin: 2px;
-    }
-
-    .pill-label input {
-      margin: 0;
-    }
-
-    button {
-      background: #2563eb;
-      color: #f9fafb;
-      border: none;
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 13px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    button.secondary {
-      background: #1f2937;
-    }
-
-    button.danger {
-      background: #b91c1c;
-    }
-
-    button.small {
-      padding: 4px 10px;
-      font-size: 12px;
-    }
-
-    button:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-
-    .btn-row {
+    .row {
       display: flex;
       gap: 8px;
-      margin: 10px 0;
-      flex-wrap: wrap;
     }
-
-    .collapsible {
-      margin-top: 6px;
+    .row > .field-group {
+      flex: 1;
+    }
+    .tag-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 4px;
       border-radius: 6px;
-      border: 1px solid #2b2e40;
-      background: #151724;
+      border: 1px solid #1f2933;
+      background: #020617;
+      cursor: text;
     }
-
-    .collapsible-header {
-      padding: 6px 10px;
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .collapsible-body {
-      padding: 8px 10px 10px;
-      display: none;
-      font-size: 13px;
-    }
-
-    .collapsible-body.open {
-      display: block;
-    }
-
-    .tagline {
-      font-size: 12px;
-      opacity: 0.7;
-      margin-bottom: 4px;
-    }
-
-    .score-box {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .score-card {
-      border-radius: 8px;
-      border: 1px solid #2c3145;
-      padding: 8px 10px;
-      background: #141520;
-      font-size: 12px;
-    }
-
-    .score-card-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .score-value {
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .rating-badge {
+    .tag {
       display: inline-flex;
       align-items: center;
-      padding: 3px 8px;
+      padding: 2px 6px;
       border-radius: 999px;
-      border: 1px solid #374151;
-      font-size: 11px;
-      margin-top: 4px;
+      background: #1f2937;
+      font-size: 0.8rem;
     }
-
-    .chips-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 8px;
+    .tag button {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      margin-left: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
     }
-
-    .chip {
-      padding: 4px 9px;
-      border-radius: 999px;
-      font-size: 11px;
-      background: #111827;
-      border: 1px solid #374151;
+    .tag-input input {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #e5e7eb;
+      min-width: 80px;
+      font-size: 0.85rem;
+      padding: 2px;
     }
-
-    .screenshot-input {
-      font-size: 12px;
-      opacity: 0.8;
-      margin-bottom: 4px;
-    }
-
-    .separator {
-      border-top: 1px dashed #303348;
-      margin: 10px 0;
-    }
-
-    @media (max-width: 720px) {
-      .field-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .input-inline {
-        max-width: 100%;
-      }
-
-      input[type="number"] {
-        max-width: 100%;
-      }
-    }
-
-    /* Undo bar */
-    #undoBar {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #111827;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      padding: 6px 12px;
-      font-size: 12px;
-      display: none;
+    .badge {
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      z-index: 9999;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #1f2933;
+      font-size: 0.8rem;
+      gap: 4px;
     }
-
-    #undoBar span {
-      white-space: nowrap;
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-
-    #undoBar button {
-      padding: 3px 10px;
-      font-size: 11px;
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .btn-primary {
+      background: #22c55e;
+      color: #020617;
+      font-weight: 600;
+    }
+    .btn-danger {
+      background: #ef4444;
+      color: #f9fafb;
+      font-weight: 500;
+    }
+    .status-pill {
+      font-size: 0.8rem;
+      color: #a1a1aa;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .subtle {
+      font-size: 0.75rem;
+      color: #6b7280;
     }
   </style>
-
-  <!-- jsPDF only (we're doing structured PDF, no screenshots) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container" id="sop-root">
-    <h1>Daily Trading SOP – V1</h1>
-    <div class="subtitle">
-      Pre-Market · During Trading · Post-Market Review · Auto-Score · PDF Export
-    </div>
-
-    <!-- Accordion: Pre-Market -->
-    <div class="accordion-item">
-      <div class="accordion-header open" data-target="preMarket">
-        <h2>Section 1 – Pre-Market Routine</h2>
-        <span class="chevron">▶</span>
+  <div class="app">
+    <div class="controls">
+      <h1>Trading SOP Journal — V1</h1>
+      <div>
+        <button id="resetDay" class="btn-danger">RESET DAY</button>
+        <span id="saveStatus" class="status-pill"></span>
       </div>
-      <div class="accordion-body open" id="preMarket">
+    </div>
+    <p class="subtle">
+      4-section architecture (Pre-Market, During Session, Trade Idea Logic, Post-Market) with autosave +
+      tag engine. V1 is front-end only; all behavior engines are wired as functions.
+    </p>
 
-        <!-- Levels -->
-        <div class="section-group">
-          <div class="section-title">1. Levels Marked</div>
-          <div class="field-row">
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> PDH marked
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> PDL marked
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> Asia High/Low marked
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> London High/Low marked
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> HTF OB / FVG levels marked
-            </label>
-          </div>
-          <textarea data-label="Levels / HTF context notes" placeholder="Notes on HTF context / key levels"></textarea>
+    <div class="modules">
+      <!-- MODULE 1 — PRE-MARKET (summary, key fields) -->
+      <section class="module-card" id="module1">
+        <div class="section-header">
+          <h2>Module 1 — Pre-Market</h2>
+          <span class="badge">Status: V1 wired</span>
         </div>
 
-        <!-- Session Flow -->
-        <div class="section-group">
-          <div class="section-title">2. Session Flow Bias</div>
-          <div class="field-row">
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> Asia direction assessed
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> London continuation/reversal assessed
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> Combined Asia→London bias defined
-            </label>
-          </div>
-          <textarea data-label="Session flow notes" placeholder="Session flow notes (why bias exists / contradictions / liquidity behaviour)"></textarea>
+        <div class="field-group">
+          <label for="m1_levels">Session Levels Marked</label>
+          <textarea id="m1_levels" data-key="module1.levels"></textarea>
         </div>
 
-        <!-- Trend -->
-        <div class="section-group">
-          <div class="section-title">3. Trend Assessment</div>
-          <div class="field-row">
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> 15m trend direction assessed
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> 5m structure aligned
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> 1m trend clear
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> 1m EMAs aligned + fanning
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> HTF wick behaviour at key levels assessed
-            </label>
-          </div>
-          <textarea data-label="Trend notes" placeholder="Trend notes (HTF → LTF interpretation)"></textarea>
+        <div class="field-group">
+          <label for="m1_bias">Previous Sessions Observed / Bias</label>
+          <textarea id="m1_bias" data-key="module1.bias"></textarea>
         </div>
 
-        <!-- Confluence prep -->
-        <div class="section-group">
-          <div class="section-title">4. Confluence Preparation</div>
-          <div class="field-row">
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> Key OBs noted (LTF + HTF)
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> Key FVGs noted
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> EMA confluence zones identified
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> Fib zones (61.8 / 78.6) noted
-            </label>
-          </div>
-          <textarea data-label="Confluence zones" placeholder="Important confluence zones to watch"></textarea>
+        <div class="field-group">
+          <label for="m1_structure">HTF→LTF Structure &amp; Trend</label>
+          <textarea id="m1_structure" data-key="module1.structure"></textarea>
         </div>
 
-        <!-- IF–THEN (collapsible) -->
-        <div class="section-group">
-          <div class="section-title">5. IF–THEN Scenarios</div>
-          <div class="tagline">Click to expand and define your expected scenarios.</div>
-
-          <div class="collapsible">
-            <div class="collapsible-header" data-c-target="ifThenPre">
-              <span>IF–THEN Scenario Builder</span>
-              <span>▼</span>
-            </div>
-            <div class="collapsible-body" id="ifThenPre">
-              <div id="ifThenList"></div>
-              <div class="btn-row">
-                <button type="button" class="small" id="addIfThenBtn">+ Add Scenario</button>
-              </div>
-            </div>
-          </div>
+        <div class="field-group">
+          <label>Confluence Tags (Pre-Market)</label>
+          <div class="tag-input" data-key="module1.confluenceTags"></div>
         </div>
 
-        <!-- Psychological prep -->
-        <div class="section-group">
-          <div class="section-title">6. Psychological Preparation</div>
-          <div class="field-row">
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> Mindset reset
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> Rule review
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" class="discipline-item" /> A-Game reminder
-            </label>
-          </div>
-          <div class="field-row">
-            <label>Baseline Emotion:</label>
-            <select class="input-inline" id="baselineEmotion">
-              <option value="">Select...</option>
-              <option>Neutral</option>
-              <option>Confident</option>
-              <option>Fearful</option>
-              <option>Impatient</option>
-              <option>Angry</option>
-              <option>Distracted</option>
-              <option>Overconfident</option>
-              <option>Tired</option>
-              <option>Excited</option>
+        <div class="field-group">
+          <label for="m1_ifthen">IF–THEN Scenarios (raw)</label>
+          <textarea id="m1_ifthen" data-key="module1.ifthens"></textarea>
+        </div>
+
+        <div class="row">
+          <div class="field-group">
+            <label for="m1_emotion">Session-Start Emotional State</label>
+            <select id="m1_emotion" data-key="module1.emotion">
+              <option value="">– select –</option>
+              <option value="calm">Calm</option>
+              <option value="focused">Focused</option>
+              <option value="hesitant">Hesitant</option>
+              <option value="anxious">Anxious</option>
+              <option value="impatient">Impatient</option>
+              <option value="overconfident">Overconfident</option>
             </select>
           </div>
-          <textarea data-label="Pre-market emotional notes" placeholder="Notes on emotional state before session"></textarea>
+          <div class="field-group">
+            <label for="m1_emotionNotes">Emotion Clarifier</label>
+            <input id="m1_emotionNotes" data-key="module1.emotionNotes" type="text" />
+          </div>
         </div>
 
-        <!-- NY Impulse expectation -->
-        <div class="section-group">
-          <div class="section-title">7. NY Impulse Expectation</div>
-          <textarea data-label="NY impulse expectation" placeholder="Expectation of NY impulse behaviour (optional)"></textarea>
+        <div class="field-group">
+          <label>Expected Entry Models (optional)</label>
+          <div class="tag-input" data-key="module1.expectedEntryModels"></div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <!-- Accordion: During Trading -->
-    <div class="accordion-item">
-      <div class="accordion-header" data-target="duringTrading">
-        <h2>Section 2 – During Trading</h2>
-        <span class="chevron">▶</span>
-      </div>
-      <div class="accordion-body" id="duringTrading">
+      <!-- MODULE 2 — DURING SESSION (GLOBAL) -->
+      <section class="module-card" id="module2">
+        <div class="section-header">
+          <h2>Module 2 — During Session (Global)</h2>
+          <span class="badge">Watching PA + emotions</span>
+        </div>
 
-        <!-- Buttons to add trades / missed trades -->
-        <div class="btn-row">
-          <button type="button" id="addTradeBtn">+ Add Trade</button>
-          <button type="button" class="secondary" id="addMissedTradeBtn">+ Add Missed Trade</button>
+        <div class="field-group">
+          <label for="m2_notes">Global Session Notes</label>
+          <textarea id="m2_notes" data-key="module2.sessionNotes"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Watching Price — Interpretation Tags</label>
+          <div class="tag-input" data-key="module2.watchTags"></div>
+        </div>
+
+        <div class="row">
+          <div class="field-group">
+            <label for="m2_energy">Energy / Focus</label>
+            <select id="m2_energy" data-key="module2.energy">
+              <option value="">– select –</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="m2_energyNotes">Energy Notes</label>
+            <input id="m2_energyNotes" data-key="module2.energyNotes" type="text" />
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 3 — TRADE IDEA LOGIC -->
+      <section class="module-card" id="module3">
+        <div class="section-header">
+          <h2>Module 3 — Trade Idea Logic</h2>
+          <span class="badge">Trades + Missed Trades</span>
+        </div>
+
+        <div class="field-group">
+          <button id="addTrade" class="btn-primary">Add Trade</button>
         </div>
 
         <div id="tradesContainer"></div>
+      </section>
 
-        <div class="separator"></div>
+      <!-- MODULE 4 — POST-MARKET REVIEW -->
+      <section class="module-card" id="module4">
+        <div class="section-header">
+          <h2>Module 4 — Post-Market Review</h2>
+          <span class="badge">Auto + Semi-Auto</span>
+        </div>
 
-        <h3>Missed Trades</h3>
-        <div id="missedTradesContainer"></div>
+        <div class="field-group">
+          <label>Daily Performance (AUTO summary)</label>
+          <textarea id="m4_daily" data-key="module4.dailySummary" readonly></textarea>
+          <p class="subtle">
+            Populated from trades: PNL, R, missed R, missed opps, execution/discipline grades.
+          </p>
+        </div>
 
-        <!-- Mid-session notes (collapsible) -->
-        <div class="section-group">
-          <div class="collapsible">
-            <div class="collapsible-header" data-c-target="midNotes">
-              <span>Mid-Session Notes</span>
-              <span>▼</span>
-            </div>
-            <div class="collapsible-body" id="midNotes">
-              <textarea data-label="Mid-session notes" placeholder="Market behaviour shifts, NY impulse clarity, volatility, emotional shifts..."></textarea>
-            </div>
+        <div class="field-group">
+          <label>Market Behavior (multi-select tags)</label>
+          <div class="tag-input" data-key="module4.marketBehavior"></div>
+        </div>
+
+        <div class="field-group">
+          <label>Psychological Pattern Engine (AUTO)</label>
+          <textarea id="m4_psych" data-key="module4.psychSummary" readonly></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>What Went Well (semi-auto + manual)</label>
+          <textarea id="m4_well" data-key="module4.whatWentWell"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>What Went Wrong (semi-auto + manual)</label>
+          <textarea id="m4_wrong" data-key="module4.whatWentWrong"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Tomorrow’s Adjustments</label>
+          <textarea id="m4_tomorrow" data-key="module4.tomorrow"></textarea>
+        </div>
+
+        <div class="row">
+          <div class="field-group">
+            <label for="m4_grade">Daily Grade</label>
+            <select id="m4_grade" data-key="module4.grade">
+              <option value="">– select –</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
           </div>
         </div>
 
-      </div>
+        <button id="recomputePostMarket" class="btn-primary">Recompute Post-Market (V1)</button>
+      </section>
     </div>
-
-    <!-- Accordion: Post-Market -->
-    <div class="accordion-item">
-      <div class="accordion-header" data-target="postMarket">
-        <h2>Section 3 – Post-Market Review</h2>
-        <span class="chevron">▶</span>
-      </div>
-      <div class="accordion-body" id="postMarket">
-
-        <!-- Overall scores -->
-        <div class="section-group">
-          <div class="section-title">1. Overall Scores</div>
-          <button type="button" class="small" id="calcScoresBtn">Recalculate Scores</button>
-          <div class="score-box">
-            <div class="score-card">
-              <div class="score-card-title">Discipline Score</div>
-              <div class="score-value" id="disciplineScore">–</div>
-            </div>
-            <div class="score-card">
-              <div class="score-card-title">Execution Score</div>
-              <div class="score-value" id="executionScore">–</div>
-            </div>
-            <div class="score-card">
-              <div class="score-card-title">Emotional Stability</div>
-              <div class="score-value" id="emotionalScore">–</div>
-            </div>
-            <div class="score-card">
-              <div class="score-card-title">Process Integrity</div>
-              <div class="score-value" id="processScore">–</div>
-            </div>
-          </div>
-
-          <div class="score-card">
-            <div class="score-card-title">Overall Session Rating</div>
-            <div class="score-value" id="overallRatingText">–</div>
-            <div class="rating-badge" id="overallRatingBadge">No rating yet</div>
-          </div>
-        </div>
-
-        <!-- Session summary -->
-        <div class="section-group">
-          <div class="section-title">2. Session Summary</div>
-          <textarea data-label="Session summary" placeholder="Type of day, did the market behave as expected, IF–THEN outcomes, NY impulse vs bias, etc."></textarea>
-        </div>
-
-        <!-- Emotional review -->
-        <div class="section-group">
-          <div class="section-title">3. Emotional Review</div>
-          <textarea data-label="Emotional review" placeholder="Dominant emotions, influence on actions, what triggered negative/positive states, etc."></textarea>
-        </div>
-
-        <!-- Behaviour patterns -->
-        <div class="section-group">
-          <div class="section-title">4. Behaviour Patterns</div>
-          <textarea data-label="Behaviour patterns" placeholder="What behaviour pattern repeated? What did you successfully stop?"></textarea>
-        </div>
-
-        <!-- Process review -->
-        <div class="section-group">
-          <div class="section-title">5. Process Review</div>
-          <textarea data-label="Process review" placeholder="What did I do well? What must I improve tomorrow? 3 mistakes to avoid, 3 actions to repeat."></textarea>
-        </div>
-
-        <!-- Tomorrow -->
-        <div class="section-group">
-          <div class="section-title">6. Focus for Tomorrow</div>
-          <textarea data-label="Focus for tomorrow" placeholder="Tomorrow's single main focus."></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom controls -->
-    <div class="btn-row">
-      <button type="button" id="exportPdfBtn">Export PDF</button>
-    </div>
-  </div>
-
-  <!-- Undo bar -->
-  <div id="undoBar">
-    <span id="undoMessage">Item deleted.</span>
-    <button type="button" class="secondary small" id="undoButton">Undo</button>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // ----- Undo system -----
-      const undoBar = document.getElementById("undoBar");
-      const undoButton = document.getElementById("undoButton");
-      let lastDeleted = null;
-      let undoTimeout = null;
+    // ---------- STATE & AUTOSAVE ----------
+    const STORAGE_KEY = "trading_sop_v1_state";
 
-      function showUndo(element, parent, nextSibling) {
-        if (undoTimeout) clearTimeout(undoTimeout);
-        lastDeleted = { element, parent, nextSibling };
-        undoBar.style.display = "flex";
+    function getInitialState() {
+      return {
+        module1: {
+          levels: "",
+          bias: "",
+          structure: "",
+          confluenceTags: [],
+          ifthens: "",
+          emotion: "",
+          emotionNotes: "",
+          expectedEntryModels: []
+        },
+        module2: {
+          sessionNotes: "",
+          watchTags: [],
+          energy: "",
+          energyNotes: ""
+        },
+        module3: {
+          trades: [] // array of trade objects
+        },
+        module4: {
+          dailySummary: "",
+          marketBehavior: [],
+          psychSummary: "",
+          whatWentWell: "",
+          whatWentWrong: "",
+          tomorrow: "",
+          grade: ""
+        }
+      };
+    }
 
-        undoTimeout = setTimeout(() => {
-          lastDeleted = null;
-          undoBar.style.display = "none";
-        }, 5000);
+    let appState = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return getInitialState();
+        return { ...getInitialState(), ...JSON.parse(raw) };
+      } catch (e) {
+        console.error("Failed to load state:", e);
+        return getInitialState();
       }
+    }
 
-      undoButton.addEventListener("click", () => {
-        if (!lastDeleted) return;
-        const { element, parent, nextSibling } = lastDeleted;
-        if (nextSibling && parent.contains(nextSibling)) {
-          parent.insertBefore(element, nextSibling);
-        } else {
-          parent.appendChild(element);
-        }
-        lastDeleted = null;
-        undoBar.style.display = "none";
-        if (undoTimeout) clearTimeout(undoTimeout);
-      });
-
-      function deleteWithUndo(block) {
-        const parent = block.parentNode;
-        const nextSibling = block.nextSibling;
-        parent.removeChild(block);
-        showUndo(block, parent, nextSibling);
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        setSaveStatus("Saved");
+      } catch (e) {
+        console.error("Failed to save state:", e);
+        setSaveStatus("Save error");
       }
-
-      // ----- Accordion behaviour -----
-      document.querySelectorAll(".accordion-header").forEach(header => {
-        header.addEventListener("click", () => {
-          const targetId = header.getAttribute("data-target");
-          if (!targetId) return;
-          const body = document.getElementById(targetId);
-          const isOpen = body.classList.contains("open");
-          if (isOpen) {
-            body.classList.remove("open");
-            header.classList.remove("open");
-          } else {
-            body.classList.add("open");
-            header.classList.add("open");
-          }
-        });
-      });
-
-      // ----- Collapsibles -----
-      document.querySelectorAll(".collapsible-header").forEach(ch => {
-        ch.addEventListener("click", () => {
-          const target = ch.getAttribute("data-c-target");
-          if (!target) return;
-          const body = document.getElementById(target);
-          body.classList.toggle("open");
-        });
-      });
-
-      // ----- IF–THEN builder -----
-      const ifThenList = document.getElementById("ifThenList");
-      const addIfThenBtn = document.getElementById("addIfThenBtn");
-
-      addIfThenBtn.addEventListener("click", () => {
-        const idx = ifThenList.children.length + 1;
-        const wrapper = document.createElement("div");
-        wrapper.style.marginBottom = "6px";
-        wrapper.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-            <label style="font-size:12px;">Scenario ${idx}</label>
-            <button type="button" class="small secondary ifthen-delete">Delete</button>
-          </div>
-          <textarea class="ifthen-scenario" placeholder="IF ... THEN ..."></textarea>
-        `;
-        ifThenList.appendChild(wrapper);
-
-        const delBtn = wrapper.querySelector(".ifthen-delete");
-        delBtn.addEventListener("click", () => deleteWithUndo(wrapper));
-      });
-
-      // ----- Trade & missed trade blocks -----
-      const tradesContainer = document.getElementById("tradesContainer");
-      const missedTradesContainer = document.getElementById("missedTradesContainer");
-      const addTradeBtn = document.getElementById("addTradeBtn");
-      const addMissedTradeBtn = document.getElementById("addMissedTradeBtn");
-
-      let tradeCounter = 0;
-      let missedTradeCounter = 0;
-
-      addTradeBtn.addEventListener("click", () => {
-        tradeCounter++;
-        const block = document.createElement("div");
-        block.className = "section-group";
-        block.dataset.tradeBlock = "1";
-
-        block.innerHTML = `
-          <div class="field-row" style="justify-content:space-between; align-items:center;">
-            <div class="section-title">Trade ${tradeCounter}</div>
-            <button type="button" class="small secondary delete-trade">Delete</button>
-          </div>
-
-          <div class="field-row">
-            <label>Trade ID:<input type="text" class="input-inline trade-id" /></label>
-            <label>Instrument:<input type="text" class="input-inline trade-instrument" /></label>
-            <label>Date:<input type="date" class="input-inline trade-date" /></label>
-            <label>Session:
-              <select class="input-inline trade-session">
-                <option></option>
-                <option>Pre-NY</option>
-                <option>NY Open</option>
-                <option>NY Continuation</option>
-                <option>NY PM</option>
-              </select>
-            </label>
-            <label>Direction:
-              <select class="input-inline trade-direction">
-                <option></option>
-                <option>Long</option>
-                <option>Short</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="field-row">
-            <label class="input-inline">Entry Type:
-              <input type="text" class="trade-entry-type" placeholder="Pattern + setup description" />
-            </label>
-          </div>
-
-          <div class="section-title">Trade Result Summary</div>
-          <div class="field-row">
-            <label>Result:
-              <select class="input-inline trade-result">
-                <option></option>
-                <option>Win</option>
-                <option>Loss</option>
-                <option>BE</option>
-                <option>Scratch</option>
-              </select>
-            </label>
-            <label>PnL:
-              <input type="number" step="0.01" class="input-inline trade-pnl" placeholder="+/-$" />
-            </label>
-            <label>R Multiple:
-              <input type="number" step="0.1" class="input-inline trade-rr" placeholder="R" />
-            </label>
-            <label>Execution Score (0–5):
-              <input type="number" min="0" max="5" step="0.1" class="input-inline execution-score" />
-            </label>
-          </div>
-
-          <div class="section-title">Pre-Trade Plan & Narrative</div>
-          <textarea class="trade-narrative" placeholder="Bias, HTF context, expectations, invalidations, confirmations..."></textarea>
-
-          <div class="section-title">Entry Setup & Technical Details</div>
-          <div class="field-row">
-            <label>Entry Price:<input type="number" step="0.01" class="input-inline trade-entry-price" /></label>
-            <label>SL:<input type="number" step="0.01" class="input-inline trade-sl" /></label>
-            <label>Lot Size:<input type="number" step="0.01" class="input-inline trade-size" /></label>
-            <label>$ Risk:<input type="number" step="0.01" class="input-inline trade-risk" /></label>
-            <label>Exit Price:<input type="number" step="0.01" class="input-inline trade-exit-price" /></label>
-          </div>
-          <textarea class="trade-structure-notes" placeholder="Structure, HTF factors, additional notes..."></textarea>
-
-          <div class="section-title">Add-On Position (optional)</div>
-          <label class="checkbox-inline">
-            <input type="checkbox" class="addon-toggle" /> Add-on position used
-          </label>
-          <div class="addon-fields" style="display:none; margin-top:6px;">
-            <div class="field-row">
-              <label>Add-On Entry Price:<input type="number" step="0.01" class="input-inline addon-entry-price" /></label>
-              <label>Add-On Risk Model:<input type="text" class="input-inline addon-risk-model" /></label>
-            </div>
-            <textarea class="addon-notes" placeholder="Add-on reason, confluence, result..."></textarea>
-          </div>
-
-          <div class="section-title">Risk Model</div>
-          <div class="field-row">
-            <label class="pill-label">
-              <input type="radio" name="risk-${tradeCounter}" value="Lowest Risk" /> Lowest Risk
-            </label>
-            <label class="pill-label">
-              <input type="radio" name="risk-${tradeCounter}" value="Mid Risk" /> Mid Risk
-            </label>
-            <label class="pill-label">
-              <input type="radio" name="risk-${tradeCounter}" value="High Risk" /> High Risk
-            </label>
-            <label class="pill-label">
-              <input type="radio" name="risk-${tradeCounter}" value="Full Risk" /> Full Risk
-            </label>
-          </div>
-          <textarea class="risk-notes" placeholder="Reason for chosen risk model"></textarea>
-
-          <div class="collapsible" style="margin-top:10px;">
-            <div class="collapsible-header" data-c-target="conf-${tradeCounter}">
-              <span>Confluence Stack</span><span>▼</span>
-            </div>
-            <div class="collapsible-body" id="conf-${tradeCounter}">
-              <div class="section-title">Reversal Confluences</div>
-              <div class="chips-row">
-                ${
-                  [
-                    "M1 CHoCH opposite direction",
-                    "M1 RSI divergence",
-                    "Sharp displacement from level",
-                    "M1 Order Block",
-                    "M1 FVG",
-                    "M5 Order Block",
-                    "M5 FVG",
-                    "15m wick rejection",
-                    "1H wick rejection",
-                    "HTF OB",
-                    "HTF FVG",
-                    "5m range alignment",
-                    "EMA interaction"
-                  ].map(label => `
-                  <label class="pill-label">
-                    <input type="checkbox" class="conf-flag" /> ${label}
-                  </label>
-                `).join("")
-                }
-              </div>
-
-              <div class="section-title">Break + Retest Confluences</div>
-              <div class="chips-row">
-                ${
-                  [
-                    "Fast break + instant retest",
-                    "Normal retest",
-                    "Later retest after travel",
-                    "5m strategy alignment",
-                    "EMA supports retest"
-                  ].map(label => `
-                  <label class="pill-label">
-                    <input type="checkbox" class="conf-flag" /> ${label}
-                  </label>
-                `).join("")
-                }
-              </div>
-
-              <div class="section-title">Pullback Continuation Confluences</div>
-              <div class="chips-row">
-                ${
-                  [
-                    "Impulse established",
-                    "Deep pullback",
-                    "Key level tagged",
-                    "200 EMA confluence",
-                    "50 EMA confluence",
-                    "M1 overbought/oversold",
-                    "Fib 61.8",
-                    "Fib 78.6",
-                    "Trend intact",
-                    "NY impulse intact"
-                  ].map(label => `
-                  <label class="pill-label">
-                    <input type="checkbox" class="conf-flag" /> ${label}
-                  </label>
-                `).join("")
-                }
-              </div>
-
-              <textarea class="confluence-notes" placeholder="Additional confluence notes"></textarea>
-            </div>
-          </div>
-
-          <div class="collapsible" style="margin-top:10px;">
-            <div class="collapsible-header" data-c-target="ifthen-${tradeCounter}">
-              <span>IF–THEN Tagging</span><span>▼</span>
-            </div>
-            <div class="collapsible-body" id="ifthen-${tradeCounter}">
-              <p class="tagline">Tick which of your pre-market scenarios this trade followed.</p>
-              <div class="ifthen-tags"></div>
-              <textarea class="ifthen-notes" placeholder="Notes on how IF–THEN applied"></textarea>
-            </div>
-          </div>
-
-          <div class="collapsible" style="margin-top:10px;">
-            <div class="collapsible-header" data-c-target="emo-${tradeCounter}">
-              <span>Emotional Tagging</span><span>▼</span>
-            </div>
-            <div class="collapsible-body" id="emo-${tradeCounter}">
-              <div class="section-title">Main Emotional State</div>
-              <select class="input-inline main-emotion">
-                <option></option>
-                <option>Neutral</option>
-                <option>Confident</option>
-                <option>Fearful</option>
-                <option>Impatient</option>
-                <option>Angry</option>
-                <option>Distracted</option>
-                <option>Overconfident</option>
-                <option>Tired</option>
-                <option>Excited</option>
-              </select>
-
-              <div class="section-title" style="margin-top:6px;">Secondary Emotions</div>
-              <div class="chips-row">
-                ${
-                  [
-                    "Fear","Frustration","FOMO","Overconfidence","Hesitation",
-                    "Tilt","Revenge urge","Impatience","Doubt","Distraction","Euphoria"
-                  ].map(label => `
-                  <label class="pill-label">
-                    <input type="checkbox" class="emotion-flag" /> ${label}
-                  </label>
-                `).join("")
-                }
-              </div>
-
-              <textarea class="emotion-notes" placeholder="Emotional notes during / after trade"></textarea>
-
-              <div class="section-title" style="margin-top:8px;">Behaviour Escalation (if any)</div>
-              <textarea class="escalation-trigger" placeholder="Trigger"></textarea>
-              <textarea class="escalation-thought" placeholder="Emotional thought"></textarea>
-              <textarea class="escalation-action" placeholder="Impulsive action"></textarea>
-              <textarea class="escalation-consequence" placeholder="Consequence"></textarea>
-
-              <div class="section-title" style="margin-top:8px;">Reset Protocol (if escalated)</div>
-              <div class="chips-row">
-                ${
-                  [
-                    "Step away","Identify root cause","Read rules",
-                    "Take corrective action","Resume at baseline"
-                  ].map(label => `
-                  <label class="pill-label">
-                    <input type="checkbox" class="reset-flag" /> ${label}
-                  </label>
-                `).join("")
-                }
-              </div>
-            </div>
-          </div>
-
-          <div class="section-title" style="margin-top:8px;">What You Did Right</div>
-          <textarea class="did-right" placeholder="Reinforce correct behaviour"></textarea>
-
-          <div class="section-title" style="margin-top:8px;">What You Did Wrong</div>
-          <textarea class="did-wrong" placeholder="Own the mistakes clearly"></textarea>
-
-          <div class="section-title" style="margin-top:8px;">Screenshot</div>
-          <div class="screenshot-input">
-            Paste an image (Ctrl+V) into the notes or upload a file below.
-          </div>
-          <input type="file" accept="image/*" class="trade-screenshot" />
-
-          <div class="section-title" style="margin-top:8px;">Result Notes</div>
-          <textarea class="result-notes" placeholder="Extra comments about outcome and management..."></textarea>
-        `;
-
-        tradesContainer.appendChild(block);
-
-        // delete button
-        block.querySelector(".delete-trade").addEventListener("click", () => deleteWithUndo(block));
-
-        // addon toggle
-        const addonToggle = block.querySelector(".addon-toggle");
-        const addonFields = block.querySelector(".addon-fields");
-        addonToggle.addEventListener("change", () => {
-          addonFields.style.display = addonToggle.checked ? "block" : "none";
-        });
-
-        // collapsible inside trade
-        block.querySelectorAll(".collapsible-header").forEach(ch => {
-          ch.addEventListener("click", () => {
-            const target = ch.getAttribute("data-c-target");
-            const body = document.getElementById(target);
-            body.classList.toggle("open");
-          });
-        });
-
-        // IF–THEN tags snapshot
-        const ifthenTagsContainer = block.querySelector(".ifthen-tags");
-        const currentScenarios = document.querySelectorAll(".ifthen-scenario");
-        ifthenTagsContainer.innerHTML = "";
-        currentScenarios.forEach((sc, idx) => {
-          const text = sc.value.trim() || `Scenario ${idx + 1}`;
-          const lbl = document.createElement("label");
-          lbl.className = "pill-label";
-          lbl.innerHTML = `<input type="checkbox" /> ${text}`;
-          ifthenTagsContainer.appendChild(lbl);
-        });
-      });
-
-      addMissedTradeBtn.addEventListener("click", () => {
-        missedTradeCounter++;
-        const block = document.createElement("div");
-        block.className = "section-group";
-        block.dataset.missedBlock = "1";
-        block.innerHTML = `
-          <div class="field-row" style="justify-content:space-between; align-items:center;">
-            <div class="section-title">Missed Trade ${missedTradeCounter}</div>
-            <button type="button" class="small secondary delete-missed">Delete</button>
-          </div>
-          <div class="field-row">
-            <label>Missed Trade ID:<input type="text" class="input-inline missed-id" /></label>
-            <label>Setup Category:
-              <select class="input-inline missed-category">
-                <option></option>
-                <option>Reversal at Level</option>
-                <option>Break + Retest</option>
-                <option>Pullback Continuation</option>
-              </select>
-            </label>
-          </div>
-          <div class="field-row">
-            <label>R-Multiples Missed:
-              <input type="number" step="0.1" class="input-inline missed-r" />
-            </label>
-          </div>
-          <textarea class="missed-reason" placeholder="Reason you missed it (valid or emotional, timing, uncertainty, etc.)"></textarea>
-
-          <div class="section-title" style="margin-top:8px;">Emotional State</div>
-          <select class="input-inline missed-emotion">
-            <option></option>
-            <option>Neutral</option>
-            <option>Confident</option>
-            <option>Fearful</option>
-            <option>Impatient</option>
-            <option>Angry</option>
-            <option>Distracted</option>
-            <option>Overconfident</option>
-            <option>Tired</option>
-            <option>Excited</option>
-          </select>
-
-          <div class="section-title" style="margin-top:8px;">IF–THEN Tagging</div>
-          <div class="chips-row missed-ifthen-tags">
-            ${
-              Array.from(document.querySelectorAll(".ifthen-scenario"))
-                .map((sc, idx) => {
-                  const text = sc.value.trim() || `Scenario ${idx + 1}`;
-                  return `
-                    <label class="pill-label">
-                      <input type="checkbox" /> ${text}
-                    </label>`;
-                }).join("")
-            }
-          </div>
-
-          <div class="section-title" style="margin-top:8px;">Screenshot</div>
-          <div class="screenshot-input">
-            Paste chart into notes or upload a file:
-          </div>
-          <input type="file" accept="image/*" class="missed-screenshot" />
-
-          <div class="section-title" style="margin-top:8px;">Valid vs Emotional Miss</div>
-          <div class="chips-row">
-            <label class="pill-label"><input type="radio" name="miss-type-${missedTradeCounter}" value="Valid Miss" /> Valid Miss</label>
-            <label class="pill-label"><input type="radio" name="miss-type-${missedTradeCounter}" value="Emotional Miss" /> Emotional Miss</label>
-          </div>
-
-          <div class="section-title" style="margin-top:8px;">Lesson</div>
-          <textarea class="missed-lesson" placeholder="How to avoid missing this type of trade next time."></textarea>
-        `;
-        missedTradesContainer.appendChild(block);
-
-        block.querySelector(".delete-missed").addEventListener("click", () => deleteWithUndo(block));
-      });
-
-      // ----- Score calculation -----
-      const calcScoresBtn = document.getElementById("calcScoresBtn");
-
-      function computeAndRenderScores() {
-        const disciplineCheckboxes = document.querySelectorAll(".discipline-item");
-        let totalDisc = disciplineCheckboxes.length;
-        let tickedDisc = 0;
-        disciplineCheckboxes.forEach(cb => { if (cb.checked) tickedDisc++; });
-        const disciplineScore = totalDisc > 0 ? Math.round(100 * tickedDisc / totalDisc) : 100;
-
-        const execInputs = document.querySelectorAll(".execution-score");
-        let execSum = 0, execCount = 0;
-        execInputs.forEach(inp => {
-          const v = parseFloat(inp.value);
-          if (!isNaN(v)) { execSum += v; execCount++; }
-        });
-        const execScore = execCount > 0 ? Math.round(20 * (execSum / execCount)) : 100;
-
-        const tradeBlocks = document.querySelectorAll("[data-trade-block='1']");
-        let escalationCount = 0;
-        tradeBlocks.forEach(tb => {
-          const escTrig = tb.querySelector(".escalation-trigger");
-          const escThought = tb.querySelector(".escalation-thought");
-          const escAction = tb.querySelector(".escalation-action");
-          const escCons = tb.querySelector(".escalation-consequence");
-          const hasEsc = [escTrig, escThought, escAction, escCons].some(
-            el => el && el.value.trim().length > 0
-          );
-          if (hasEsc) escalationCount++;
-        });
-        let emotionalScore = 100;
-        if (tradeBlocks.length > 0) {
-          const ratio = escalationCount / tradeBlocks.length;
-          emotionalScore = Math.max(0, Math.round(100 - ratio * 70));
-        }
-
-        let tradesWithIfThen = 0;
-        tradeBlocks.forEach(tb => {
-          const ifThenBox = tb.querySelector(".ifthen-tags");
-          if (!ifThenBox) return;
-          const checkboxes = ifThenBox.querySelectorAll("input[type='checkbox']");
-          let any = false;
-          checkboxes.forEach(cb => { if (cb.checked) any = true; });
-          if (any) tradesWithIfThen++;
-        });
-        const processScore = tradeBlocks.length > 0
-          ? Math.round(100 * tradesWithIfThen / tradeBlocks.length)
-          : 100;
-
-        // Render
-        document.getElementById("disciplineScore").textContent = disciplineScore + "%";
-        document.getElementById("executionScore").textContent = execScore + "%";
-        document.getElementById("emotionalScore").textContent = emotionalScore + "%";
-        document.getElementById("processScore").textContent = processScore + "%";
-
-        const overall = Math.round((disciplineScore + execScore + emotionalScore + processScore) / 4);
-        const ratingTextEl = document.getElementById("overallRatingText");
-        const ratingBadgeEl = document.getElementById("overallRatingBadge");
-
-        let label = "Undefined";
-        if (overall >= 90) label = "A – Elite";
-        else if (overall >= 80) label = "B – Professional";
-        else if (overall >= 70) label = "C – Stable";
-        else if (overall >= 60) label = "D – Inconsistent";
-        else label = "F – Tilted";
-
-        ratingTextEl.textContent = overall + "%";
-        ratingBadgeEl.textContent = label;
-
-        return { disciplineScore, execScore, emotionalScore, processScore, overall, label };
-      }
-
-      calcScoresBtn.addEventListener("click", computeAndRenderScores);
-
-      // ----- PDF Export (structured, summary only) -----
-      const exportPdfBtn = document.getElementById("exportPdfBtn");
-
-      exportPdfBtn.addEventListener("click", () => {
-        // Compute scores first
-        const scores = computeAndRenderScores();
-
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF("p", "pt", "a4");
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const marginLeft = 40;
-        const maxWidth = pageWidth - marginLeft * 2;
-        let y = 40;
-
-        function addLine(text, options = {}) {
-          if (!text || !text.trim()) return;
-          const fontSize = options.fontSize || 10;
-          const indent = options.indent || 0;
-          pdf.setFontSize(fontSize);
-          const lines = pdf.splitTextToSize(text, maxWidth - indent);
-          lines.forEach(line => {
-            if (y > 780) {
-              pdf.addPage();
-              y = 40;
-            }
-            pdf.text(line, marginLeft + indent, y);
-            y += fontSize + 2;
-          });
-        }
-
-        function addSection(title) {
-          if (y > 760) {
-            pdf.addPage();
-            y = 40;
-          }
-          pdf.setFontSize(12);
-          pdf.setFont(undefined, "bold");
-          pdf.text(title, marginLeft, y);
-          y += 14;
-          pdf.setFont(undefined, "normal");
-        }
-
-        // Header
-        pdf.setFontSize(16);
-        pdf.setFont(undefined, "bold");
-        pdf.text("Daily Trading SOP – Session Report", marginLeft, y);
-        y += 20;
-        pdf.setFont(undefined, "normal");
-
-        const today = new Date().toISOString().slice(0, 10);
-
-        const tradeBlocks = document.querySelectorAll("[data-trade-block='1']");
-        const missedBlocks = document.querySelectorAll("[data-missed-block='1']");
-
-        const firstTrade = tradeBlocks[0];
-        const headerInstrument = firstTrade ? firstTrade.querySelector(".trade-instrument")?.value || "" : "";
-        const headerSession = firstTrade ? firstTrade.querySelector(".trade-session")?.value || "" : "";
-        const headerDate = firstTrade ? firstTrade.querySelector(".trade-date")?.value || today : today;
-
-        addLine(`Date: ${headerDate}   Instrument: ${headerInstrument || "N/A"}   Session: ${headerSession || "N/A"}`);
-        addLine(`Total Trades: ${tradeBlocks.length}   Missed Trades: ${missedBlocks.length}`);
-        addLine(`Scores – Discipline: ${scores.disciplineScore}%, Execution: ${scores.execScore}%, Emotional: ${scores.emotionalScore}%, Process: ${scores.processScore}%`);
-        addLine(`Overall Rating: ${scores.overall}% (${scores.label})`);
-        y += 6;
-
-        // Pre-Market Summary
-        addSection("Pre-Market Summary");
-
-        const preMarket = document.getElementById("preMarket");
-        const preTextareas = preMarket.querySelectorAll("textarea[data-label]");
-        preTextareas.forEach(t => {
-          const val = t.value.trim();
-          if (val) {
-            addLine(`${t.dataset.label}:`, { fontSize: 10 });
-            addLine(val, { indent: 10 });
-          }
-        });
-
-        const baselineEmotion = document.getElementById("baselineEmotion").value;
-        if (baselineEmotion) {
-          addLine(`Baseline emotion: ${baselineEmotion}`, { fontSize: 10 });
-        }
-
-        // IF–THEN scenarios
-        const scenarios = document.querySelectorAll(".ifthen-scenario");
-        const scenarioLines = [];
-        scenarios.forEach((sc, idx) => {
-          const v = sc.value.trim();
-          if (v) scenarioLines.push(`Scenario ${idx + 1}: ${v}`);
-        });
-        if (scenarioLines.length) {
-          addLine("IF–THEN Scenarios:", { fontSize: 10 });
-          scenarioLines.forEach(s => addLine("• " + s, { indent: 10 }));
-        }
-
-        // Trades Summary
-        if (tradeBlocks.length) {
-          y += 6;
-          addSection("Trades");
-
-          tradeBlocks.forEach((tb, index) => {
-            const id = tb.querySelector(".trade-id")?.value.trim();
-            const instrument = tb.querySelector(".trade-instrument")?.value.trim();
-            const date = tb.querySelector(".trade-date")?.value.trim();
-            const session = tb.querySelector(".trade-session")?.value;
-            const direction = tb.querySelector(".trade-direction")?.value;
-            const entryType = tb.querySelector(".trade-entry-type")?.value.trim();
-            const result = tb.querySelector(".trade-result")?.value;
-            const pnl = tb.querySelector(".trade-pnl")?.value;
-            const rr = tb.querySelector(".trade-rr")?.value;
-            const exec = tb.querySelector(".execution-score")?.value;
-
-            const entryPrice = tb.querySelector(".trade-entry-price")?.value;
-            const sl = tb.querySelector(".trade-sl")?.value;
-            const size = tb.querySelector(".trade-size")?.value;
-            const risk = tb.querySelector(".trade-risk")?.value;
-            const exitPrice = tb.querySelector(".trade-exit-price")?.value;
-
-            const narrative = tb.querySelector(".trade-narrative")?.value.trim();
-            const structureNotes = tb.querySelector(".trade-structure-notes")?.value.trim();
-            const riskNotes = tb.querySelector(".risk-notes")?.value.trim();
-
-            const addonUsed = tb.querySelector(".addon-toggle")?.checked;
-            const addonEntry = tb.querySelector(".addon-entry-price")?.value;
-            const addonModel = tb.querySelector(".addon-risk-model")?.value.trim();
-            const addonNotes = tb.querySelector(".addon-notes")?.value.trim();
-
-            const mainEmotion = tb.querySelector(".main-emotion")?.value;
-            const emotionFlags = Array.from(tb.querySelectorAll(".emotion-flag:checked")).map(el => el.parentElement.textContent.trim());
-            const emotionNotes = tb.querySelector(".emotion-notes")?.value.trim();
-
-            const escTrig = tb.querySelector(".escalation-trigger")?.value.trim();
-            const escThought = tb.querySelector(".escalation-thought")?.value.trim();
-            const escAction = tb.querySelector(".escalation-action")?.value.trim();
-            const escCons = tb.querySelector(".escalation-consequence")?.value.trim();
-            const resetFlags = Array.from(tb.querySelectorAll(".reset-flag:checked")).map(el => el.parentElement.textContent.trim());
-
-            const didRight = tb.querySelector(".did-right")?.value.trim();
-            const didWrong = tb.querySelector(".did-wrong")?.value.trim();
-            const resultNotes = tb.querySelector(".result-notes")?.value.trim();
-
-            const riskRadio = tb.querySelector("input[name='risk-" + (index + 1) + "']:checked");
-            const riskModel = riskRadio ? riskRadio.value : "";
-
-            const confFlags = Array.from(tb.querySelectorAll(".conf-flag:checked")).map(el => el.parentElement.textContent.trim());
-            const confNotes = tb.querySelector(".confluence-notes")?.value.trim();
-
-            const ifthenTagsBox = tb.querySelector(".ifthen-tags");
-            const ifthenChecked = ifthenTagsBox
-              ? Array.from(ifthenTagsBox.querySelectorAll("input[type='checkbox']:checked")).map(cb => cb.parentElement.textContent.trim())
-              : [];
-            const ifthenNotes = tb.querySelector(".ifthen-notes")?.value.trim();
-
-            // Only include trade if it has at least ID or result or narrative
-            const hasContent = id || result || narrative || didRight || didWrong;
-            if (!hasContent) return;
-
-            addLine(`Trade ${index + 1}${id ? " – ID: " + id : ""}`, { fontSize: 11 });
-            const headerParts = [];
-            if (instrument) headerParts.push(`Instrument: ${instrument}`);
-            if (date) headerParts.push(`Date: ${date}`);
-            if (session) headerParts.push(`Session: ${session}`);
-            if (direction) headerParts.push(`Direction: ${direction}`);
-            if (entryType) headerParts.push(`Entry: ${entryType}`);
-            if (headerParts.length) addLine(headerParts.join("   "), { indent: 10 });
-
-            const resultParts = [];
-            if (result) resultParts.push(`Result: ${result}`);
-            if (pnl) resultParts.push(`PnL: ${pnl}`);
-            if (rr) resultParts.push(`R: ${rr}`);
-            if (exec) resultParts.push(`Exec: ${exec}/5`);
-            if (resultParts.length) addLine(resultParts.join("   "), { indent: 10 });
-
-            const priceLineParts = [];
-            if (entryPrice) priceLineParts.push(`Entry: ${entryPrice}`);
-            if (sl) priceLineParts.push(`SL: ${sl}`);
-            if (exitPrice) priceLineParts.push(`Exit: ${exitPrice}`);
-            if (size) priceLineParts.push(`Size: ${size}`);
-            if (risk) priceLineParts.push(`$Risk: ${risk}`);
-            if (priceLineParts.length) addLine(priceLineParts.join("   "), { indent: 10 });
-
-            if (riskModel || riskNotes) {
-              let txt = riskModel ? `Risk model: ${riskModel}` : "Risk model:";
-              if (riskNotes) txt += ` – ${riskNotes}`;
-              addLine(txt, { indent: 10 });
-            }
-
-            if (addonUsed && (addonEntry || addonModel || addonNotes)) {
-              let txt = "Add-on: ";
-              const bits = [];
-              if (addonEntry) bits.push(`Entry ${addonEntry}`);
-              if (addonModel) bits.push(addonModel);
-              if (addonNotes) bits.push(addonNotes);
-              txt += bits.join(" | ");
-              addLine(txt, { indent: 10 });
-            }
-
-            if (confFlags.length || confNotes) {
-              addLine("Confluence:", { indent: 10 });
-              if (confFlags.length) addLine("• " + confFlags.join(", "), { indent: 18 });
-              if (confNotes) addLine(confNotes, { indent: 18 });
-            }
-
-            if (ifthenChecked.length || ifthenNotes) {
-              addLine("IF–THEN:", { indent: 10 });
-              if (ifthenChecked.length) addLine("Matched: " + ifthenChecked.join(", "), { indent: 18 });
-              if (ifthenNotes) addLine(ifthenNotes, { indent: 18 });
-            }
-
-            if (mainEmotion || emotionFlags.length || emotionNotes) {
-              addLine("Emotions:", { indent: 10 });
-              const emoParts = [];
-              if (mainEmotion) emoParts.push(`Main: ${mainEmotion}`);
-              if (emotionFlags.length) emoParts.push(`Flags: ${emotionFlags.join(", ")}`);
-              if (emoParts.length) addLine(emoParts.join("   "), { indent: 18 });
-              if (emotionNotes) addLine(emotionNotes, { indent: 18 });
-            }
-
-            if (escTrig || escThought || escAction || escCons || resetFlags.length) {
-              addLine("Behaviour Escalation:", { indent: 10 });
-              if (escTrig) addLine("Trigger: " + escTrig, { indent: 18 });
-              if (escThought) addLine("Thought: " + escThought, { indent: 18 });
-              if (escAction) addLine("Action: " + escAction, { indent: 18 });
-              if (escCons) addLine("Consequence: " + escCons, { indent: 18 });
-              if (resetFlags.length) addLine("Reset steps: " + resetFlags.join(", "), { indent: 18 });
-            }
-
-            if (didRight) {
-              addLine("Did well:", { indent: 10 });
-              addLine(didRight, { indent: 18 });
-            }
-
-            if (didWrong) {
-              addLine("Did wrong:", { indent: 10 });
-              addLine(didWrong, { indent: 18 });
-            }
-
-            if (resultNotes) {
-              addLine("Result notes:", { indent: 10 });
-              addLine(resultNotes, { indent: 18 });
-            }
-
-            y += 4;
-          });
-        }
-
-        // Missed trades
-        if (missedBlocks.length) {
-          y += 6;
-          addSection("Missed Trades");
-
-          missedBlocks.forEach((mb, index) => {
-            const id = mb.querySelector(".missed-id")?.value.trim();
-            const category = mb.querySelector(".missed-category")?.value;
-            const rMissed = mb.querySelector(".missed-r")?.value;
-            const reason = mb.querySelector(".missed-reason")?.value.trim();
-            const emo = mb.querySelector(".missed-emotion")?.value;
-            const lesson = mb.querySelector(".missed-lesson")?.value.trim();
-            const ifthenTags = Array.from(mb.querySelectorAll(".missed-ifthen-tags input[type='checkbox']:checked"))
-              .map(cb => cb.parentElement.textContent.trim());
-            const missTypeRadio = mb.querySelector("input[type='radio']:checked");
-            const missType = missTypeRadio ? missTypeRadio.value : "";
-
-            const hasContent = id || category || rMissed || reason || lesson;
-            if (!hasContent) return;
-
-            addLine(`Missed Trade ${index + 1}${id ? " – ID: " + id : ""}`, { fontSize: 11 });
-            const meta = [];
-            if (category) meta.push(`Category: ${category}`);
-            if (rMissed) meta.push(`R Missed: ${rMissed}`);
-            if (missType) meta.push(missType);
-            if (emo) meta.push(`Emotion: ${emo}`);
-            if (meta.length) addLine(meta.join("   "), { indent: 10 });
-
-            if (ifthenTags.length) {
-              addLine("IF–THEN: " + ifthenTags.join(", "), { indent: 10 });
-            }
-            if (reason) {
-              addLine("Reason:", { indent: 10 });
-              addLine(reason, { indent: 18 });
-            }
-            if (lesson) {
-              addLine("Lesson:", { indent: 10 });
-              addLine(lesson, { indent: 18 });
-            }
-
-            y += 4;
-          });
-        }
-
-        // Mid-session notes
-        const midNotes = document.querySelector("#midNotes textarea[data-label='Mid-session notes']");
-        if (midNotes && midNotes.value.trim()) {
-          y += 6;
-          addSection("Mid-Session Notes");
-          addLine(midNotes.value.trim(), { indent: 10 });
-        }
-
-        // Post-market sections
-        const postMarket = document.getElementById("postMarket");
-        const postTextAreas = postMarket.querySelectorAll("textarea[data-label]");
-
-        postTextAreas.forEach(t => {
-          const val = t.value.trim();
-          if (!val) return;
-          y += 4;
-          addSection(t.dataset.label);
-          addLine(val, { indent: 10 });
-        });
-
-        // Footer
-        y += 10;
-        addLine("Generated: " + new Date().toLocaleString(), { fontSize: 8 });
-
-        pdf.save("trading_sop_" + today + ".pdf");
-      });
+    }
+
+    function setSaveStatus(msg) {
+      const el = document.getElementById("saveStatus");
+      if (!el) return;
+      el.textContent = msg;
+      if (!msg) return;
+      setTimeout(() => {
+        if (el.textContent === msg) el.textContent = "";
+      }, 1500);
+    }
+
+    function resetDay() {
+      appState = getInitialState();
+      saveState();
+      renderAll();
+    }
+
+    document.getElementById("resetDay").addEventListener("click", () => {
+      if (confirm("Reset all fields for the day?")) resetDay();
     });
+
+    // ---------- GENERIC BINDING HELPERS ----------
+    function bindSimpleFields() {
+      const elements = document.querySelectorAll("[data-key]");
+      elements.forEach((el) => {
+        if (el.classList.contains("tag-input")) return; // handled separately
+        const keyPath = el.getAttribute("data-key");
+        // init value
+        el.value = getByPath(appState, keyPath) ?? "";
+        el.addEventListener("input", () => {
+          setByPath(appState, keyPath, el.value);
+          saveState();
+        });
+      });
+    }
+
+    function getByPath(obj, path) {
+      return path.split(".").reduce((acc, k) => (acc ? acc[k] : undefined), obj);
+    }
+
+    function setByPath(obj, path, value) {
+      const parts = path.split(".");
+      let current = obj;
+      for (let i = 0; i < parts.length - 1; i++) {
+        const k = parts[i];
+        if (!current[k]) current[k] = {};
+        current = current[k];
+      }
+      current[parts[parts.length - 1]] = value;
+    }
+
+    // ---------- TAG INPUT COMPONENT ----------
+    function initTagInputs() {
+      const tagInputs = document.querySelectorAll(".tag-input[data-key]");
+      tagInputs.forEach((container) => {
+        const keyPath = container.getAttribute("data-key");
+        const tags = getByPath(appState, keyPath) || [];
+        container.innerHTML = "";
+        renderTags(container, keyPath, tags);
+        attachTagInputBehavior(container, keyPath);
+      });
+    }
+
+    function renderTags(container, keyPath, tags) {
+      container.innerHTML = "";
+      tags.forEach((tag, idx) => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = tag;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = "×";
+        btn.addEventListener("click", () => {
+          const arr = [...(getByPath(appState, keyPath) || [])];
+          arr.splice(idx, 1);
+          setByPath(appState, keyPath, arr);
+          saveState();
+          initTagInputs();
+        });
+
+        span.appendChild(btn);
+        container.appendChild(span);
+      });
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "add tag…";
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === "," || e.key === " ") {
+          e.preventDefault();
+          commitTagInput(container, keyPath, input);
+        }
+      });
+      input.addEventListener("blur", () => {
+        commitTagInput(container, keyPath, input);
+      });
+
+      container.appendChild(input);
+      container.addEventListener("click", () => input.focus());
+    }
+
+    function commitTagInput(container, keyPath, input) {
+      const raw = input.value.trim();
+      if (!raw) return;
+      const pieces = raw.split(",").map((p) => p.trim()).filter(Boolean);
+      if (!pieces.length) {
+        input.value = "";
+        return;
+      }
+      const existing = new Set(getByPath(appState, keyPath) || []);
+      pieces.forEach((p) => existing.add(p));
+      setByPath(appState, keyPath, Array.from(existing));
+      input.value = "";
+      saveState();
+      initTagInputs();
+    }
+
+    function attachTagInputBehavior(container, keyPath) {
+      // Already handled in renderTags
+    }
+
+    // ---------- MODULE 3: TRADES ----------
+    function renderTrades() {
+      const container = document.getElementById("tradesContainer");
+      container.innerHTML = "";
+      const trades = appState.module3.trades || [];
+      trades.forEach((trade, idx) => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid #1f2937";
+        card.style.borderRadius = "8px";
+        card.style.padding = "8px";
+        card.style.marginBottom = "8px";
+        card.style.background = "#020617";
+
+        const header = document.createElement("div");
+        header.className = "section-header";
+        const title = document.createElement("h3");
+        title.textContent = `Trade #${idx + 1} — ${trade.type || "executed/missed?"}`;
+        title.style.fontSize = "0.9rem";
+        const controls = document.createElement("div");
+
+        const typeSelect = document.createElement("select");
+        ["", "executed", "missed"].forEach((opt) => {
+          const o = document.createElement("option");
+          o.value = opt;
+          o.textContent = opt || "type?";
+          if (trade.type === opt) o.selected = true;
+          typeSelect.appendChild(o);
+        });
+        typeSelect.addEventListener("change", () => {
+          trade.type = typeSelect.value || "";
+          saveState();
+          renderTrades();
+        });
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.className = "btn-danger";
+        delBtn.style.fontSize = "0.7rem";
+        delBtn.addEventListener("click", () => {
+          appState.module3.trades.splice(idx, 1);
+          saveState();
+          renderTrades();
+          recomputePostMarket();
+        });
+
+        controls.appendChild(typeSelect);
+        controls.appendChild(delBtn);
+        header.appendChild(title);
+        header.appendChild(controls);
+        card.appendChild(header);
+
+        // Pre-trade baseline emotion
+        const baseline = document.createElement("div");
+        baseline.className = "row";
+        baseline.innerHTML = `
+          <div class="field-group">
+            <label>Pre-Trade Emotion</label>
+            <input type="text" value="${trade.preEmotion || ""}">
+          </div>
+          <div class="field-group">
+            <label>At-Signal Emotion</label>
+            <input type="text" value="${trade.signalEmotion || ""}">
+          </div>
+        `;
+        const [preInput, sigInput] = baseline.querySelectorAll("input");
+        preInput.addEventListener("input", () => {
+          trade.preEmotion = preInput.value;
+          saveState();
+        });
+        sigInput.addEventListener("input", () => {
+          trade.signalEmotion = sigInput.value;
+          saveState();
+        });
+        card.appendChild(baseline);
+
+        // Entry models (tag input)
+        const entryModelsGroup = document.createElement("div");
+        entryModelsGroup.className = "field-group";
+        const emLabel = document.createElement("label");
+        emLabel.textContent = "Entry Models (At-Signal / Executed or Missed)";
+        entryModelsGroup.appendChild(emLabel);
+
+        const emTags = document.createElement("div");
+        emTags.className = "tag-input";
+        const keyPath = `module3.trades.${idx}.entryModels`;
+        setByPath(appState, keyPath, trade.entryModels || []);
+        emTags.setAttribute("data-key", keyPath);
+        entryModelsGroup.appendChild(emTags);
+        card.appendChild(entryModelsGroup);
+
+        // Risk model (executed only)
+        if (trade.type === "executed") {
+          const riskRow = document.createElement("div");
+          riskRow.className = "row";
+          riskRow.innerHTML = `
+            <div class="field-group">
+              <label>Risk Model</label>
+              <select>
+                <option value="">– select –</option>
+                <option value="low">Low Risk</option>
+                <option value="medium">Medium Risk</option>
+                <option value="full">Full Risk</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>Custom Risk Tags</label>
+              <div class="tag-input"></div>
+            </div>
+          `;
+          const select = riskRow.querySelector("select");
+          select.value = trade.riskModel || "";
+          select.addEventListener("change", () => {
+            trade.riskModel = select.value;
+            saveState();
+          });
+
+          const customRiskKey = `module3.trades.${idx}.riskTags`;
+          setByPath(appState, customRiskKey, trade.riskTags || []);
+          const riskTagDiv = riskRow.querySelector(".tag-input");
+          riskTagDiv.setAttribute("data-key", customRiskKey);
+
+          card.appendChild(riskRow);
+        }
+
+        // Basic PNL / R fields (for aggregation)
+        const pnlRow = document.createElement("div");
+        pnlRow.className = "row";
+        pnlRow.innerHTML = `
+          <div class="field-group">
+            <label>Realized PNL</label>
+            <input type="number" step="0.01" value="${trade.pnl ?? ""}">
+          </div>
+          <div class="field-group">
+            <label>Realized R</label>
+            <input type="number" step="0.01" value="${trade.realizedR ?? ""}">
+          </div>
+          <div class="field-group">
+            <label>Missed R (for this trade)</label>
+            <input type="number" step="0.01" value="${trade.missedR ?? ""}">
+          </div>
+        `;
+        const [pnlInput, rInput, mrInput] = pnlRow.querySelectorAll("input");
+        pnlInput.addEventListener("input", () => {
+          trade.pnl = pnlInput.value === "" ? null : Number(pnlInput.value);
+          saveState();
+        });
+        rInput.addEventListener("input", () => {
+          trade.realizedR = rInput.value === "" ? null : Number(rInput.value);
+          saveState();
+        });
+        mrInput.addEventListener("input", () => {
+          trade.missedR = mrInput.value === "" ? null : Number(mrInput.value);
+          saveState();
+        });
+        card.appendChild(pnlRow);
+
+        container.appendChild(card);
+      });
+
+      initTagInputs();
+    }
+
+    document.getElementById("addTrade").addEventListener("click", () => {
+      appState.module3.trades.push({
+        type: "",
+        preEmotion: "",
+        signalEmotion: "",
+        entryModels: [],
+        riskModel: "",
+        riskTags: [],
+        pnl: null,
+        realizedR: null,
+        missedR: null
+      });
+      saveState();
+      renderTrades();
+    });
+
+    // ---------- MODULE 4: POST-MARKET COMPUTATIONS (V1 STUBS) ----------
+    function recomputePostMarket() {
+      const trades = appState.module3.trades || [];
+
+      let totalPnl = 0;
+      let totalR = 0;
+      let totalMissedR = 0;
+      let missedCount = 0;
+
+      trades.forEach((t) => {
+        if (typeof t.pnl === "number") totalPnl += t.pnl;
+        if (typeof t.realizedR === "number") totalR += t.realizedR;
+        if (typeof t.missedR === "number") totalMissedR += t.missedR;
+        if (t.type === "missed") missedCount += 1;
+      });
+
+      const dailySummary = [
+        `Total PNL: ${totalPnl.toFixed(2)}`,
+        `Total Realized R: ${totalR.toFixed(2)}`,
+        `Total Missed R: ${totalMissedR.toFixed(2)}`,
+        `Missed Opportunities: ${missedCount}`
+      ].join(" | ");
+
+      appState.module4.dailySummary = dailySummary;
+
+      // Psych summary stub — V1: very simple narrative
+      const hasHesitation = trades.some(
+        (t) => (t.preEmotion || "").toLowerCase().includes("hesit") ||
+               (t.signalEmotion || "").toLowerCase().includes("hesit")
+      );
+      const hasAggression = trades.some(
+        (t) => (t.preEmotion || "").toLowerCase().includes("aggress") ||
+               (t.signalEmotion || "").toLowerCase().includes("aggress")
+      );
+
+      let psychSummary = "Psych pattern engine (V1): ";
+      if (hasHesitation && missedCount > 0) {
+        psychSummary +=
+          "Hesitation around the signal contributed to missed trades and unrealized R. ";
+      }
+      if (hasAggression && totalMissedR === 0 && totalR > 0) {
+        psychSummary +=
+          "Aggressive state aligned with execution and allowed you to capture R cleanly. ";
+      }
+      if (psychSummary === "Psych pattern engine (V1): ") {
+        psychSummary += "No clear dominant pattern detected yet.";
+      }
+
+      appState.module4.psychSummary = psychSummary;
+
+      saveState();
+      // re-render simple bound fields
+      const dailyEl = document.getElementById("m4_daily");
+      const psychEl = document.getElementById("m4_psych");
+      if (dailyEl) dailyEl.value = dailySummary;
+      if (psychEl) psychEl.value = psychSummary;
+    }
+
+    document
+      .getElementById("recomputePostMarket")
+      .addEventListener("click", recomputePostMarket);
+
+    // ---------- INITIALIZE ----------
+    function renderAll() {
+      bindSimpleFields();
+      initTagInputs();
+      renderTrades();
+      // reflect computed module4 values
+      const dailyEl = document.getElementById("m4_daily");
+      const psychEl = document.getElementById("m4_psych");
+      if (dailyEl) dailyEl.value = appState.module4.dailySummary || "";
+      if (psychEl) psychEl.value = appState.module4.psychSummary || "";
+    }
+
+    renderAll();
   </script>
 </body>
 </html>
