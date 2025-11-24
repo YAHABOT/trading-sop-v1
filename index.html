@@ -7,188 +7,274 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app-shell">
-    <header class="top-bar">
-      <div>
-        <p class="eyebrow">Trading SOP Journal</p>
-        <h1>Build 009</h1>
-      </div>
-      <button class="reset-day" id="resetDayBtn" title="Reset all modules">Reset Day</button>
-    </header>
-
-    <div class="accordion">
-      <section class="accordion-item" data-accordion="m1">
-        <header class="accordion-header">
-          <div>
-            <p class="eyebrow">Module 1</p>
-            <h2>Pre-Market</h2>
-          </div>
-          <span class="chevron">▾</span>
-        </header>
-        <div class="accordion-content">
-          <div class="grid-two">
-            <div class="card-block">
-              <label class="checkbox-line">
-                <input type="checkbox" id="levelsMarked" />
-                <span>Levels marked</span>
-              </label>
-              <label class="field-block">
-                <span>Previous sessions</span>
-                <textarea id="previousSessions" placeholder="Summaries of prior sessions"></textarea>
-              </label>
-              <label class="field-block">
-                <span>HTF → LTF structure</span>
-                <textarea id="structureNotes" placeholder="Top-down structure notes"></textarea>
-              </label>
-            </div>
-            <div class="card-block">
-              <div class="section-heading">
-                <div>
-                  <p class="eyebrow">Scenario System</p>
-                  <h3>IF–THEN Scenarios</h3>
-                </div>
-                <button class="pill success" id="addScenarioBtn">Add Scenario</button>
-              </div>
-              <div id="scenarioList" class="stack"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="accordion-item" data-accordion="m2">
-        <header class="accordion-header">
-          <div>
-            <p class="eyebrow">Module 2</p>
-            <h2>During Session</h2>
-          </div>
-          <span class="chevron">▾</span>
-        </header>
-        <div class="accordion-content">
-          <div class="grid-two">
-            <div class="card-block">
-              <div class="section-heading">
-                <div>
-                  <p class="eyebrow">Watching Price</p>
-                  <h3>Observations</h3>
-                </div>
-                <button class="pill info" id="addWatchBtn">Add Entry</button>
-              </div>
-              <div class="inline-form" id="watchForm">
-                <input type="time" id="watchTime" />
-                <input type="text" id="watchEmotion" placeholder="Emotion" />
-                <input type="text" id="watchNotes" placeholder="Notes" />
-              </div>
-              <div id="watchList" class="stack"></div>
-            </div>
-            <div class="card-block">
-              <div class="section-heading">
-                <div>
-                  <p class="eyebrow">Emotional Surges</p>
-                  <h3>Spikes</h3>
-                </div>
-                <button class="pill warning" id="addSurgeBtn">Add Surge</button>
-              </div>
-              <div class="inline-form" id="surgeForm">
-                <input type="time" id="surgeTime" />
-                <input type="text" id="surgeEmotion" placeholder="Emotion" />
-                <input type="text" id="surgeNotes" placeholder="Notes" />
-              </div>
-              <div id="surgeList" class="stack"></div>
-            </div>
-          </div>
-          <div class="grid-two">
-            <div class="card-block">
-              <div class="section-heading">
-                <div>
-                  <p class="eyebrow">Adaptation Windows</p>
-                  <h3>Adjustments</h3>
-                </div>
-                <button class="pill purple" id="addAdaptBtn">Add Window</button>
-              </div>
-              <div class="inline-form" id="adaptForm">
-                <input type="time" id="adaptStart" placeholder="Start" />
-                <input type="time" id="adaptEnd" placeholder="End" />
-                <input type="text" id="adaptDescription" placeholder="Description" />
-              </div>
-              <div id="adaptList" class="stack"></div>
-            </div>
-            <div class="card-block">
-              <div class="section-heading">
-                <div>
-                  <p class="eyebrow">Session Energy</p>
-                  <h3>State Check</h3>
-                </div>
-              </div>
-              <div class="grid-two tight">
-                <label class="field-block">
-                  <span>Trader energy (0–10)</span>
-                  <input type="number" id="traderEnergy" min="0" max="10" />
-                </label>
-                <label class="field-block">
-                  <span>Market energy (0–10)</span>
-                  <input type="number" id="marketEnergy" min="0" max="10" />
-                </label>
-              </div>
-              <label class="field-block">
-                <span>Market type</span>
-                <select id="marketType">
-                  <option value="">Select type</option>
-                  <option>Rotational</option>
-                  <option>Trending</option>
-                  <option>Expanding</option>
-                  <option>Contracting</option>
-                </select>
-              </label>
-              <label class="field-block">
-                <span>Market notes</span>
-                <textarea id="marketNotes" placeholder="Key read of the session"></textarea>
-              </label>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="accordion-item" data-accordion="m3">
-        <header class="accordion-header">
-          <div>
-            <p class="eyebrow">Module 3</p>
-            <h2>Trade Idea Logic</h2>
-          </div>
-          <span class="chevron">▾</span>
-        </header>
-        <div class="accordion-content">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Idea Builder</p>
-              <h3>All Three Stages</h3>
-            </div>
-            <button class="pill success" id="addTradeIdeaBtn">Add Trade Idea</button>
-          </div>
-          <div class="inline-form idea-form">
-            <input type="text" id="tradeTitleInput" placeholder="Trade title" />
-            <button class="pill success" id="confirmAddIdea">Create</button>
-          </div>
-          <div id="tradeIdeaList" class="stack"></div>
-        </div>
-      </section>
-
-      <section class="accordion-item" data-accordion="m4">
-        <header class="accordion-header">
-          <div>
-            <p class="eyebrow">Module 4</p>
-            <h2>Post-Market Review</h2>
-          </div>
-          <span class="chevron">▾</span>
-        </header>
-        <div class="accordion-content">
-          <div class="card-block placeholder">
-            <p class="eyebrow">Coming soon</p>
-            <p>Reserved for future review templates and scorecards.</p>
-          </div>
-        </div>
-      </section>
+  <header class="top-bar">
+    <div>
+      <p class="eyebrow">Trading SOP Journal</p>
+      <h1>Build 009</h1>
     </div>
-  </div>
+    <button id="reset-day" class="btn danger">Reset Day</button>
+  </header>
+
+  <main class="container">
+
+    <!-- MODULE 1: PRE-MARKET -->
+    <section class="accordion" data-accordion>
+      <header class="accordion-header" data-accordion-trigger>
+        <div>
+          <p class="eyebrow">Module 1</p>
+          <h2>Pre-Market</h2>
+        </div>
+        <span class="chevron">▼</span>
+      </header>
+      <div class="accordion-content">
+
+        <div class="module-grid">
+          <!-- Left card: baseline prep -->
+          <div class="card">
+            <label class="checkbox-row">
+              <input type="checkbox" id="levels-marked" />
+              <span>All required session levels marked</span>
+            </label>
+
+            <label class="field">
+              <span>Previous sessions observed / bias</span>
+              <textarea id="previous-sessions" placeholder="Asia, London, prior NY, combined bias…"></textarea>
+            </label>
+
+            <label class="field">
+              <span>HTF → LTF structure & trend</span>
+              <textarea id="structure" placeholder="15m → 5m → 1m narrative…"></textarea>
+            </label>
+
+            <label class="field">
+              <span>Session-start emotional state</span>
+              <select id="session-emotion">
+                <option value="">– select –</option>
+                <option value="calm">Calm</option>
+                <option value="focused">Focused</option>
+                <option value="hesitant">Hesitant</option>
+                <option value="anxious">Anxious</option>
+                <option value="impatient">Impatient</option>
+                <option value="overconfident">Overconfident</option>
+              </select>
+            </label>
+          </div>
+
+          <!-- Right card: IF–THEN scenario builder -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Scenario Engine</p>
+                <h3>IF–THEN Scenarios</h3>
+              </div>
+              <button id="add-scenario" type="button" class="btn success">+ Add Scenario</button>
+            </div>
+
+            <div class="form-row">
+              <input type="text" id="scenario-title" placeholder="Scenario title (e.g. ‘NY liquidity grab then trend’)" />
+            </div>
+            <div class="form-row">
+              <textarea id="scenario-if" placeholder="IF: condition (price behavior, level interaction, time window)…"></textarea>
+            </div>
+            <div class="form-row">
+              <textarea id="scenario-then" placeholder="THEN: execution expectation (direction, model, TP/SL behavior)…"></textarea>
+            </div>
+
+            <div id="scenario-list" class="stack"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MODULE 2: DURING SESSION (GLOBAL) -->
+    <section class="accordion" data-accordion>
+      <header class="accordion-header" data-accordion-trigger>
+        <div>
+          <p class="eyebrow">Module 2</p>
+          <h2>During Session (Global)</h2>
+        </div>
+        <span class="chevron">▼</span>
+      </header>
+      <div class="accordion-content">
+
+        <div class="module-grid">
+          <!-- Watching price -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Flat State</p>
+                <h3>Watching Price</h3>
+              </div>
+              <button id="add-watching" type="button" class="btn info">+ Add Watching Entry</button>
+            </div>
+            <div class="form-row">
+              <input type="time" id="watch-time" />
+              <input type="text" id="watch-emotion" placeholder="Emotion (calm, FOMO, bored…)" />
+            </div>
+            <div class="form-row">
+              <textarea id="watch-notes" placeholder="What you saw, how it shaped your bias…"></textarea>
+            </div>
+            <div id="watching-list" class="stack"></div>
+          </div>
+
+          <!-- Emotional surges -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Emotional Spikes</p>
+                <h3>Emotional Surges</h3>
+              </div>
+              <button id="add-surge" type="button" class="btn warning">+ Add Surge</button>
+            </div>
+            <div class="form-row">
+              <input type="time" id="surge-time" />
+              <input type="text" id="surge-emotion" placeholder="Spike emotion (panic, greed, tilt…)" />
+            </div>
+            <div class="form-row">
+              <textarea id="surge-notes" placeholder="Trigger and reaction (what caused it, what you did next)…"></textarea>
+            </div>
+            <div id="surge-list" class="stack"></div>
+          </div>
+        </div>
+
+        <div class="module-grid">
+          <!-- Adaptation windows -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Market Shift</p>
+                <h3>Adaptation Windows</h3>
+              </div>
+              <button id="add-adaptation" type="button" class="btn accent">+ Add Adaptation</button>
+            </div>
+            <div class="form-row">
+              <input type="time" id="adapt-start" placeholder="Start time" />
+              <input type="time" id="adapt-end" placeholder="End time" />
+            </div>
+            <div class="form-row">
+              <textarea id="adapt-description" placeholder="What changed (structure, tempo, liquidity, orderflow)… and how you adapted (or didn’t)…"></textarea>
+            </div>
+            <div id="adapt-list" class="stack"></div>
+          </div>
+
+          <!-- Session energy & market behavior -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Session Snapshot</p>
+                <h3>Energy & Market Type</h3>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="field">
+                <span>Trader energy (0–10)</span>
+                <input type="number" id="trader-energy" min="0" max="10" />
+              </label>
+              <label class="field">
+                <span>Market energy (0–10)</span>
+                <input type="number" id="market-energy" min="0" max="10" />
+              </label>
+            </div>
+            <label class="field">
+              <span>Market type</span>
+              <select id="market-type">
+                <option value="">– select –</option>
+                <option value="trend">Trend</option>
+                <option value="range">Range</option>
+                <option value="choppy">Choppy</option>
+                <option value="volatile">High volatility</option>
+                <option value="slow">Slow grind</option>
+                <option value="manipulative">Manipulative</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Session notes (tempo / behavior)</span>
+              <textarea id="session-notes" placeholder="Tempo shifts, sudden dead periods, liquidity feel, fake moves…"></textarea>
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MODULE 3: TRADE IDEA LOGIC -->
+    <section class="accordion" data-accordion>
+      <header class="accordion-header" data-accordion-trigger>
+        <div>
+          <p class="eyebrow">Module 3</p>
+          <h2>Trade Idea Logic</h2>
+        </div>
+        <span class="chevron">▼</span>
+      </header>
+      <div class="accordion-content">
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">New Idea</p>
+              <h3>Create Trade Idea</h3>
+            </div>
+            <button id="add-trade" type="button" class="btn danger">+ Add Trade Idea</button>
+          </div>
+
+          <!-- Pre-trade baseline -->
+          <div class="form-row">
+            <input type="text" id="trade-title" placeholder="Trade idea title (e.g. ‘NY reversal from HTF supply’)" />
+          </div>
+          <div class="form-row">
+            <input type="text" id="trade-pre-emotion" placeholder="Pre-trade emotion (focused, hesitant, overconfident…)" />
+            <input type="text" id="trade-tags" placeholder="Tags (comma separated: NYO, news, HTF zone…)" />
+          </div>
+          <div class="form-row">
+            <input type="text" id="trade-confluence" placeholder="Confluence stack (HTF level, liquidity, time of day…)" />
+          </div>
+          <div class="form-row">
+            <textarea id="trade-pre-notes" placeholder="Pre-trade narrative / expectation…"></textarea>
+          </div>
+
+          <hr />
+
+          <!-- Signal section -->
+          <div class="form-row">
+            <input type="time" id="trade-signal-time" />
+            <input type="text" id="trade-signal-emotion" placeholder="Emotion at signal (calm, FOMO…)" />
+            <input type="text" id="trade-entry-models" placeholder="Entry models (e.g. limit, stop, confirmation…)" />
+          </div>
+          <div class="form-row">
+            <input type="text" id="trade-signal-confluence" placeholder="Signal-specific confluence (e.g. 1m displacement, sweep…)" />
+            <select id="trade-scenario-link">
+              <option value="">Link to scenario (optional)</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <textarea id="trade-signal-notes" placeholder="Signal notes (what confirmed or invalidated it)…"></textarea>
+          </div>
+        </div>
+
+        <div id="trade-list" class="stack" style="margin-top: 14px;"></div>
+
+      </div>
+    </section>
+
+    <!-- MODULE 4: POST-MARKET REVIEW (placeholder for now) -->
+    <section class="accordion" data-accordion>
+      <header class="accordion-header" data-accordion-trigger>
+        <div>
+          <p class="eyebrow">Module 4</p>
+          <h2>Post-Market Review</h2>
+        </div>
+        <span class="chevron">▼</span>
+      </header>
+      <div class="accordion-content">
+        <div class="card placeholder">
+          <p>Module 4 engine (P/L, R tally, execution/disc grades, auto-psych patterns) will be wired in a later build.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
