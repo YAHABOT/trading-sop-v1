@@ -1,553 +1,784 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const accordionItems = document.querySelectorAll('.accordion-item');
-  accordionItems.forEach((item) => {
-    item.classList.add('open');
-    item.querySelector('.accordion-header').addEventListener('click', () => {
-      item.classList.toggle('open');
-    });
-  });
+const storageKeys = {
+  preMarket: 'tsj_pre_market',
+  scenarios: 'tsj_scenarios',
+  watching: 'tsj_watching',
+  surges: 'tsj_surges',
+  adaptations: 'tsj_adaptations',
+  session: 'tsj_session_global',
+  trades: 'tsj_trades',
+};
 
-  const preMarketDefaults = {
+const state = {
+  preMarket: load(storageKeys.preMarket, {
     levelsMarked: false,
     previousSessions: '',
-    structureNotes: '',
-    scenarios: [],
-    counter: 1,
-  };
+    structure: '',
+    sessionEmotion: '',
+  }),
+  scenarios: load(storageKeys.scenarios, []),
+  watching: load(storageKeys.watching, []),
+  surges: load(storageKeys.surges, []),
+  adaptations: load(storageKeys.adaptations, []),
+  session: load(storageKeys.session, {
+    traderEnergy: '',
+    marketEnergy: '',
+    marketType: '',
+    notes: '',
+  }),
+  trades: load(storageKeys.trades, []),
+};
 
-  const sessionDefaults = {
-    watching: [],
-    surges: [],
-    adaptations: [],
-    energy: {
-      traderEnergy: '',
-      marketEnergy: '',
-      marketType: '',
-      marketNotes: '',
-    },
-  };
+function load(key, fallback) {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : fallback;
+  } catch (err) {
+    console.warn('Load error', key, err);
+    return fallback;
+  }
+}
 
-  const tradeIdeaDefaults = {
-    ideas: [],
-    counter: 1,
-  };
+function persist(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
 
-  const preMarketState = loadState('sop-pre-market', preMarketDefaults);
-  const sessionState = loadState('sop-session', sessionDefaults);
-  const tradeIdeaState = loadState('sop-trade-ideas', tradeIdeaDefaults);
+/* Accordion setup */
 
-  // Pre-market fields
-  const levelsMarked = document.getElementById('levelsMarked');
-  const previousSessions = document.getElementById('previousSessions');
-  const structureNotes = document.getElementById('structureNotes');
-  const scenarioList = document.getElementById('scenarioList');
-  const addScenarioBtn = document.getElementById('addScenarioBtn');
-
-  levelsMarked.checked = preMarketState.levelsMarked;
-  previousSessions.value = preMarketState.previousSessions;
-  structureNotes.value = preMarketState.structureNotes;
-
-  levelsMarked.addEventListener('change', () => {
-    preMarketState.levelsMarked = levelsMarked.checked;
-    saveState('sop-pre-market', preMarketState);
-  });
-
-  [previousSessions, structureNotes].forEach((el) => {
-    el.addEventListener('input', () => {
-      preMarketState.previousSessions = previousSessions.value;
-      preMarketState.structureNotes = structureNotes.value;
-      saveState('sop-pre-market', preMarketState);
+function initAccordion() {
+  document.querySelectorAll('[data-accordion]').forEach((acc) => {
+    const trigger = acc.querySelector('[data-accordion-trigger]');
+    trigger?.addEventListener('click', () => {
+      acc.classList.toggle('open');
     });
   });
+}
 
-  addScenarioBtn.addEventListener('click', () => {
-    const scenarioId = `S${preMarketState.counter}`;
-    preMarketState.counter += 1;
-    preMarketState.scenarios.push({
-      id: scenarioId,
-      title: '',
-      ifText: '',
-      thenText: '',
-      open: true,
-    });
-    saveState('sop-pre-market', preMarketState);
+/* Scenario dropdown options for trades */
+
+function renderScenarioOptions() {
+  const select = document.getElementById('trade-scenario-link');
+  if (!select) return;
+  select.innerHTML = '<option value="">Link to scenario (optional)</option>';
+  state.scenarios.forEach((s) => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = `${s.id} — ${s.title || 'Untitled'}`;
+    select.appendChild(opt);
+  });
+}
+
+/* Render scenarios */
+
+function renderScenarios() {
+  const container = document.getElementById('scenario-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!state.scenarios.length) {
+    const empty = document.createElement('div');
+    empty.className = 'tagline';
+    empty.textContent = 'No scenarios logged yet.';
+    container.appendChild(empty);
+    renderScenarioOptions();
+    return;
+  }
+
+  state.scenarios.forEach((scenario) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+
+    card.innerHTML = `
+      <div class="item-header">
+        <div class="item-title">
+          <span class="badge">${scenario.id}</span>
+          <strong>${scenario.title || 'Untitled scenario'}</strong>
+        </div>
+        <div class="item-actions">
+          <button type="button" class="small-btn toggle-card">Toggle</button>
+          <button type="button" class="small-btn" data-delete-scenario="${scenario.id}">Delete</button>
+        </div>
+      </div>
+      <div class="item-body">
+        <p class="tagline"><strong>IF:</strong> ${scenario.if || '—'}</p>
+        <p class="tagline"><strong>THEN:</strong> ${scenario.then || '—'}</p>
+      </div>
+    `;
+
+    attachCardToggle(card);
+    container.appendChild(card);
+  });
+
+  renderScenarioOptions();
+}
+
+/* Watching entries */
+
+function renderWatching() {
+  const container = document.getElementById('watching-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!state.watching.length) {
+    const empty = document.createElement('div');
+    empty.className = 'tagline';
+    empty.textContent = 'No watching entries logged yet.';
+    container.appendChild(empty);
+    return;
+  }
+
+  state.watching.forEach((entry) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+
+    card.innerHTML = `
+      <div class="item-header">
+        <div class="item-title">
+          <span class="badge">${entry.time || '—'}</span>
+          <span>${entry.emotion || 'Watching'}</span>
+        </div>
+        <div class="item-actions">
+          <button type="button" class="small-btn toggle-card">Toggle</button>
+          <button type="button" class="small-btn" data-delete-watch="${entry.id}">Delete</button>
+        </div>
+      </div>
+      <div class="item-body">
+        <p>${entry.notes || 'No notes provided.'}</p>
+      </div>
+    `;
+
+    attachCardToggle(card);
+    container.appendChild(card);
+  });
+}
+
+/* Surges */
+
+function renderSurges() {
+  const container = document.getElementById('surge-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!state.surges.length) {
+    const empty = document.createElement('div');
+    empty.className = 'tagline';
+    empty.textContent = 'No emotional surges logged yet.';
+    container.appendChild(empty);
+    return;
+  }
+
+  state.surges.forEach((entry) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+
+    card.innerHTML = `
+      <div class="item-header">
+        <div class="item-title">
+          <span class="badge">${entry.time || '—'}</span>
+          <span>${entry.emotion || 'Surge'}</span>
+        </div>
+        <div class="item-actions">
+          <button type="button" class="small-btn toggle-card">Toggle</button>
+          <button type="button" class="small-btn" data-delete-surge="${entry.id}">Delete</button>
+        </div>
+      </div>
+      <div class="item-body">
+        <p>${entry.notes || 'No notes provided.'}</p>
+      </div>
+    `;
+
+    attachCardToggle(card);
+    container.appendChild(card);
+  });
+}
+
+/* Adaptations */
+
+function renderAdaptations() {
+  const container = document.getElementById('adapt-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!state.adaptations.length) {
+    const empty = document.createElement('div');
+    empty.className = 'tagline';
+    empty.textContent = 'No adaptation windows logged yet.';
+    container.appendChild(empty);
+    return;
+  }
+
+  state.adaptations.forEach((entry) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+
+    card.innerHTML = `
+      <div class="item-header">
+        <div class="item-title">
+          <span class="badge">${entry.start || '—'} → ${entry.end || '—'}</span>
+          <span>Adaptation</span>
+        </div>
+        <div class="item-actions">
+          <button type="button" class="small-btn toggle-card">Toggle</button>
+          <button type="button" class="small-btn" data-delete-adapt="${entry.id}">Delete</button>
+        </div>
+      </div>
+      <div class="item-body">
+        <p>${entry.description || 'No description provided.'}</p>
+      </div>
+    `;
+
+    attachCardToggle(card);
+    container.appendChild(card);
+  });
+}
+
+/* Trade cards */
+
+function tradeTemplate(trade) {
+  const scenarioName = trade.signal.scenarioId
+    ? (state.scenarios.find((s) => s.id === trade.signal.scenarioId)?.title || 'Linked scenario')
+    : 'No scenario link';
+
+  return `
+    <div class="item-card" data-trade="${trade.id}">
+      <div class="item-header">
+        <div class="item-title">
+          <span class="badge">${trade.id}</span>
+          <strong>${trade.title || 'Trade Idea'}</strong>
+        </div>
+        <div class="item-actions">
+          <button type="button" class="small-btn toggle-card">Toggle</button>
+          <button type="button" class="small-btn" data-delete-trade="${trade.id}">Delete</button>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="label-grid">
+          <div><strong>Pre-Trade Emotion:</strong> ${trade.pre.emotion || '—'}</div>
+          <div><strong>Tags:</strong> ${trade.pre.tags || '—'}</div>
+          <div><strong>Confluence:</strong> ${trade.pre.confluence || '—'}</div>
+        </div>
+        <p class="tagline"><strong>Pre-Trade Notes:</strong> ${trade.pre.notes || '—'}</p>
+
+        <hr />
+
+        <div class="label-grid">
+          <div><strong>Signal Time:</strong> ${trade.signal.time || '—'}</div>
+          <div><strong>Signal Emotion:</strong> ${trade.signal.emotion || '—'}</div>
+          <div><strong>Entry Models:</strong> ${trade.signal.entryModels || '—'}</div>
+          <div><strong>Signal Confluence:</strong> ${trade.signal.confluence || '—'}</div>
+          <div><strong>Scenario Link:</strong> ${
+            trade.signal.scenarioId ? `${trade.signal.scenarioId} — ${scenarioName}` : 'None'
+          }</div>
+        </div>
+        <p class="tagline"><strong>Signal Notes:</strong> ${trade.signal.notes || '—'}</p>
+
+        <hr />
+
+        <div class="form-row">
+          <button type="button" class="small-btn" data-mark-taken="${trade.id}">Mark as Trade Taken</button>
+          <button type="button" class="small-btn" data-mark-missed="${trade.id}">Mark as Trade Missed</button>
+          <span class="badge">Status: ${trade.decision.toUpperCase()}</span>
+        </div>
+
+        <div class="label-grid">
+          <label class="field">
+            <span>Entry price</span>
+            <input type="number" step="0.0001" data-entry-price="${trade.id}" value="${trade.taken.entryPrice || ''}" />
+          </label>
+          <label class="field">
+            <span>Stop loss</span>
+            <input type="number" step="0.0001" data-stop-loss="${trade.id}" value="${trade.taken.stopLoss || ''}" />
+          </label>
+          <label class="field">
+            <span>Expected R:R</span>
+            <input type="text" data-expected-rr="${trade.id}" value="${trade.taken.expectedRR || ''}" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Trade taken notes</span>
+          <textarea data-taken-notes="${trade.id}">${trade.taken.notes || ''}</textarea>
+        </label>
+
+        <hr />
+
+        <div class="label-grid">
+          <label class="field">
+            <span>Reason missed</span>
+            <input type="text" data-missed-reason="${trade.id}" value="${trade.missed.reason || ''}" />
+          </label>
+          <label class="field">
+            <span>Missed R value</span>
+            <input type="text" data-missed-r="${trade.id}" value="${trade.missed.rValue || ''}" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Missed notes</span>
+          <textarea data-missed-notes="${trade.id}">${trade.missed.notes || ''}</textarea>
+        </label>
+      </div>
+    </div>
+  `;
+}
+
+function renderTrades() {
+  const container = document.getElementById('trade-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!state.trades.length) {
+    const empty = document.createElement('div');
+    empty.className = 'tagline';
+    empty.textContent = 'No trade ideas logged yet.';
+    container.appendChild(empty);
+    return;
+  }
+
+  state.trades.forEach((trade) => {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = tradeTemplate(trade);
+    const card = wrapper.firstElementChild;
+    attachCardToggle(card);
+    container.appendChild(card);
+  });
+
+  attachTradeFieldListeners();
+}
+
+/* Generic card toggle */
+
+function attachCardToggle(card) {
+  const header = card.querySelector('.item-header');
+  const body = card.querySelector('.item-body');
+  const toggleBtn = card.querySelector('.toggle-card');
+
+  function toggle() {
+    card.classList.toggle('open');
+  }
+
+  header?.addEventListener('click', (e) => {
+    if (e.target.closest('button')) return;
+    toggle();
+  });
+
+  toggleBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggle();
+  });
+}
+
+/* Pre-market setup */
+
+function setupPreMarket() {
+  const levels = document.getElementById('levels-marked');
+  const prevSessions = document.getElementById('previous-sessions');
+  const structure = document.getElementById('structure');
+  const sessionEmotion = document.getElementById('session-emotion');
+
+  if (!levels) return; // page not loaded correctly
+
+  levels.checked = state.preMarket.levelsMarked;
+  prevSessions.value = state.preMarket.previousSessions;
+  structure.value = state.preMarket.structure;
+  sessionEmotion.value = state.preMarket.sessionEmotion;
+
+  levels.addEventListener('change', (e) => {
+    state.preMarket.levelsMarked = e.target.checked;
+    persist(storageKeys.preMarket, state.preMarket);
+  });
+
+  prevSessions.addEventListener('input', (e) => {
+    state.preMarket.previousSessions = e.target.value;
+    persist(storageKeys.preMarket, state.preMarket);
+  });
+
+  structure.addEventListener('input', (e) => {
+    state.preMarket.structure = e.target.value;
+    persist(storageKeys.preMarket, state.preMarket);
+  });
+
+  sessionEmotion.addEventListener('input', (e) => {
+    state.preMarket.sessionEmotion = e.target.value;
+    persist(storageKeys.preMarket, state.preMarket);
+  });
+
+  // Add scenario
+  const addScenarioBtn = document.getElementById('add-scenario');
+  addScenarioBtn?.addEventListener('click', () => {
+    const titleInput = document.getElementById('scenario-title');
+    const ifInput = document.getElementById('scenario-if');
+    const thenInput = document.getElementById('scenario-then');
+
+    const title = titleInput.value.trim();
+    const ifText = ifInput.value.trim();
+    const thenText = thenInput.value.trim();
+
+    if (!title && !ifText && !thenText) return;
+
+    const nextId = `S${state.scenarios.length + 1}`;
+    state.scenarios.push({ id: nextId, title, if: ifText, then: thenText });
+    persist(storageKeys.scenarios, state.scenarios);
+
+    titleInput.value = '';
+    ifInput.value = '';
+    thenInput.value = '';
+
     renderScenarios();
-    renderTradeIdeas();
   });
 
-  scenarioList.addEventListener('click', (e) => {
-    const target = e.target;
-    const card = target.closest('.card');
-    if (!card) return;
-    const id = card.dataset.id;
-
-    if (target.classList.contains('card-toggle')) {
-      card.classList.toggle('open');
-      const scenario = preMarketState.scenarios.find((s) => s.id === id);
-      if (scenario) {
-        scenario.open = card.classList.contains('open');
-        saveState('sop-pre-market', preMarketState);
-      }
-    }
-
-    if (target.classList.contains('delete-card')) {
-      preMarketState.scenarios = preMarketState.scenarios.filter((s) => s.id !== id);
-      saveState('sop-pre-market', preMarketState);
+  document.getElementById('scenario-list').addEventListener('click', (e) => {
+    const delId = e.target.getAttribute('data-delete-scenario');
+    if (delId) {
+      state.scenarios = state.scenarios.filter((s) => s.id !== delId);
+      persist(storageKeys.scenarios, state.scenarios);
       renderScenarios();
-      renderTradeIdeas();
     }
-  });
-
-  scenarioList.addEventListener('input', (e) => {
-    const target = e.target;
-    const card = target.closest('.card');
-    if (!card) return;
-    const id = card.dataset.id;
-    const scenario = preMarketState.scenarios.find((s) => s.id === id);
-    if (!scenario) return;
-
-    if (target.dataset.field === 'title') scenario.title = target.value;
-    if (target.dataset.field === 'ifText') scenario.ifText = target.value;
-    if (target.dataset.field === 'thenText') scenario.thenText = target.value;
-
-    saveState('sop-pre-market', preMarketState);
-    renderTradeIdeas();
-    updateScenarioHeaders();
   });
 
   renderScenarios();
+}
 
-  function updateScenarioHeaders() {
-    document.querySelectorAll('[data-scenario-title]').forEach((el) => {
-      const id = el.dataset.scenarioTitle;
-      const scenario = preMarketState.scenarios.find((s) => s.id === id);
-      el.textContent = scenario && scenario.title ? scenario.title : 'Untitled';
+/* Session module (Module 2) */
+
+function setupSessionModule() {
+  const traderEnergy = document.getElementById('trader-energy');
+  const marketEnergy = document.getElementById('market-energy');
+  const marketType = document.getElementById('market-type');
+  const sessionNotes = document.getElementById('session-notes');
+
+  traderEnergy.value = state.session.traderEnergy;
+  marketEnergy.value = state.session.marketEnergy;
+  marketType.value = state.session.marketType;
+  sessionNotes.value = state.session.notes;
+
+  traderEnergy.addEventListener('input', (e) => {
+    state.session.traderEnergy = e.target.value;
+    persist(storageKeys.session, state.session);
+  });
+  marketEnergy.addEventListener('input', (e) => {
+    state.session.marketEnergy = e.target.value;
+    persist(storageKeys.session, state.session);
+  });
+  marketType.addEventListener('input', (e) => {
+    state.session.marketType = e.target.value;
+    persist(storageKeys.session, state.session);
+  });
+  sessionNotes.addEventListener('input', (e) => {
+    state.session.notes = e.target.value;
+    persist(storageKeys.session, state.session);
+  });
+
+  // Watching
+  document.getElementById('add-watching').addEventListener('click', () => {
+    const time = document.getElementById('watch-time').value;
+    const emotion = document.getElementById('watch-emotion').value.trim();
+    const notes = document.getElementById('watch-notes').value.trim();
+    if (!time && !emotion && !notes) return;
+
+    state.watching.push({
+      id: crypto.randomUUID(),
+      time,
+      emotion,
+      notes,
     });
-  }
+    persist(storageKeys.watching, state.watching);
 
-  // During session
-  const watchTime = document.getElementById('watchTime');
-  const watchEmotion = document.getElementById('watchEmotion');
-  const watchNotes = document.getElementById('watchNotes');
-  const addWatchBtn = document.getElementById('addWatchBtn');
-  const watchList = document.getElementById('watchList');
+    document.getElementById('watch-time').value = '';
+    document.getElementById('watch-emotion').value = '';
+    document.getElementById('watch-notes').value = '';
 
-  const surgeTime = document.getElementById('surgeTime');
-  const surgeEmotion = document.getElementById('surgeEmotion');
-  const surgeNotes = document.getElementById('surgeNotes');
-  const addSurgeBtn = document.getElementById('addSurgeBtn');
-  const surgeList = document.getElementById('surgeList');
-
-  const adaptStart = document.getElementById('adaptStart');
-  const adaptEnd = document.getElementById('adaptEnd');
-  const adaptDescription = document.getElementById('adaptDescription');
-  const addAdaptBtn = document.getElementById('addAdaptBtn');
-  const adaptList = document.getElementById('adaptList');
-
-  const traderEnergy = document.getElementById('traderEnergy');
-  const marketEnergy = document.getElementById('marketEnergy');
-  const marketType = document.getElementById('marketType');
-  const marketNotes = document.getElementById('marketNotes');
-
-  addWatchBtn.addEventListener('click', () => {
-    const item = {
-      id: `W${Date.now()}`,
-      time: watchTime.value,
-      emotion: watchEmotion.value,
-      notes: watchNotes.value,
-      open: true,
-    };
-    sessionState.watching.unshift(item);
-    saveState('sop-session', sessionState);
     renderWatching();
-    watchTime.value = '';
-    watchEmotion.value = '';
-    watchNotes.value = '';
   });
 
-  addSurgeBtn.addEventListener('click', () => {
-    const item = {
-      id: `E${Date.now()}`,
-      time: surgeTime.value,
-      emotion: surgeEmotion.value,
-      notes: surgeNotes.value,
-      open: true,
-    };
-    sessionState.surges.unshift(item);
-    saveState('sop-session', sessionState);
-    renderSurges();
-    surgeTime.value = '';
-    surgeEmotion.value = '';
-    surgeNotes.value = '';
+  document.getElementById('watching-list').addEventListener('click', (e) => {
+    const delId = e.target.getAttribute('data-delete-watch');
+    if (delId) {
+      state.watching = state.watching.filter((w) => w.id !== delId);
+      persist(storageKeys.watching, state.watching);
+      renderWatching();
+    }
   });
 
-  addAdaptBtn.addEventListener('click', () => {
-    const item = {
-      id: `A${Date.now()}`,
-      start: adaptStart.value,
-      end: adaptEnd.value,
-      description: adaptDescription.value,
-      open: true,
-    };
-    sessionState.adaptations.unshift(item);
-    saveState('sop-session', sessionState);
-    renderAdaptations();
-    adaptStart.value = '';
-    adaptEnd.value = '';
-    adaptDescription.value = '';
-  });
+  // Surges
+  document.getElementById('add-surge').addEventListener('click', () => {
+    const time = document.getElementById('surge-time').value;
+    const emotion = document.getElementById('surge-emotion').value.trim();
+    const notes = document.getElementById('surge-notes').value.trim();
+    if (!time && !emotion && !notes) return;
 
-  [traderEnergy, marketEnergy, marketType, marketNotes].forEach((el) => {
-    const key = el.id;
-    el.value = sessionState.energy[key] || '';
-    el.addEventListener('input', () => {
-      sessionState.energy[key] = el.value;
-      saveState('sop-session', sessionState);
+    state.surges.push({
+      id: crypto.randomUUID(),
+      time,
+      emotion,
+      notes,
     });
+    persist(storageKeys.surges, state.surges);
+
+    document.getElementById('surge-time').value = '';
+    document.getElementById('surge-emotion').value = '';
+    document.getElementById('surge-notes').value = '';
+
+    renderSurges();
   });
 
-  watchList.addEventListener('click', (e) => handleCardActions(e, 'watching'));
-  surgeList.addEventListener('click', (e) => handleCardActions(e, 'surges'));
-  adaptList.addEventListener('click', (e) => handleCardActions(e, 'adaptations'));
+  document.getElementById('surge-list').addEventListener('click', (e) => {
+    const delId = e.target.getAttribute('data-delete-surge');
+    if (delId) {
+      state.surges = state.surges.filter((s) => s.id !== delId);
+      persist(storageKeys.surges, state.surges);
+      renderSurges();
+    }
+  });
 
-  watchList.addEventListener('input', (e) => handleCardInput(e, 'watching'));
-  surgeList.addEventListener('input', (e) => handleCardInput(e, 'surges'));
-  adaptList.addEventListener('input', (e) => handleCardInput(e, 'adaptations'));
+  // Adaptations
+  document.getElementById('add-adaptation').addEventListener('click', () => {
+    const start = document.getElementById('adapt-start').value;
+    const end = document.getElementById('adapt-end').value;
+    const description = document.getElementById('adapt-description').value.trim();
+    if (!start && !end && !description) return;
+
+    state.adaptations.push({
+      id: crypto.randomUUID(),
+      start,
+      end,
+      description,
+    });
+    persist(storageKeys.adaptations, state.adaptations);
+
+    document.getElementById('adapt-start').value = '';
+    document.getElementById('adapt-end').value = '';
+    document.getElementById('adapt-description').value = '';
+
+    renderAdaptations();
+  });
+
+  document.getElementById('adapt-list').addEventListener('click', (e) => {
+    const delId = e.target.getAttribute('data-delete-adapt');
+    if (delId) {
+      state.adaptations = state.adaptations.filter((a) => a.id !== delId);
+      persist(storageKeys.adaptations, state.adaptations);
+      renderAdaptations();
+    }
+  });
 
   renderWatching();
   renderSurges();
   renderAdaptations();
+}
 
-  function handleCardActions(e, type) {
-    const target = e.target;
-    const card = target.closest('.card');
-    if (!card) return;
-    const id = card.dataset.id;
+/* Trades (Module 3) */
 
-    if (target.classList.contains('card-toggle')) {
-      card.classList.toggle('open');
-      const item = findItem(type, id);
-      if (item) item.open = card.classList.contains('open');
-      saveState('sop-session', sessionState);
-    }
+function setupTrades() {
+  renderTrades();
 
-    if (target.classList.contains('delete-card')) {
-      sessionState[type] = sessionState[type].filter((i) => i.id !== id);
-      saveState('sop-session', sessionState);
-      renderList(type);
-    }
-  }
+  document.getElementById('add-trade').addEventListener('click', () => {
+    const title = document.getElementById('trade-title').value.trim();
+    const preEmotion = document.getElementById('trade-pre-emotion').value.trim();
+    const tags = document.getElementById('trade-tags').value.trim();
+    const confluence = document.getElementById('trade-confluence').value.trim();
+    const preNotes = document.getElementById('trade-pre-notes').value.trim();
+    const signalTime = document.getElementById('trade-signal-time').value;
+    const signalEmotion = document.getElementById('trade-signal-emotion').value.trim();
+    const entryModels = document.getElementById('trade-entry-models').value.trim();
+    const signalConfluence = document.getElementById('trade-signal-confluence').value.trim();
+    const scenarioLink = document.getElementById('trade-scenario-link').value;
+    const signalNotes = document.getElementById('trade-signal-notes').value.trim();
 
-  function handleCardInput(e, type) {
-    const target = e.target;
-    const card = target.closest('.card');
-    if (!card) return;
-    const id = card.dataset.id;
-    const item = findItem(type, id);
-    if (!item) return;
-    if (target.dataset.field) item[target.dataset.field] = target.value;
-    saveState('sop-session', sessionState);
-  }
+    if (!title && !preEmotion && !tags && !signalTime && !entryModels && !signalNotes) return;
 
-  function findItem(type, id) {
-    return sessionState[type].find((i) => i.id === id);
-  }
-
-  function renderList(type) {
-    if (type === 'watching') renderWatching();
-    if (type === 'surges') renderSurges();
-    if (type === 'adaptations') renderAdaptations();
-  }
-
-  function cardTemplate(item, fields) {
-    return `
-      <div class="card ${item.open ? 'open' : ''}" data-id="${item.id}">
-        <div class="card-header">
-          <div class="card-title">${fields.title}</div>
-          <div class="card-actions">
-            <button class="small-btn secondary card-toggle">Toggle</button>
-            <button class="small-btn danger delete-card">Delete</button>
-          </div>
-        </div>
-        <div class="card-body">
-          ${fields.body}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderWatching() {
-    watchList.innerHTML = sessionState.watching
-      .map((item, idx) =>
-        cardTemplate(item, {
-          title: `Watching #${sessionState.watching.length - idx}`,
-          body: `
-            <div class="field-row">
-              <label class="field-block"><span>Time</span><input data-field="time" type="time" value="${item.time || ''}" /></label>
-              <label class="field-block"><span>Emotion</span><input data-field="emotion" type="text" value="${escapeValue(item.emotion)}" /></label>
-            </div>
-            <label class="field-block"><span>Notes</span><textarea data-field="notes">${escapeValue(item.notes)}</textarea></label>
-          `,
-        })
-      )
-      .join('');
-  }
-
-  function renderSurges() {
-    surgeList.innerHTML = sessionState.surges
-      .map((item, idx) =>
-        cardTemplate(item, {
-          title: `Surge #${sessionState.surges.length - idx}`,
-          body: `
-            <div class="field-row">
-              <label class="field-block"><span>Time</span><input data-field="time" type="time" value="${item.time || ''}" /></label>
-              <label class="field-block"><span>Emotion</span><input data-field="emotion" type="text" value="${escapeValue(item.emotion)}" /></label>
-            </div>
-            <label class="field-block"><span>Notes</span><textarea data-field="notes">${escapeValue(item.notes)}</textarea></label>
-          `,
-        })
-      )
-      .join('');
-  }
-
-  function renderAdaptations() {
-    adaptList.innerHTML = sessionState.adaptations
-      .map((item, idx) =>
-        cardTemplate(item, {
-          title: `Adaptation #${sessionState.adaptations.length - idx}`,
-          body: `
-            <div class="field-row">
-              <label class="field-block"><span>Start</span><input data-field="start" type="time" value="${item.start || ''}" /></label>
-              <label class="field-block"><span>End</span><input data-field="end" type="time" value="${item.end || ''}" /></label>
-            </div>
-            <label class="field-block"><span>Description</span><textarea data-field="description">${escapeValue(item.description)}</textarea></label>
-          `,
-        })
-      )
-      .join('');
-  }
-
-  // Trade ideas
-  const tradeIdeaList = document.getElementById('tradeIdeaList');
-  const addTradeIdeaBtn = document.getElementById('addTradeIdeaBtn');
-  const confirmAddIdea = document.getElementById('confirmAddIdea');
-  const tradeTitleInput = document.getElementById('tradeTitleInput');
-
-  function createTradeIdea(title) {
-    const id = `T${tradeIdeaState.counter}`;
-    tradeIdeaState.counter += 1;
-    return {
-      id,
-      title: title || `Trade Idea ${tradeIdeaState.counter - 1}`,
-      status: 'pending',
-      open: true,
-      pre: { emotion: '', tags: '', confluence: '', notes: '' },
-      signal: { time: '', emotion: '', entryModels: '', confluence: '', scenarioLink: '', notes: '' },
+    const nextId = `T${state.trades.length + 1}`;
+    state.trades.push({
+      id: nextId,
+      title,
+      pre: {
+        emotion: preEmotion,
+        tags,
+        confluence,
+        notes: preNotes,
+      },
+      signal: {
+        time: signalTime,
+        emotion: signalEmotion,
+        entryModels,
+        confluence: signalConfluence,
+        scenarioId: scenarioLink,
+        notes: signalNotes,
+      },
+      decision: 'none',
       taken: { entryPrice: '', stopLoss: '', expectedRR: '', notes: '' },
       missed: { reason: '', rValue: '', notes: '' },
-    };
-  }
-
-  addTradeIdeaBtn.addEventListener('click', () => {
-    tradeTitleInput.focus();
-  });
-
-  confirmAddIdea.addEventListener('click', () => {
-    const idea = createTradeIdea(tradeTitleInput.value.trim());
-    tradeIdeaState.ideas.unshift(idea);
-    saveState('sop-trade-ideas', tradeIdeaState);
-    tradeTitleInput.value = '';
-    renderTradeIdeas();
-  });
-
-  tradeIdeaList.addEventListener('click', (e) => {
-    const target = e.target;
-    const card = target.closest('.card');
-    if (!card) return;
-    const id = card.dataset.id;
-    const idea = tradeIdeaState.ideas.find((i) => i.id === id);
-    if (!idea) return;
-
-    if (target.classList.contains('card-toggle')) {
-      card.classList.toggle('open');
-      idea.open = card.classList.contains('open');
-      saveState('sop-trade-ideas', tradeIdeaState);
-    }
-
-    if (target.classList.contains('delete-card')) {
-      tradeIdeaState.ideas = tradeIdeaState.ideas.filter((i) => i.id !== id);
-      saveState('sop-trade-ideas', tradeIdeaState);
-      renderTradeIdeas();
-    }
-
-    if (target.dataset.action === 'markTaken') {
-      idea.status = 'taken';
-      saveState('sop-trade-ideas', tradeIdeaState);
-      renderTradeIdeas();
-    }
-
-    if (target.dataset.action === 'markMissed') {
-      idea.status = 'missed';
-      saveState('sop-trade-ideas', tradeIdeaState);
-      renderTradeIdeas();
-    }
-  });
-
-  tradeIdeaList.addEventListener('input', (e) => {
-    const target = e.target;
-    const card = target.closest('.card');
-    if (!card) return;
-    const id = card.dataset.id;
-    const idea = tradeIdeaState.ideas.find((i) => i.id === id);
-    if (!idea) return;
-
-    const section = target.dataset.section;
-    const field = target.dataset.field;
-    if (!field) return;
-
-    if (section === 'title') {
-      idea.title = target.value;
-    } else if (section && idea[section]) {
-      idea[section][field] = target.value;
-    }
-    saveState('sop-trade-ideas', tradeIdeaState);
-  });
-
-  renderTradeIdeas();
-
-  function renderTradeIdeas() {
-    tradeIdeaList.innerHTML = tradeIdeaState.ideas
-      .map((idea) => {
-        const statusLabel = idea.status === 'taken' ? 'Trade Taken' : idea.status === 'missed' ? 'Trade Missed' : 'Pending';
-        const statusClass = idea.status === 'taken' ? 'badge taken' : idea.status === 'missed' ? 'badge missed' : 'badge';
-        const scenarioOptions = buildScenarioOptions(idea.signal.scenarioLink);
-        return `
-          <div class="card ${idea.open ? 'open' : ''}" data-id="${idea.id}">
-            <div class="card-header">
-              <div class="card-title">
-                <span>${idea.id}</span>
-                <input data-section="title" data-field="title" type="text" value="${escapeValue(idea.title)}" />
-              </div>
-              <div class="card-actions">
-                <span class="${statusClass}">${statusLabel}</span>
-                <button class="small-btn secondary card-toggle">Toggle</button>
-                <button class="small-btn danger delete-card">Delete</button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="card-block">
-                <p class="eyebrow">Baseline</p>
-                <h3>Pre-Trade</h3>
-                <div class="field-row">
-                  <label class="field-block"><span>Emotion</span><input data-section="pre" data-field="emotion" type="text" value="${escapeValue(idea.pre.emotion)}" /></label>
-                  <label class="field-block"><span>Tags</span><input data-section="pre" data-field="tags" type="text" value="${escapeValue(idea.pre.tags)}" /></label>
-                </div>
-                <label class="field-block"><span>Confluence</span><input data-section="pre" data-field="confluence" type="text" value="${escapeValue(idea.pre.confluence)}" /></label>
-                <label class="field-block"><span>Notes</span><textarea data-section="pre" data-field="notes">${escapeValue(idea.pre.notes)}</textarea></label>
-              </div>
-
-              <div class="card-block">
-                <p class="eyebrow">Signal</p>
-                <h3>Trigger</h3>
-                <div class="field-row">
-                  <label class="field-block"><span>Time</span><input data-section="signal" data-field="time" type="time" value="${escapeValue(idea.signal.time)}" /></label>
-                  <label class="field-block"><span>Emotion</span><input data-section="signal" data-field="emotion" type="text" value="${escapeValue(idea.signal.emotion)}" /></label>
-                </div>
-                <div class="field-row">
-                  <label class="field-block"><span>Entry models</span><input data-section="signal" data-field="entryModels" type="text" value="${escapeValue(idea.signal.entryModels)}" /></label>
-                  <label class="field-block"><span>Confluence</span><input data-section="signal" data-field="confluence" type="text" value="${escapeValue(idea.signal.confluence)}" /></label>
-                </div>
-                <label class="field-block"><span>Link to scenario</span><select data-section="signal" data-field="scenarioLink">${scenarioOptions}</select></label>
-                <label class="field-block"><span>Notes</span><textarea data-section="signal" data-field="notes">${escapeValue(idea.signal.notes)}</textarea></label>
-              </div>
-
-              <div class="card-block">
-                <p class="eyebrow">Decision Fork</p>
-                <h3>Outcome</h3>
-                <div class="status-row">
-                  <button class="pill success" data-action="markTaken">Mark as Trade Taken</button>
-                  <button class="pill warning" data-action="markMissed">Mark as Trade Missed</button>
-                </div>
-                <div class="grid-two">
-                  <div>
-                    <p class="eyebrow">Trade Taken</p>
-                    <label class="field-block"><span>Entry price</span><input data-section="taken" data-field="entryPrice" type="text" value="${escapeValue(idea.taken.entryPrice)}" /></label>
-                    <label class="field-block"><span>Stop loss</span><input data-section="taken" data-field="stopLoss" type="text" value="${escapeValue(idea.taken.stopLoss)}" /></label>
-                    <label class="field-block"><span>Expected RR</span><input data-section="taken" data-field="expectedRR" type="text" value="${escapeValue(idea.taken.expectedRR)}" /></label>
-                    <label class="field-block"><span>Notes</span><textarea data-section="taken" data-field="notes">${escapeValue(idea.taken.notes)}</textarea></label>
-                  </div>
-                  <div>
-                    <p class="eyebrow">Trade Missed</p>
-                    <label class="field-block"><span>Reason</span><input data-section="missed" data-field="reason" type="text" value="${escapeValue(idea.missed.reason)}" /></label>
-                    <label class="field-block"><span>R value</span><input data-section="missed" data-field="rValue" type="text" value="${escapeValue(idea.missed.rValue)}" /></label>
-                    <label class="field-block"><span>Notes</span><textarea data-section="missed" data-field="notes">${escapeValue(idea.missed.notes)}</textarea></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      })
-      .join('');
-  }
-
-  function buildScenarioOptions(selected) {
-    const options = ['<option value="">Link a scenario</option>'];
-    preMarketState.scenarios.forEach((s) => {
-      const label = s.title ? `${s.id} — ${s.title}` : s.id;
-      options.push(`<option value="${s.id}" ${selected === s.id ? 'selected' : ''}>${label}</option>`);
     });
-    return options.join('');
-  }
 
-  function renderScenarios() {
-    scenarioList.innerHTML = preMarketState.scenarios
-      .map((scenario) => `
-        <div class="card ${scenario.open ? 'open' : ''}" data-id="${scenario.id}">
-          <div class="card-header">
-            <div class="card-title">
-              <span>${scenario.id}</span>
-              <input data-field="title" type="text" value="${escapeValue(scenario.title)}" placeholder="Scenario title" />
-            </div>
-            <div class="card-actions">
-              <button class="small-btn secondary card-toggle">Toggle</button>
-              <button class="small-btn danger delete-card">Delete</button>
-            </div>
-          </div>
-          <div class="card-body">
-            <label class="field-block"><span>IF</span><textarea data-field="ifText" placeholder="If ...">${escapeValue(scenario.ifText)}</textarea></label>
-            <label class="field-block"><span>THEN</span><textarea data-field="thenText" placeholder="Then ...">${escapeValue(scenario.thenText)}</textarea></label>
-          </div>
-        </div>
-      `)
-      .join('');
-  }
+    persist(storageKeys.trades, state.trades);
+    clearTradeForm();
+    renderTrades();
+  });
 
-  function escapeValue(value) {
-    if (value == null) return '';
-    return String(value).replace(/\"/g, '&quot;');
-  }
-
-  function clone(obj) {
-    return JSON.parse(JSON.stringify(obj));
-  }
-
-  function loadState(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return clone(fallback);
-      return Object.assign(clone(fallback), JSON.parse(raw));
-    } catch (err) {
-      return clone(fallback);
+  document.getElementById('trade-list').addEventListener('click', (e) => {
+    const delId = e.target.getAttribute('data-delete-trade');
+    if (delId) {
+      state.trades = state.trades.filter((t) => t.id !== delId);
+      persist(storageKeys.trades, state.trades);
+      renderTrades();
+      return;
     }
-  }
 
-  function saveState(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
+    const markTaken = e.target.getAttribute('data-mark-taken');
+    const markMissed = e.target.getAttribute('data-mark-missed');
 
-  document.getElementById('resetDayBtn').addEventListener('click', () => {
-    localStorage.clear();
+    if (markTaken) {
+      updateTradeDecision(markTaken, 'taken');
+    } else if (markMissed) {
+      updateTradeDecision(markMissed, 'missed');
+    }
+  });
+}
+
+function updateTradeDecision(tradeId, decision) {
+  const trade = state.trades.find((t) => t.id === tradeId);
+  if (!trade) return;
+
+  const entryPrice = document.querySelector(`[data-entry-price="${tradeId}"]`)?.value || '';
+  const stopLoss = document.querySelector(`[data-stop-loss="${tradeId}"]`)?.value || '';
+  const expectedRR = document.querySelector(`[data-expected-rr="${tradeId}"]`)?.value || '';
+  const takenNotes = document.querySelector(`[data-taken-notes="${tradeId}"]`)?.value || '';
+  const missedReason = document.querySelector(`[data-missed-reason="${tradeId}"]`)?.value || '';
+  const missedR = document.querySelector(`[data-missed-r="${tradeId}"]`)?.value || '';
+  const missedNotes = document.querySelector(`[data-missed-notes="${tradeId}"]`)?.value || '';
+
+  trade.decision = decision;
+  trade.taken = { entryPrice, stopLoss, expectedRR, notes: takenNotes };
+  trade.missed = { reason: missedReason, rValue: missedR, notes: missedNotes };
+
+  persist(storageKeys.trades, state.trades);
+  renderTrades();
+}
+
+function attachTradeFieldListeners() {
+  // Live update on change instead of only when marking taken/missed
+  state.trades.forEach((trade) => {
+    const id = trade.id;
+
+    const entryPriceEl = document.querySelector(`[data-entry-price="${id}"]`);
+    const stopLossEl = document.querySelector(`[data-stop-loss="${id}"]`);
+    const expectedRREl = document.querySelector(`[data-expected-rr="${id}"]`);
+    const takenNotesEl = document.querySelector(`[data-taken-notes="${id}"]`);
+    const missedReasonEl = document.querySelector(`[data-missed-reason="${id}"]`);
+    const missedREl = document.querySelector(`[data-missed-r="${id}"]`);
+    const missedNotesEl = document.querySelector(`[data-missed-notes="${id}"]`);
+
+    if (entryPriceEl)
+      entryPriceEl.addEventListener('input', (e) => {
+        trade.taken.entryPrice = e.target.value;
+        persist(storageKeys.trades, state.trades);
+      });
+    if (stopLossEl)
+      stopLossEl.addEventListener('input', (e) => {
+        trade.taken.stopLoss = e.target.value;
+        persist(storageKeys.trades, state.trades);
+      });
+    if (expectedRREl)
+      expectedRREl.addEventListener('input', (e) => {
+        trade.taken.expectedRR = e.target.value;
+        persist(storageKeys.trades, state.trades);
+      });
+    if (takenNotesEl)
+      takenNotesEl.addEventListener('input', (e) => {
+        trade.taken.notes = e.target.value;
+        persist(storageKeys.trades, state.trades);
+      });
+    if (missedReasonEl)
+      missedReasonEl.addEventListener('input', (e) => {
+        trade.missed.reason = e.target.value;
+        persist(storageKeys.trades, state.trades);
+      });
+    if (missedREl)
+      missedREl.addEventListener('input', (e) => {
+        trade.missed.rValue = e.target.value;
+        persist(storageKeys.trades, state.trades);
+      });
+    if (missedNotesEl)
+      missedNotesEl.addEventListener('input', (e) => {
+        trade.missed.notes = e.target.value;
+        persist(storageKeys.trades, state.trades);
+      });
+  });
+}
+
+function clearTradeForm() {
+  [
+    'trade-title',
+    'trade-pre-emotion',
+    'trade-tags',
+    'trade-confluence',
+    'trade-pre-notes',
+    'trade-signal-time',
+    'trade-signal-emotion',
+    'trade-entry-models',
+    'trade-signal-confluence',
+    'trade-signal-notes',
+  ].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const scenarioSelect = document.getElementById('trade-scenario-link');
+  if (scenarioSelect) scenarioSelect.value = '';
+}
+
+/* Reset Day */
+
+function setupReset() {
+  document.getElementById('reset-day').addEventListener('click', () => {
+    if (!confirm('Reset the entire day (all modules)? This cannot be undone.')) return;
+
+    Object.values(storageKeys).forEach((key) => localStorage.removeItem(key));
+
+    // Reset in-memory state
+    state.preMarket = {
+      levelsMarked: false,
+      previousSessions: '',
+      structure: '',
+      sessionEmotion: '',
+    };
+    state.scenarios = [];
+    state.watching = [];
+    state.surges = [];
+    state.adaptations = [];
+    state.session = {
+      traderEnergy: '',
+      marketEnergy: '',
+      marketType: '',
+      notes: '',
+    };
+    state.trades = [];
+
     location.reload();
   });
-});
+}
+
+/* Global small-card body toggle safety */
+
+function setupItemBodyToggle() {
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('toggle-card')) {
+      const card = e.target.closest('.item-card');
+      card?.classList.toggle('open');
+    }
+  });
+}
+
+/* Init */
+
+function init() {
+  initAccordion();
+  setupPreMarket();
+  setupSessionModule();
+  setupTrades();
+  setupReset();
+  setupItemBodyToggle();
+
+  // Open all accordions by default for visibility
+  document.querySelectorAll('[data-accordion]').forEach((acc) => acc.classList.add('open'));
+}
+
+document.addEventListener('DOMContentLoaded', init);
