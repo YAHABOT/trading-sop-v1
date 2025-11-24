@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 007</title>
+  <title>Trading SOP Journal — Build 007a</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -275,9 +275,9 @@
 
     <div class="top-bar">
       <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 007</h1>
+        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 007a</h1>
         <p class="small-text">
-          Accordion ✓ • M1 Scenarios ✓ • M2 Watching + Surges ✓ • Persistence ✓ • Per-card collapse/expand (Scenarios / Watching / Surges) ✓
+          Accordion ✓ • M1 Scenarios ✓ • M2 Watching + Surges ✓ • Persistence ✓ • Per-card collapse/expand ✓ • Input focus bug fixed ✓
         </p>
       </div>
       <div style="text-align:right;">
@@ -724,8 +724,11 @@
 
         const summary = document.createElement("div");
         summary.className = "watch-summary";
-        const sumText = `${entry.time || "—"} | ${entry.emotion || "no emotion"}`;
-        summary.textContent = sumText;
+        const setWatchSummary = () => {
+          const sumText = `${entry.time || "—"} | ${entry.emotion || "no emotion"}`;
+          summary.textContent = sumText;
+        };
+        setWatchSummary();
 
         const right = document.createElement("div");
         right.style.display = "flex";
@@ -782,13 +785,13 @@
 
         timeInput.addEventListener("input", () => {
           entry.time = timeInput.value;
+          setWatchSummary();
           saveModule2();
-          renderWatchEntries(); // update summary
         });
         emoInput.addEventListener("input", () => {
           entry.emotion = emoInput.value;
+          setWatchSummary();
           saveModule2();
-          renderWatchEntries(); // update summary
         });
 
         body.appendChild(row);
@@ -881,8 +884,11 @@
 
         const summary = document.createElement("div");
         summary.className = "surge-summary";
-        const sumText = `${entry.time || "—"} | ${entry.emotion || "no label"}`;
-        summary.textContent = sumText;
+        const setSurgeSummary = () => {
+          const sumText = `${entry.time || "—"} | ${entry.emotion || "no label"}`;
+          summary.textContent = sumText;
+        };
+        setSurgeSummary();
 
         const right = document.createElement("div");
         right.style.display = "flex";
@@ -939,13 +945,13 @@
 
         timeInput.addEventListener("input", () => {
           entry.time = timeInput.value;
+          setSurgeSummary();
           saveModule2();
-          renderSurges(); // update summary
         });
         emoInput.addEventListener("input", () => {
           entry.emotion = emoInput.value;
+          setSurgeSummary();
           saveModule2();
-          renderSurges(); // update summary
         });
 
         body.appendChild(row);
