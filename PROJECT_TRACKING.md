@@ -795,6 +795,61 @@ Accordion = multiple open allowed (per final answer)
 **Notes / Limitations (by design):**
 - Module 1 textareas and emotion dropdown are still not persisted (only scenarios are).
 - Module 3 and 4 are untouched in this build (scheduled for later phases).
+✅ CHANGELOG — BUILD 007c (2025-11-24)
 
+Status: PASSED**
+Category: Module 1 & 2 UI Stabilization / Core UX Polish**
+
+Fixes Included
+
+Accordion System Restored
+
+All modules now open/close correctly.
+
+Arrows functional and state resets cleanly.
+
+Scenario Header Row Fixed
+
+Label on left, “Add Scenario” button on right.
+
+Proper spacing + flex alignment restored.
+
+Per-Card Collapse/Expand Implemented
+
+Scenarios: collapse body, keep header visible.
+
+Watching entries: live mini-accordion.
+
+Emotional surges: same pattern as watching entries.
+
+Collapsed state persists via localStorage.
+
+Critical Input Bug Fixed (Focus Loss)
+
+Time/Emotion fields no longer break after each character.
+
+Backspace works normally.
+
+Inputs update summary text without re-rendering the card.
+
+LocalStorage Stability
+
+Data persistence restored after accordion fix.
+
+All watchers + surges + scenarios persist correctly.
+
+Global Script Crash Fixed
+
+Stray bracket removed that previously killed the script.
+
+Page now fully functional on load.
+
+Result
+
+Module 1 + 2 now stable, usable, and visually consistent.
+
+UI is clean, responsive, and matches Build Plan Phase 1 (Scenarios + Micros).
+
+Ready to expand into deeper session mechanics.
 
 
