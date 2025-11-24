@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 005</title>
+  <title>Trading SOP Journal — Build 006</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -137,7 +137,9 @@
 
     .scenario-add-btn,
     .watch-add-btn,
-    .watch-delete-btn {
+    .watch-delete-btn,
+    .surge-add-btn,
+    .surge-delete-btn {
       font-size: 0.7rem;
       padding: 4px 8px;
       border-radius: 999px;
@@ -156,7 +158,8 @@
       color: #e0f2fe;
     }
 
-    .watch-delete-btn {
+    .watch-delete-btn,
+    .surge-delete-btn {
       border: 1px solid #ef4444;
       background: #450a0a;
       color: #fecaca;
@@ -195,8 +198,9 @@
       margin-bottom: 8px;
     }
 
-    /* Watching Price cards */
-    .watch-card {
+    /* Watching Price / Surges cards */
+    .watch-card,
+    .surge-card {
       border: 1px solid #243045;
       border-radius: 6px;
       padding: 8px;
@@ -204,13 +208,15 @@
       background: #020617;
     }
 
-    .watch-row {
+    .watch-row,
+    .surge-row {
       display: flex;
       gap: 8px;
       margin-bottom: 8px;
     }
 
-    .watch-row > div {
+    .watch-row > div,
+    .surge-row > div {
       flex: 1;
     }
 
@@ -240,13 +246,13 @@
 
     <div class="top-bar">
       <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 005</h1>
+        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 006</h1>
         <p class="small-text">
-          Accordion ✓ • Module 1 UI ✓ • Dark theme ✓ • IF–THEN UI ✓ • Scenario persistence ✓ • Watching Price UI (Module 2) ✓
+          Accordion ✓ • Module 1 UI ✓ • Dark theme ✓ • IF–THEN UI ✓ • Scenario persistence ✓ • Watching Price UI ✓ • Module 2 persistence + Emotional Surges ✓
         </p>
       </div>
       <div style="text-align:right;">
-        <button type="button" id="resetDayBtn" class="reset-btn">Reset Day (Scenarios)</button>
+        <button type="button" id="resetDayBtn" class="reset-btn">Reset Day (M1 Scenarios + M2)</button>
         <div id="statusText" class="small-text"></div>
       </div>
     </div>
@@ -316,11 +322,27 @@
         </p>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span class="small-text">Entries</span>
+          <span class="small-text">Watching entries</span>
           <button type="button" id="addWatchBtn" class="watch-add-btn">+ Add Watching Entry</button>
         </div>
 
         <div id="watchList"></div>
+
+        <hr style="border:none; border-top:1px solid #1f2933; margin: 12px 0;" />
+
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Emotional Surges</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Log spikes in emotion during the session (panic, FOMO, tilt, anger, etc.) while flat or in trades.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="small-text">Surge entries</span>
+          <button type="button" id="addSurgeBtn" class="surge-add-btn" style="border:1px solid #f97316; background:#451a03; color:#fed7aa;">
+            + Add Emotional Surge
+          </button>
+        </div>
+
+        <div id="surgeList"></div>
 
       </div>
     </div>
@@ -361,14 +383,8 @@
       });
     });
 
-    // ----------------- SCENARIO STATE + PERSISTENCE (Build 004) -----------------
-    const STORAGE_KEY = "sop_v1_scenarios_only";
+    // ----------------- GLOBAL STATUS -----------------
     const statusEl = document.getElementById("statusText");
-    const resetDayBtn = document.getElementById("resetDayBtn");
-
-    let scenarios = [];
-    let nextScenarioIndex = 1;
-
     function setStatus(msg) {
       if (!statusEl) return;
       statusEl.textContent = msg || "";
@@ -379,10 +395,23 @@
       }
     }
 
+    // ----------------- STORAGE KEYS -----------------
+    const STORAGE_KEY_SCENARIOS = "sop_v1_scenarios_only";
+    const STORAGE_KEY_MODULE2 = "sop_v1_module2";
+
+    const resetDayBtn = document.getElementById("resetDayBtn");
+
+    // ----------------- MODULE 1: SCENARIOS -----------------
+    let scenarios = [];
+    let nextScenarioIndex = 1;
+
+    const scenarioListEl = document.getElementById("scenarioList");
+    const addScenarioBtn = document.getElementById("addScenarioBtn");
+
     function saveScenarios() {
       try {
         const payload = { scenarios };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        localStorage.setItem(STORAGE_KEY_SCENARIOS, JSON.stringify(payload));
         setStatus("Scenarios saved");
       } catch (e) {
         console.error("Error saving scenarios", e);
@@ -392,7 +421,7 @@
 
     function loadScenarios() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(STORAGE_KEY_SCENARIOS);
         if (!raw) {
           scenarios = [];
           nextScenarioIndex = 1;
@@ -414,23 +443,6 @@
         nextScenarioIndex = 1;
       }
     }
-
-    function resetDayScenarios() {
-      if (!confirm("Reset scenarios for this day? This cannot be undone.")) return;
-      scenarios = [];
-      nextScenarioIndex = 1;
-      localStorage.removeItem(STORAGE_KEY);
-      renderScenarios();
-      setStatus("Scenarios reset");
-    }
-
-    if (resetDayBtn) {
-      resetDayBtn.addEventListener("click", resetDayScenarios);
-    }
-
-    // ----------------- SCENARIO UI -----------------
-    const scenarioListEl = document.getElementById("scenarioList");
-    const addScenarioBtn = document.getElementById("addScenarioBtn");
 
     function createScenario() {
       const id = "S" + nextScenarioIndex++;
@@ -542,7 +554,7 @@
       });
     }
 
-    // Expose helpers
+    // Helpers for future modules
     function getAllScenarios() {
       return scenarios.slice();
     }
@@ -556,27 +568,83 @@
       getScenarioById
     };
 
-    // ----------------- BUILD 005: WATCHING PRICE (Module 2) -----------------
+    // ----------------- MODULE 2: WATCHING + SURGES + PERSISTENCE -----------------
     const watchListEl = document.getElementById("watchList");
     const addWatchBtn = document.getElementById("addWatchBtn");
+    const surgeListEl = document.getElementById("surgeList");
+    const addSurgeBtn = document.getElementById("addSurgeBtn");
 
     let watchEntries = [];
+    let surges = [];
+
+    function defaultPresets() {
+      return {
+        chop: false,
+        compression: false,
+        sweep: false,
+        displacement: false,
+        indecision: false,
+        stalling: false
+      };
+    }
 
     function createWatchEntry() {
       return {
         time: "",
         emotion: "",
-        presets: {
-          chop: false,
-          compression: false,
-          sweep: false,
-          displacement: false,
-          indecision: false,
-          stalling: false
-        },
+        presets: defaultPresets(),
         customInterp: "",
         notes: ""
       };
+    }
+
+    function createSurgeEntry() {
+      return {
+        time: "",
+        emotion: "",
+        trigger: "",
+        notes: ""
+      };
+    }
+
+    function saveModule2() {
+      try {
+        const payload = { watchEntries, surges };
+        localStorage.setItem(STORAGE_KEY_MODULE2, JSON.stringify(payload));
+        setStatus("Module 2 saved");
+      } catch (e) {
+        console.error("Error saving module 2", e);
+        setStatus("Save error");
+      }
+    }
+
+    function loadModule2() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_MODULE2);
+        if (!raw) {
+          watchEntries = [];
+          surges = [];
+          return;
+        }
+        const parsed = JSON.parse(raw);
+        watchEntries = Array.isArray(parsed.watchEntries) ? parsed.watchEntries : [];
+        surges = Array.isArray(parsed.surges) ? parsed.surges : [];
+
+        // Ensure presets exist on watch entries
+        watchEntries.forEach(entry => {
+          if (!entry.presets) entry.presets = defaultPresets();
+          else {
+            const def = defaultPresets();
+            Object.keys(def).forEach(k => {
+              if (typeof entry.presets[k] !== "boolean") entry.presets[k] = false;
+            });
+          }
+        });
+      } catch (e) {
+        console.error("Error loading module 2", e);
+        watchEntries = [];
+        surges = [];
+      }
     }
 
     function renderWatchEntries() {
@@ -612,6 +680,7 @@
         delBtn.textContent = "Delete";
         delBtn.addEventListener("click", () => {
           watchEntries.splice(index, 1);
+          saveModule2();
           renderWatchEntries();
         });
 
@@ -638,9 +707,11 @@
 
         timeInput.addEventListener("input", () => {
           entry.time = timeInput.value;
+          saveModule2();
         });
         emoInput.addEventListener("input", () => {
           entry.emotion = emoInput.value;
+          saveModule2();
         });
 
         card.appendChild(row);
@@ -666,6 +737,7 @@
           cb.checked = !!entry.presets[key];
           cb.addEventListener("change", () => {
             entry.presets[key] = cb.checked;
+            saveModule2();
           });
           const span = document.createElement("span");
           span.textContent = text;
@@ -685,6 +757,7 @@
         customInput.value = entry.customInterp || "";
         customInput.addEventListener("input", () => {
           entry.customInterp = customInput.value;
+          saveModule2();
         });
         card.appendChild(customInput);
 
@@ -697,6 +770,7 @@
         notesArea.value = entry.notes || "";
         notesArea.addEventListener("input", () => {
           entry.notes = notesArea.value;
+          saveModule2();
         });
         card.appendChild(notesArea);
 
@@ -704,17 +778,152 @@
       });
     }
 
+    function renderSurges() {
+      surgeListEl.innerHTML = "";
+
+      if (!surges.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.75rem";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No emotional surges logged yet.";
+        surgeListEl.appendChild(empty);
+        return;
+      }
+
+      surges.forEach((entry, index) => {
+        const card = document.createElement("div");
+        card.className = "surge-card";
+
+        const topRow = document.createElement("div");
+        topRow.style.display = "flex";
+        topRow.style.justifyContent = "space-between";
+        topRow.style.alignItems = "center";
+        topRow.style.marginBottom = "4px";
+
+        const label = document.createElement("div");
+        label.style.fontSize = "0.7rem";
+        label.style.color = "#fbbf24";
+        label.textContent = `Surge #${index + 1}`;
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "surge-delete-btn";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", () => {
+          surges.splice(index, 1);
+          saveModule2();
+          renderSurges();
+        });
+
+        topRow.appendChild(label);
+        topRow.appendChild(delBtn);
+        card.appendChild(topRow);
+
+        const row = document.createElement("div");
+        row.className = "surge-row";
+        row.innerHTML = `
+          <div>
+            <label>Time (EST)</label>
+            <input type="text" placeholder="10:05, 11:32, etc.">
+          </div>
+          <div>
+            <label>Emotion Spike</label>
+            <input type="text" placeholder="panic, tilt, anger, FOMO, etc.">
+          </div>
+        `;
+        const timeInput = row.querySelectorAll("input")[0];
+        const emoInput = row.querySelectorAll("input")[1];
+        timeInput.value = entry.time || "";
+        emoInput.value = entry.emotion || "";
+
+        timeInput.addEventListener("input", () => {
+          entry.time = timeInput.value;
+          saveModule2();
+        });
+        emoInput.addEventListener("input", () => {
+          entry.emotion = emoInput.value;
+          saveModule2();
+        });
+
+        card.appendChild(row);
+
+        const triggerLabel = document.createElement("label");
+        triggerLabel.textContent = "Trigger (what caused the surge)";
+        card.appendChild(triggerLabel);
+
+        const triggerInput = document.createElement("input");
+        triggerInput.type = "text";
+        triggerInput.placeholder = "e.g. candle spike against position, missed entry, sudden drawdown, etc.";
+        triggerInput.value = entry.trigger || "";
+        triggerInput.addEventListener("input", () => {
+          entry.trigger = triggerInput.value;
+          saveModule2();
+        });
+        card.appendChild(triggerInput);
+
+        const notesLabel = document.createElement("label");
+        notesLabel.textContent = "Notes / Reaction";
+        card.appendChild(notesLabel);
+
+        const notesArea = document.createElement("textarea");
+        notesArea.placeholder = "How you reacted, what you did next, whether you regained control.";
+        notesArea.value = entry.notes || "";
+        notesArea.addEventListener("input", () => {
+          entry.notes = notesArea.value;
+          saveModule2();
+        });
+        card.appendChild(notesArea);
+
+        surgeListEl.appendChild(card);
+      });
+    }
+
     if (addWatchBtn) {
       addWatchBtn.addEventListener("click", () => {
         watchEntries.push(createWatchEntry());
+        saveModule2();
         renderWatchEntries();
       });
+    }
+
+    if (addSurgeBtn) {
+      addSurgeBtn.addEventListener("click", () => {
+        surges.push(createSurgeEntry());
+        saveModule2();
+        renderSurges();
+      });
+    }
+
+    // ----------------- RESET DAY (M1 + M2) -----------------
+    function resetDayAll() {
+      if (!confirm("Reset M1 scenarios and all Module 2 entries for this day? This cannot be undone.")) return;
+
+      // Clear scenarios
+      scenarios = [];
+      nextScenarioIndex = 1;
+      localStorage.removeItem(STORAGE_KEY_SCENARIOS);
+      renderScenarios();
+
+      // Clear module 2
+      watchEntries = [];
+      surges = [];
+      localStorage.removeItem(STORAGE_KEY_MODULE2);
+      renderWatchEntries();
+      renderSurges();
+
+      setStatus("Day reset (M1 + M2)");
+    }
+
+    if (resetDayBtn) {
+      resetDayBtn.addEventListener("click", resetDayAll);
     }
 
     // ----------------- INIT -----------------
     loadScenarios();
     renderScenarios();
+    loadModule2();
     renderWatchEntries();
+    renderSurges();
   </script>
 
 </body>
