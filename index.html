@@ -2,278 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trading SOP Journal — Build 009</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="top-bar">
-    <div>
-      <p class="eyebrow">Trading SOP Journal</p>
-      <h1>Build 009</h1>
+
+  <div class="container">
+    <div class="top-bar">
+      <div>
+        <h1>Trading SOP Journal — Build 009</h1>
+        <p class="small-text">(M1 + M2 stable) • M3 initialized</p>
+      </div>
+      <button id="resetDayBtn" class="reset-btn">Reset Day</button>
     </div>
-    <button id="reset-day" class="btn danger">Reset Day</button>
-  </header>
 
-  <main class="container">
-
-    <!-- MODULE 1: PRE-MARKET -->
-    <section class="accordion" data-accordion>
-      <header class="accordion-header" data-accordion-trigger>
-        <div>
-          <p class="eyebrow">Module 1</p>
-          <h2>Pre-Market</h2>
-        </div>
-        <span class="chevron">▼</span>
-      </header>
+    <!-- MODULE 1 -->
+    <div class="accordion-item" data-acc>
+      <div class="accordion-header" data-acc-trigger>
+        <span>Module 1 — Pre-Market</span><span>▼</span>
+      </div>
       <div class="accordion-content">
 
-        <div class="module-grid">
-          <!-- Left card: baseline prep -->
-          <div class="card">
-            <label class="checkbox-row">
-              <input type="checkbox" id="levels-marked" />
-              <span>All required session levels marked</span>
-            </label>
-
-            <label class="field">
-              <span>Previous sessions observed / bias</span>
-              <textarea id="previous-sessions" placeholder="Asia, London, prior NY, combined bias…"></textarea>
-            </label>
-
-            <label class="field">
-              <span>HTF → LTF structure & trend</span>
-              <textarea id="structure" placeholder="15m → 5m → 1m narrative…"></textarea>
-            </label>
-
-            <label class="field">
-              <span>Session-start emotional state</span>
-              <select id="session-emotion">
-                <option value="">– select –</option>
-                <option value="calm">Calm</option>
-                <option value="focused">Focused</option>
-                <option value="hesitant">Hesitant</option>
-                <option value="anxious">Anxious</option>
-                <option value="impatient">Impatient</option>
-                <option value="overconfident">Overconfident</option>
-              </select>
-            </label>
-          </div>
-
-          <!-- Right card: IF–THEN scenario builder -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <p class="eyebrow">Scenario Engine</p>
-                <h3>IF–THEN Scenarios</h3>
-              </div>
-              <button id="add-scenario" type="button" class="btn success">+ Add Scenario</button>
-            </div>
-
-            <div class="form-row">
-              <input type="text" id="scenario-title" placeholder="Scenario title (e.g. ‘NY liquidity grab then trend’)" />
-            </div>
-            <div class="form-row">
-              <textarea id="scenario-if" placeholder="IF: condition (price behavior, level interaction, time window)…"></textarea>
-            </div>
-            <div class="form-row">
-              <textarea id="scenario-then" placeholder="THEN: execution expectation (direction, model, TP/SL behavior)…"></textarea>
-            </div>
-
-            <div id="scenario-list" class="stack"></div>
-          </div>
+        <label>Session Levels</label>
+        <div class="checkbox-row">
+          <input type="checkbox" id="levels_done">
+          <label>All required levels marked</label>
         </div>
 
+        <label>Previous Sessions Observed / Bias</label>
+        <textarea id="prev_sessions"></textarea>
+
+        <label>HTF → LTF Structure</label>
+        <textarea id="htf_ltf"></textarea>
+
+        <label>IF–THEN Scenarios</label>
+        <div class="scenario-header">
+          <span>Scenario List</span>
+          <button id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
+        </div>
+        <div id="scenarioList"></div>
+
+        <label>Session-Start Emotional State</label>
+        <select id="session_emotion">
+          <option value="">– select –</option>
+          <option value="calm">Calm</option>
+          <option value="focused">Focused</option>
+          <option value="anxious">Anxious</option>
+          <option value="impatient">Impatient</option>
+          <option value="overconfident">Overconfident</option>
+        </select>
       </div>
-    </section>
+    </div>
 
-    <!-- MODULE 2: DURING SESSION (GLOBAL) -->
-    <section class="accordion" data-accordion>
-      <header class="accordion-header" data-accordion-trigger>
-        <div>
-          <p class="eyebrow">Module 2</p>
-          <h2>During Session (Global)</h2>
-        </div>
-        <span class="chevron">▼</span>
-      </header>
+    <!-- MODULE 2 -->
+    <div class="accordion-item" data-acc>
+      <div class="accordion-header" data-acc-trigger>
+        <span>Module 2 — During Session (Global)</span><span>▼</span>
+      </div>
       <div class="accordion-content">
 
-        <div class="module-grid">
-          <!-- Watching price -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <p class="eyebrow">Flat State</p>
-                <h3>Watching Price</h3>
-              </div>
-              <button id="add-watching" type="button" class="btn info">+ Add Watching Entry</button>
-            </div>
-            <div class="form-row">
-              <input type="time" id="watch-time" />
-              <input type="text" id="watch-emotion" placeholder="Emotion (calm, FOMO, bored…)" />
-            </div>
-            <div class="form-row">
-              <textarea id="watch-notes" placeholder="What you saw, how it shaped your bias…"></textarea>
-            </div>
-            <div id="watching-list" class="stack"></div>
-          </div>
+        <h3>Watching Price (Flat)</h3>
+        <div class="header-row">
+          <span>Watching entries</span>
+          <button id="addWatchBtn" class="watch-add-btn">+ Add</button>
+        </div>
+        <div id="watchList"></div>
 
-          <!-- Emotional surges -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <p class="eyebrow">Emotional Spikes</p>
-                <h3>Emotional Surges</h3>
-              </div>
-              <button id="add-surge" type="button" class="btn warning">+ Add Surge</button>
-            </div>
-            <div class="form-row">
-              <input type="time" id="surge-time" />
-              <input type="text" id="surge-emotion" placeholder="Spike emotion (panic, greed, tilt…)" />
-            </div>
-            <div class="form-row">
-              <textarea id="surge-notes" placeholder="Trigger and reaction (what caused it, what you did next)…"></textarea>
-            </div>
-            <div id="surge-list" class="stack"></div>
+        <hr>
+
+        <h3>Emotional Surges</h3>
+        <div class="header-row">
+          <span>Surges</span>
+          <button id="addSurgeBtn" class="surge-add-btn">+ Add</button>
+        </div>
+        <div id="surgeList"></div>
+
+        <hr>
+
+        <h3>Adaptation Windows</h3>
+        <div class="header-row">
+          <span>Adapt entries</span>
+          <button id="addAdaptBtn" class="adapt-add-btn">+ Add</button>
+        </div>
+        <div id="adaptList"></div>
+
+        <hr>
+
+        <h3>Session Energy & Market Behavior</h3>
+        <div class="row-2">
+          <div>
+            <label>Trader Energy (0–10)</label>
+            <input type="number" id="trader_energy" min="0" max="10">
+          </div>
+          <div>
+            <label>Market Energy (0–10)</label>
+            <input type="number" id="market_energy" min="0" max="10">
           </div>
         </div>
 
-        <div class="module-grid">
-          <!-- Adaptation windows -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <p class="eyebrow">Market Shift</p>
-                <h3>Adaptation Windows</h3>
-              </div>
-              <button id="add-adaptation" type="button" class="btn accent">+ Add Adaptation</button>
-            </div>
-            <div class="form-row">
-              <input type="time" id="adapt-start" placeholder="Start time" />
-              <input type="time" id="adapt-end" placeholder="End time" />
-            </div>
-            <div class="form-row">
-              <textarea id="adapt-description" placeholder="What changed (structure, tempo, liquidity, orderflow)… and how you adapted (or didn’t)…"></textarea>
-            </div>
-            <div id="adapt-list" class="stack"></div>
-          </div>
+        <label>Market Type</label>
+        <select id="market_type">
+          <option value="">– select –</option>
+          <option value="trend">Trend</option>
+          <option value="range">Range</option>
+          <option value="choppy">Choppy</option>
+        </select>
 
-          <!-- Session energy & market behavior -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <p class="eyebrow">Session Snapshot</p>
-                <h3>Energy & Market Type</h3>
-              </div>
-            </div>
-            <div class="form-row">
-              <label class="field">
-                <span>Trader energy (0–10)</span>
-                <input type="number" id="trader-energy" min="0" max="10" />
-              </label>
-              <label class="field">
-                <span>Market energy (0–10)</span>
-                <input type="number" id="market-energy" min="0" max="10" />
-              </label>
-            </div>
-            <label class="field">
-              <span>Market type</span>
-              <select id="market-type">
-                <option value="">– select –</option>
-                <option value="trend">Trend</option>
-                <option value="range">Range</option>
-                <option value="choppy">Choppy</option>
-                <option value="volatile">High volatility</option>
-                <option value="slow">Slow grind</option>
-                <option value="manipulative">Manipulative</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Session notes (tempo / behavior)</span>
-              <textarea id="session-notes" placeholder="Tempo shifts, sudden dead periods, liquidity feel, fake moves…"></textarea>
-            </label>
-          </div>
-        </div>
-
+        <label>Notes</label>
+        <textarea id="market_notes"></textarea>
       </div>
-    </section>
+    </div>
 
-    <!-- MODULE 3: TRADE IDEA LOGIC -->
-    <section class="accordion" data-accordion>
-      <header class="accordion-header" data-accordion-trigger>
-        <div>
-          <p class="eyebrow">Module 3</p>
-          <h2>Trade Idea Logic</h2>
-        </div>
-        <span class="chevron">▼</span>
-      </header>
+    <!-- MODULE 3 -->
+    <div class="accordion-item" data-acc>
+      <div class="accordion-header" data-acc-trigger>
+        <span>Module 3 — Trade Idea Logic</span><span>▼</span>
+      </div>
       <div class="accordion-content">
 
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <p class="eyebrow">New Idea</p>
-              <h3>Create Trade Idea</h3>
-            </div>
-            <button id="add-trade" type="button" class="btn danger">+ Add Trade Idea</button>
-          </div>
-
-          <!-- Pre-trade baseline -->
-          <div class="form-row">
-            <input type="text" id="trade-title" placeholder="Trade idea title (e.g. ‘NY reversal from HTF supply’)" />
-          </div>
-          <div class="form-row">
-            <input type="text" id="trade-pre-emotion" placeholder="Pre-trade emotion (focused, hesitant, overconfident…)" />
-            <input type="text" id="trade-tags" placeholder="Tags (comma separated: NYO, news, HTF zone…)" />
-          </div>
-          <div class="form-row">
-            <input type="text" id="trade-confluence" placeholder="Confluence stack (HTF level, liquidity, time of day…)" />
-          </div>
-          <div class="form-row">
-            <textarea id="trade-pre-notes" placeholder="Pre-trade narrative / expectation…"></textarea>
-          </div>
-
-          <hr />
-
-          <!-- Signal section -->
-          <div class="form-row">
-            <input type="time" id="trade-signal-time" />
-            <input type="text" id="trade-signal-emotion" placeholder="Emotion at signal (calm, FOMO…)" />
-            <input type="text" id="trade-entry-models" placeholder="Entry models (e.g. limit, stop, confirmation…)" />
-          </div>
-          <div class="form-row">
-            <input type="text" id="trade-signal-confluence" placeholder="Signal-specific confluence (e.g. 1m displacement, sweep…)" />
-            <select id="trade-scenario-link">
-              <option value="">Link to scenario (optional)</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <textarea id="trade-signal-notes" placeholder="Signal notes (what confirmed or invalidated it)…"></textarea>
-          </div>
+        <div class="header-row">
+          <span>Trade Ideas</span>
+          <button id="addTradeIdeaBtn" class="tradeidea-add-btn">+ Add Trade Idea</button>
         </div>
 
-        <div id="trade-list" class="stack" style="margin-top: 14px;"></div>
+        <p class="small-text">Full flow: Baseline → Signal → Trade Taken or Missed</p>
+
+        <div id="tradeIdeaList"></div>
 
       </div>
-    </section>
+    </div>
 
-    <!-- MODULE 4: POST-MARKET REVIEW (placeholder for now) -->
-    <section class="accordion" data-accordion>
-      <header class="accordion-header" data-accordion-trigger>
-        <div>
-          <p class="eyebrow">Module 4</p>
-          <h2>Post-Market Review</h2>
-        </div>
-        <span class="chevron">▼</span>
-      </header>
-      <div class="accordion-content">
-        <div class="card placeholder">
-          <p>Module 4 engine (P/L, R tally, execution/disc grades, auto-psych patterns) will be wired in a later build.</p>
-        </div>
-      </div>
-    </section>
-
-  </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
