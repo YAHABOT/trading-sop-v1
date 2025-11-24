@@ -11,7 +11,7 @@ Everything in one place.
 
 # 🧾 CHANGE LOG
 
-## [2025-11-25 — Step 0 Audit Completed + New 4-Section Architecture]
+## [2025-11-23 — Step 0 Audit Completed + New 4-Section Architecture]
 
 ### ✅ Step 0 — Automaticity Field Audit Fully Completed
 A full psychological, behavioral, execution-flow, and structural audit was completed.
@@ -279,4 +279,192 @@ This is the core engine replacing “Add Trade / Add Miss.”
 - Module 2 finalized  
 - Module 3 finalized  
 - Autosave logic confirmed (instant)
+
+[2025-11-24 — Module 4 Completed + Behavior Engine Added]
+✅ Module 4 — Post-Market Review FINALIZED
+
+A full refactor of the Post-Market Review was completed, adding:
+
+automated PNL aggregation
+
+automated R and missed-R aggregation
+
+automated missed-opportunity count
+
+scenario auto-resolution (played / didn’t play)
+
+multi-select trend/range/continuation/reversal/mixed structure logic
+
+full psychological pattern auto-generation based on Modules 1–3 emotional chain
+
+semi-automated “What Went Well / What Went Wrong”
+
+missed-opportunity explanation engine linked to emotional patterns
+
+final daily grading
+
+full backend logic for narrative generation
+
+V1 layout frozen
+
+This completes all 4 modules of the Trading SOP V1.
+
+⭐ MODULE 4 — POST-MARKET REVIEW (FINALIZED)
+🔹 Final Approved Blocks
+
+1) Daily Performance (Auto)
+
+total PNL
+
+total realized R
+
+total missed R (missed + taken-trade missed sections)
+
+total missed opportunities
+
+execution grade (auto)
+
+discipline grade (auto)
+
+2) Market Behavior
+
+multi-select: trend / range / manipulation / continuation / reversal / hybrids
+
+NY session only
+
+3) Scenario Resolution (Auto)
+
+“Scenario Played/Didn’t Play” auto-selected based on “Which Scenario Unfolded?”
+
+TradeID → auto-links to its IF-THEN
+
+ScenarioID → selected if chosen
+
+none → all premkt scenarios marked “didn’t play”
+
+4) Rule Adherence
+
+check rule → follow/break
+
+auto feeds scoring
+
+5) Trade Logic Validation
+
+per trade: setup valid, trigger valid, invalidation respected, management consistent
+
+6) Psychological Pattern Detection (Auto)
+Machine-like conditional engine combines emotional tags from:
+
+pre-trade baseline
+
+watching PA
+
+at the signal
+
+missed trade emotions
+
+during-trade emotions
+
+rule breaks
+
+hesitation/fomo/revenge/avoidance tags
+Produces final stitched summary
+
+7) What Went Well (Semi-Auto)
+
+auto-generated behavioral + structural wins
+
+optional manual note
+
+8) What Went Wrong (Semi-Auto)
+
+auto-generated errors from execution + psychology
+
+optional manual note
+
+9) Missed Opportunities (Linked Auto)
+
+counts missed trades
+
+sums missed R
+
+generates explanation using emotional-pattern engine
+
+10) Tomorrow’s Adjustments
+
+manual: “If X → tomorrow Y.”
+
+11) Daily Grade
+
+manual A/B/C or percentage
+
+📘 Module 4 Summary Table
+Section	Final Name	Action	Explanation
+Daily PNL / R	Daily Performance	AUTO	Derived from trades
+Scenario Outcome	Scenario Resolution	AUTO	Based on TradeID / ScenarioID
+Market Behavior	Market Structure	UPGRADE	Multi-select logic
+Rule Adherence	Rule Checklist	KEEP+UPGRADE	Feeds execution scoring
+Trade Logic Validation	TIL Compliance	KEEP+UPGRADE	Per-trade logic
+Psychological Patterns	Behavior Engine	AUTO	Full emotional chain synthesis
+What Went Well	Performance Positives	SEMI-AUTO	Derived from trades
+What Went Wrong	Performance Negatives	SEMI-AUTO	Derived from mistakes
+Missed Opps	Missed Opportunities	AUTO+LINKED	Uses psych engine
+Tomorrow	Feedback Loop	KEEP	Manual
+Daily Grade	Grade	KEEP	Manual
+🔧 TO-DO PIPELINE (Updated)
+⭐ PRIORITY 0 (NOW)
+
+Freeze V1 field architecture (Modules 1–4)
+
+Begin UI structuring for all 4 modules
+
+Implement autosave after every field edit
+
+🛠 NEXT UP
+
+Build dynamic multi-module UI
+
+Implement psychological pattern engine
+
+Build scenario auto-resolution logic
+
+Implement missed-R and PNL aggregation logic
+
+Implement semi-auto “What Went Well / Wrong” engine
+
+Establish component-based PDF generator
+
+Add refresh logic:
+→ page refresh only when “Reset Day” pressed
+→ fields persist always
+
+📌 BACKLOG (V2+)
+
+Weighting-based scoring system for execution & discipline
+
+Advanced behavior-loop diagnostics
+
+Multi-day performance trend charts
+
+Trade classification engine
+
+Entry-model scoring matrix
+
+Dynamic coaching prompts
+
+✅ DONE
+
+Step 0 audit
+
+New 4-section architecture
+
+Module 1 finalized
+
+Module 2 finalized
+
+Module 3 finalized
+
+Module 4 finalized
+
+Autosave logic confirmed (instant)
 
