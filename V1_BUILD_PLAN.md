@@ -261,14 +261,77 @@ Ready to expand into deeper session mechanics.
 
 ## Phase 4 — Module 3 Core Flow (Baseline → Signal → Branch)
 
-### Build 008 — Pre-Trade Baseline  
-**Status:** Planned  
-**Scope:**
-1. Create **Pre-Trade Baseline block** for each trade idea:  
-   - Baseline emotion  
-   - Baseline notes  
-2. (Optional, only if previously defined in spec) Baseline tags if required; otherwise keep minimal.  
-3. Ensure baseline is clearly separated and appears **before** At-Signal block.
+✅ CHANGELOG — BUILD 008 (2025-11-24)
+
+Status: PASSED**
+Category: Module 2 Expansion — Adaptation Layer + Session State**
+
+What Was Added
+
+Adaptation Windows Block (Module 2)
+
+Add/Remove adaptation entries
+
+Start/End time
+
+Structural/Tempo/Liquidity/Orderflow tags
+
+Custom tags
+
+“What changed?” text field
+
+“How I adapted?” field
+
+Per-card collapse/expand
+
+Full persistence via localStorage
+
+Reset Day wipes everything
+
+Session Energy & Market Behavior Block
+
+Trader Energy (0–10)
+
+Market Energy (0–10)
+
+Market Type dropdown (Choppy/Directional/etc.)
+
+Tempo/Behavior notes
+
+Full persistence + Reset Day integration
+
+UI Enhancements
+
+All new cards match scenario/watching/surge visual pattern
+
+Summary text updates live when fields change
+
+Collapse behavior consistent across all card types
+
+Persistence Layer Update
+
+Added adaptations[] and sessionState{} to M2 storage
+
+Added cleanup logic on Reset Day
+
+Backward compatible with older saves
+
+Stability
+
+No re-render focus-loss bugs
+
+No JS crashes
+
+No broken accordion
+
+No layout shifts
+
+Result
+
+Module 2’s real-time session logic is now fully operational:
+
+Watching → emotional spikes → adaptation windows → session state
+All tracked, persisted, collapsible, and clean.
 
 ### Build 009 — At The Signal  
 **Status:** Planned  
