@@ -50,7 +50,7 @@ Deliver the complete **Trading SOP Journal V1**:
 ## Phase 1 — Core UI Scaffolding
 
 ### Build 002 — Accordion + Module 1 Base + Theming  
-**Status:** Planned  
+**Status:** Passed
 **Scope:**
 1. Implement **accordion system** for all 4 modules  
    - Each module is a collapsible section.  
@@ -76,23 +76,32 @@ Deliver the complete **Trading SOP Journal V1**:
 
 ## Phase 2 — Module 1: IF–THEN Scenarios
 
-### Build 003 — Scenario Creation & Layout  
-**Status:** Planned  
-**Scope:**
-1. Implement **add/delete IF–THEN scenarios** in Module 1.  
-2. Each scenario uses a clean, vertical layout:  
-   - `Scenario S#`  
-   - Title (single line input)  
-   - IF: textarea  
-   - THEN: textarea  
-3. Auto-generate scenario IDs (`S1`, `S2`, `S3` …) and persist them in state.
+### Build 003 — IF–THEN Scenario UI (Module 1)  
+**Status:** Done / Passed  
 
-### Build 004 — Scenario Persistence & Integration Hooks  
-**Status:** Planned  
 **Scope:**
-1. Ensure all scenarios are persisted via autosave and cleared correctly on Reset Day.  
-2. Prepare a **read-only scenario list API** in state so other modules (3 & 4) can read scenarios by `id`.  
-3. Add a simple internal helper to fetch scenarios (`getScenarioById(id)`) to be used later by trades and post-market.
+1. Add IF–THEN scenario creation UI inside Module 1  
+2. Use a clean vertical layout for each scenario (ID, Title, IF, THEN, Delete)  
+3. Auto-generate Scenario IDs (S1, S2, S3, …) and keep them in page state  
+
+**What Was Implemented:**
+- Added a **Scenario UI block** under `IF–THEN Scenarios` in Module 1:
+  - “Scenarios List” header
+  - `+ Add Scenario` button
+  - Empty state message when no scenarios exist
+- Each scenario is rendered as a separate **vertical card** with:
+  - Scenario ID (S1, S2, S3, …)
+  - Title (single-line input)
+  - IF: textarea
+  - THEN: textarea
+  - Delete button (removes the scenario from the list)
+- Scenario IDs are generated sequentially as S1, S2, S3… using an internal counter.
+
+**Notes / Limitations (by design):**
+- Scenarios are kept in **front-end memory only** for now (no localStorage yet).
+- Refreshing the page clears the scenarios (persistence will be added in Build 004).
+- No linking to trades or post-market yet; this UI is a standalone editor in Module 1.
+
 
 ---
 
