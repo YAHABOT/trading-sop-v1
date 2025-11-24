@@ -647,3 +647,37 @@ No white-on-white elements
 No side-by-side modules
 
 Accordion = multiple open allowed (per final answer)
+
+### Build 002 — Accordion + Module 1 UI + Dark Theme  
+**Status:** Done / Passed  
+
+**Scope:**
+1. Implement accordion system for all 4 modules  
+2. Rebuild Module 1 UI (Pre-Market) correctly  
+3. Apply global dark theme to inputs / textareas / selects  
+
+**What Was Implemented:**
+- All 4 modules (Pre-Market, During Session, Trade Idea Logic, Post-Market Review) are now rendered as **accordion sections**:
+  - Click header to expand/collapse
+  - Multiple modules can be open at the same time
+- **Module 1 — Pre-Market** UI rebuilt from scratch with the correct fields:
+  - `Session Levels` → single checkbox: “All required levels marked”
+  - `Previous Sessions Observed / Bias` → dark textarea
+  - `HTF → LTF Structure & Trend` → dark textarea
+  - `IF–THEN Scenarios` → placeholder block only (scenario system to be built in Build 003)
+  - `Session-Start Emotional State` → dropdown with the approved options
+- Explicitly **removed**:
+  - Confluence tags in pre-market
+  - “Emotion clarifier”
+  - “Expected entry models” in Module 1
+  - Any extra/undefined fields from Build 001
+
+**Theming / Styling:**
+- All text inputs, textareas and dropdowns now use a **dark background with light text**.
+- No more white-text-on-white-background issues.
+- Dropdowns are readable in closed state and consistent with the dark theme.
+
+**Notes:**
+- No autosave, scenario logic, or trade logic added in this build (by design).
+- This build is the clean scaffold for all later logic.
+
