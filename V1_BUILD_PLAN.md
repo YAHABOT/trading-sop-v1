@@ -165,13 +165,41 @@ Deliver the complete **Trading SOP Journal V1**:
 - Page refresh clears all watching entries.
 - No emotional surges / adaptation logic added yet (planned in Builds 006–007).
 
-### Build 006 — Emotional Surges  
-**Status:** Planned  
+### Build 006 — Module 2 Emotional Surges + Persistence + Unified Reset  
+**Status:** Done / Passed  
+
 **Scope:**
-1. Add **Emotional Surges** list in Module 2.  
-   - Fields: time, emotion, description.  
-2. Implement add/delete behavior for surges.  
-3. Ensure autosave + Reset Day correctly handle all surges.
+1. Add Emotional Surges block in Module 2  
+2. Persist Module 2 state (Watching Price + Emotional Surges) using localStorage  
+3. Extend Reset Day to wipe both Module 1 scenarios and all Module 2 entries  
+
+**What Was Implemented:**
+- **Module 2 — Emotional Surges**:
+  - New `Emotional Surges` section with:
+    - Time (EST)
+    - Emotion Spike (panic, tilt, anger, FOMO, etc.)
+    - Trigger (what caused the surge)
+    - Notes / Reaction (how you responded, whether control was regained)
+  - `+ Add Emotional Surge` button creates a new surge card.
+  - Each surge card has a Delete button to remove it.
+- **Module 2 — Watching Price**:
+  - Existing Watching entries now **persist** via localStorage.
+  - All fields (time, emotion, presets, custom tags, notes) save on change and reload correctly after refresh.
+- **Persistence:**
+  - `localStorage["sop_v1_scenarios_only"]` → stores Module 1 scenarios.
+  - `localStorage["sop_v1_module2"]` → stores:
+    - `watchEntries`
+    - `surges`
+- **Reset Day (M1 + M2):**
+  - Top-level `Reset Day (M1 Scenarios + M2)` button now:
+    - Clears all Module 1 scenarios (memory + localStorage).
+    - Clears all Module 2 Watching entries and Emotional Surges.
+    - After refresh, the page starts clean for a new day.
+
+**Notes / Limitations (by design):**
+- Module 1 textareas and emotion dropdown are still not persisted (only scenarios are).
+- Module 3 and 4 are untouched in this build (scheduled for later phases).
+
 
 ### Build 007 — Adaptation + Energy + Behavior Notes  
 **Status:** Planned  
