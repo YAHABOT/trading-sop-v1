@@ -4,343 +4,323 @@
   <meta charset="UTF-8" />
   <title>Trading SOP Journal — V1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #050816;
-      color: #e5e7eb;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      background: #020617;
-      color: #e5e7eb;
-    }
-    .app {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-    h1, h2, h3 {
-      margin: 0 0 8px;
-    }
-    .modules {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .module-card {
-      background: #020817;
-      border-radius: 10px;
-      padding: 14px;
-      border: 1px solid #1e293b;
-      flex: 1 1 100%;
-    }
-    @media (min-width: 900px) {
-      .module-card {
-        flex: 1 1 calc(50% - 16px);
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: "#020617",
+            panel: "#020817",
+            border: "#1e293b",
+            accent: "#22c55e",
+          }
+        }
       }
     }
-    .field-group {
-      margin-bottom: 10px;
-    }
-    label {
-      display: block;
-      font-size: 0.85rem;
-      color: #9ca3af;
-      margin-bottom: 2px;
-    }
-    input[type="text"],
-    input[type="number"],
-    textarea,
-    select {
-      width: 100%;
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 1px solid #1f2933;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 0.9rem;
-      box-sizing: border-box;
-    }
-    textarea {
-      min-height: 60px;
-      resize: vertical;
-    }
-    .row {
-      display: flex;
-      gap: 8px;
-    }
-    .row > .field-group {
-      flex: 1;
-    }
-    .tag-input {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      padding: 4px;
-      border-radius: 6px;
-      border: 1px solid #1f2933;
-      background: #020617;
-      cursor: text;
-    }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: #1f2937;
-      font-size: 0.8rem;
-    }
-    .tag button {
-      border: none;
-      background: transparent;
-      color: #9ca3af;
-      margin-left: 4px;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-    .tag-input input {
-      border: none;
-      outline: none;
-      background: transparent;
-      color: #e5e7eb;
-      min-width: 80px;
-      font-size: 0.85rem;
-      padding: 2px;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid #1f2933;
-      font-size: 0.8rem;
-      gap: 4px;
-    }
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    button {
-      border-radius: 999px;
-      border: none;
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-    .btn-primary {
-      background: #22c55e;
-      color: #020617;
-      font-weight: 600;
-    }
-    .btn-danger {
-      background: #ef4444;
-      color: #f9fafb;
-      font-weight: 500;
-    }
-    .status-pill {
-      font-size: 0.8rem;
-      color: #a1a1aa;
-    }
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-    .subtle {
-      font-size: 0.75rem;
-      color: #6b7280;
-    }
-  </style>
+  </script>
 </head>
-<body>
-  <div class="app">
-    <div class="controls">
-      <h1>Trading SOP Journal — V1</h1>
+<body class="bg-bg text-slate-100">
+  <div class="max-w-7xl mx-auto px-4 py-4 space-y-4">
+    <!-- Header / Controls -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
       <div>
-        <button id="resetDay" class="btn-danger">RESET DAY</button>
-        <span id="saveStatus" class="status-pill"></span>
+        <h1 class="text-xl md:text-2xl font-semibold">Trading SOP Journal — V1</h1>
+        <p class="text-xs text-slate-400">
+          4-module architecture • Autosave • Tag engine • Entry / Risk / Scenario / Post-Market logic
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="resetDay"
+                class="px-4 py-1.5 rounded-full bg-red-500/90 hover:bg-red-500 text-xs font-semibold">
+          RESET DAY
+        </button>
+        <span id="saveStatus" class="text-[11px] text-slate-400"></span>
       </div>
     </div>
-    <p class="subtle">
-      4-section architecture (Pre-Market, During Session, Trade Idea Logic, Post-Market) with autosave +
-      tag engine. V1 is front-end only; all behavior engines are wired as functions.
-    </p>
 
-    <div class="modules">
-      <!-- MODULE 1 — PRE-MARKET (summary, key fields) -->
-      <section class="module-card" id="module1">
-        <div class="section-header">
-          <h2>Module 1 — Pre-Market</h2>
-          <span class="badge">Status: V1 wired</span>
+    <!-- Modules Grid -->
+    <div class="grid lg:grid-cols-2 gap-4">
+      <!-- MODULE 1 -->
+      <section id="module1" class="bg-panel border border-border rounded-xl p-3 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold">Module 1 — Pre-Market</h2>
+          <span class="px-2 py-0.5 rounded-full border border-border text-[11px]">Finalized</span>
         </div>
 
-        <div class="field-group">
-          <label for="m1_levels">Session Levels Marked</label>
-          <textarea id="m1_levels" data-key="module1.levels"></textarea>
-        </div>
-
-        <div class="field-group">
-          <label for="m1_bias">Previous Sessions Observed / Bias</label>
-          <textarea id="m1_bias" data-key="module1.bias"></textarea>
-        </div>
-
-        <div class="field-group">
-          <label for="m1_structure">HTF→LTF Structure &amp; Trend</label>
-          <textarea id="m1_structure" data-key="module1.structure"></textarea>
-        </div>
-
-        <div class="field-group">
-          <label>Confluence Tags (Pre-Market)</label>
-          <div class="tag-input" data-key="module1.confluenceTags"></div>
-        </div>
-
-        <div class="field-group">
-          <label for="m1_ifthen">IF–THEN Scenarios (raw)</label>
-          <textarea id="m1_ifthen" data-key="module1.ifthens"></textarea>
-        </div>
-
-        <div class="row">
-          <div class="field-group">
-            <label for="m1_emotion">Session-Start Emotional State</label>
-            <select id="m1_emotion" data-key="module1.emotion">
-              <option value="">– select –</option>
-              <option value="calm">Calm</option>
-              <option value="focused">Focused</option>
-              <option value="hesitant">Hesitant</option>
-              <option value="anxious">Anxious</option>
-              <option value="impatient">Impatient</option>
-              <option value="overconfident">Overconfident</option>
-            </select>
+        <div class="space-y-2">
+          <div>
+            <label class="label">Session Levels Marked</label>
+            <textarea data-key="module1.levels"
+                      class="input textarea"
+                      placeholder="PDH, PDL, Asia H/L, London H/L..."></textarea>
           </div>
-          <div class="field-group">
-            <label for="m1_emotionNotes">Emotion Clarifier</label>
-            <input id="m1_emotionNotes" data-key="module1.emotionNotes" type="text" />
+
+          <div>
+            <label class="label">Previous Sessions Observed / Bias</label>
+            <textarea data-key="module1.bias"
+                      class="input textarea"
+                      placeholder="Asia/London behavior, combined bias..."></textarea>
           </div>
-        </div>
 
-        <div class="field-group">
-          <label>Expected Entry Models (optional)</label>
-          <div class="tag-input" data-key="module1.expectedEntryModels"></div>
-        </div>
-      </section>
-
-      <!-- MODULE 2 — DURING SESSION (GLOBAL) -->
-      <section class="module-card" id="module2">
-        <div class="section-header">
-          <h2>Module 2 — During Session (Global)</h2>
-          <span class="badge">Watching PA + emotions</span>
-        </div>
-
-        <div class="field-group">
-          <label for="m2_notes">Global Session Notes</label>
-          <textarea id="m2_notes" data-key="module2.sessionNotes"></textarea>
-        </div>
-
-        <div class="field-group">
-          <label>Watching Price — Interpretation Tags</label>
-          <div class="tag-input" data-key="module2.watchTags"></div>
-        </div>
-
-        <div class="row">
-          <div class="field-group">
-            <label for="m2_energy">Energy / Focus</label>
-            <select id="m2_energy" data-key="module2.energy">
-              <option value="">– select –</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
+          <div>
+            <label class="label">HTF → LTF Structure & Trend</label>
+            <textarea data-key="module1.structure"
+                      class="input textarea"
+                      placeholder="15m trend, 5m structure, 1m trend + EMA, wick behavior..."></textarea>
           </div>
-          <div class="field-group">
-            <label for="m2_energyNotes">Energy Notes</label>
-            <input id="m2_energyNotes" data-key="module2.energyNotes" type="text" />
+
+          <div>
+            <label class="label">Confluence Tags (Pre-Market)</label>
+            <div class="tag-input" data-key="module1.confluenceTags"></div>
+            <p class="help">Type and press Enter / comma to create tags.</p>
+          </div>
+
+          <!-- IF–THEN SCENARIOS -->
+          <div class="border border-border rounded-lg p-2 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-200">IF–THEN Scenarios</span>
+              <button id="addScenario"
+                      class="px-2 py-0.5 rounded-full bg-slate-700 text-[11px]">
+                Add Scenario
+              </button>
+            </div>
+            <p class="help">Each scenario gets an ID and can be linked to trades and post-market.</p>
+            <div id="scenarioList" class="space-y-2"></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="label">Session-Start Emotional State</label>
+              <select data-key="module1.emotion" class="input">
+                <option value="">– select –</option>
+                <option value="calm">Calm</option>
+                <option value="focused">Focused</option>
+                <option value="hesitant">Hesitant</option>
+                <option value="anxious">Anxious</option>
+                <option value="impatient">Impatient</option>
+                <option value="overconfident">Overconfident</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Emotion Clarifier</label>
+              <input data-key="module1.emotionNotes" class="input" type="text"
+                     placeholder="Short description" />
+            </div>
+          </div>
+
+          <div>
+            <label class="label">Expected Entry Models (optional)</label>
+            <div class="tag-input" data-key="module1.expectedEntryModels"></div>
+          </div>
+
+          <div>
+            <label class="label">NY Opening Impulse Expectation</label>
+            <textarea data-key="module1.nyImpulse" class="input textarea"
+                      placeholder="Expected reaction around 9:30–10:00 NY..."></textarea>
           </div>
         </div>
       </section>
 
-      <!-- MODULE 3 — TRADE IDEA LOGIC -->
-      <section class="module-card" id="module3">
-        <div class="section-header">
-          <h2>Module 3 — Trade Idea Logic</h2>
-          <span class="badge">Trades + Missed Trades</span>
+      <!-- MODULE 2 -->
+      <section id="module2" class="bg-panel border border-border rounded-xl p-3 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold">Module 2 — During Session (Global)</h2>
+          <span class="px-2 py-0.5 rounded-full border border-border text-[11px]">Finalized</span>
         </div>
 
-        <div class="field-group">
-          <button id="addTrade" class="btn-primary">Add Trade</button>
-        </div>
+        <div class="space-y-2">
+          <div>
+            <label class="label">Global Session Notes</label>
+            <textarea data-key="module2.sessionNotes"
+                      class="input textarea"
+                      placeholder="General session-wide notes..."></textarea>
+          </div>
 
-        <div id="tradesContainer"></div>
-      </section>
+          <!-- Watching Price Entries -->
+          <div class="border border-border rounded-lg p-2 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold">Watching Price Entries</span>
+              <button id="addWatchEntry"
+                      class="px-2 py-0.5 rounded-full bg-slate-700 text-[11px]">
+                Add Entry
+              </button>
+            </div>
+            <p class="help">Tracks emotion + interpretation while flat.</p>
+            <div id="watchList" class="space-y-2"></div>
+          </div>
 
-      <!-- MODULE 4 — POST-MARKET REVIEW -->
-      <section class="module-card" id="module4">
-        <div class="section-header">
-          <h2>Module 4 — Post-Market Review</h2>
-          <span class="badge">Auto + Semi-Auto</span>
-        </div>
+          <!-- Emotional Surges -->
+          <div class="border border-border rounded-lg p-2 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold">Emotional Surges</span>
+              <button id="addSurge"
+                      class="px-2 py-0.5 rounded-full bg-slate-700 text-[11px]">
+                Add Surge
+              </button>
+            </div>
+            <div id="surgeList" class="space-y-2"></div>
+          </div>
 
-        <div class="field-group">
-          <label>Daily Performance (AUTO summary)</label>
-          <textarea id="m4_daily" data-key="module4.dailySummary" readonly></textarea>
-          <p class="subtle">
-            Populated from trades: PNL, R, missed R, missed opps, execution/discipline grades.
-          </p>
-        </div>
+          <!-- Market Behavior -->
+          <div>
+            <label class="label">Market Behavior Observation</label>
+            <textarea data-key="module2.marketBehaviorNotes"
+                      class="input textarea"
+                      placeholder="Liquidity behavior, displacement, volatility regime..."></textarea>
+          </div>
 
-        <div class="field-group">
-          <label>Market Behavior (multi-select tags)</label>
-          <div class="tag-input" data-key="module4.marketBehavior"></div>
-        </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="label">Energy / Focus</label>
+              <select data-key="module2.energy" class="input">
+                <option value="">– select –</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Energy Notes</label>
+              <input data-key="module2.energyNotes" class="input" type="text" />
+            </div>
+          </div>
 
-        <div class="field-group">
-          <label>Psychological Pattern Engine (AUTO)</label>
-          <textarea id="m4_psych" data-key="module4.psychSummary" readonly></textarea>
-        </div>
-
-        <div class="field-group">
-          <label>What Went Well (semi-auto + manual)</label>
-          <textarea id="m4_well" data-key="module4.whatWentWell"></textarea>
-        </div>
-
-        <div class="field-group">
-          <label>What Went Wrong (semi-auto + manual)</label>
-          <textarea id="m4_wrong" data-key="module4.whatWentWrong"></textarea>
-        </div>
-
-        <div class="field-group">
-          <label>Tomorrow’s Adjustments</label>
-          <textarea id="m4_tomorrow" data-key="module4.tomorrow"></textarea>
-        </div>
-
-        <div class="row">
-          <div class="field-group">
-            <label for="m4_grade">Daily Grade</label>
-            <select id="m4_grade" data-key="module4.grade">
-              <option value="">– select –</option>
-              <option value="A">A</option>
-              <option value="B">B</option>
-              <option value="C">C</option>
-              <option value="D">D</option>
-            </select>
+          <!-- Adaptation Notes -->
+          <div class="border border-border rounded-lg p-2 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold">Session Adaptation</span>
+              <button id="addAdapt"
+                      class="px-2 py-0.5 rounded-full bg-slate-700 text-[11px]">
+                Add Adapt</button>
+            </div>
+            <div id="adaptList" class="space-y-2"></div>
           </div>
         </div>
+      </section>
 
-        <button id="recomputePostMarket" class="btn-primary">Recompute Post-Market (V1)</button>
+      <!-- MODULE 3 -->
+      <section id="module3" class="bg-panel border border-border rounded-xl p-3 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold">Module 3 — Trade Idea Logic</h2>
+          <button id="addTrade"
+                  class="px-3 py-1 rounded-full bg-accent text-xs font-semibold text-black">
+            Add Trade
+          </button>
+        </div>
+        <p class="help">
+          Each trade captures baseline → signal → executed/missed, entry models, risk, PNL/R, IF–THEN link.
+        </p>
+        <div id="tradesContainer" class="space-y-3"></div>
+      </section>
+
+      <!-- MODULE 4 -->
+      <section id="module4" class="bg-panel border border-border rounded-xl p-3 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold">Module 4 — Post-Market Review</h2>
+          <button id="recomputePostMarket"
+                  class="px-3 py-1 rounded-full bg-accent text-xs font-semibold text-black">
+            Recompute Post-Market
+          </button>
+        </div>
+
+        <div class="space-y-2">
+          <div>
+            <label class="label">Which Scenarios Unfolded?</label>
+            <select data-key="module4.scenarioIds" multiple
+                    class="input h-20 text-xs">
+            </select>
+            <p class="help">Multi-select from IF–THEN scenarios (hold Ctrl/Cmd).</p>
+          </div>
+
+          <div>
+            <label class="label">Daily Performance (AUTO)</label>
+            <textarea id="m4_daily" data-key="module4.dailySummary"
+                      class="input textarea" readonly></textarea>
+          </div>
+
+          <div>
+            <label class="label">Market Behavior (tags)</label>
+            <div class="tag-input" data-key="module4.marketBehavior"></div>
+          </div>
+
+          <div>
+            <label class="label">Psychological Pattern Engine (AUTO)</label>
+            <textarea id="m4_psych" data-key="module4.psychSummary"
+                      class="input textarea" readonly></textarea>
+          </div>
+
+          <div>
+            <label class="label">What Went Well (semi-auto + manual)</label>
+            <textarea id="m4_well" data-key="module4.whatWentWell"
+                      class="input textarea"></textarea>
+          </div>
+
+          <div>
+            <label class="label">What Went Wrong (semi-auto + manual)</label>
+            <textarea id="m4_wrong" data-key="module4.whatWentWrong"
+                      class="input textarea"></textarea>
+          </div>
+
+          <div>
+            <label class="label">Missed Opportunities (AUTO explanation)</label>
+            <textarea id="m4_missed" data-key="module4.missedSummary"
+                      class="input textarea" readonly></textarea>
+          </div>
+
+          <div>
+            <label class="label">Tomorrow’s Adjustments</label>
+            <textarea data-key="module4.tomorrow" class="input textarea"></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="label">Daily Grade</label>
+              <select data-key="module4.grade" id="m4_grade" class="input">
+                <option value="">– select –</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </div>
 
+  <style>
+    .input {
+      @apply w-full text-xs bg-slate-950/60 border border-border rounded-md px-2 py-1.5 outline-none focus:ring-1 focus:ring-accent/70;
+    }
+    .textarea {
+      @apply min-h-[60px];
+    }
+    .label {
+      @apply block text-[11px] text-slate-300 mb-0.5;
+    }
+    .help {
+      @apply text-[10px] text-slate-500 mt-0.5;
+    }
+    .tag-input {
+      @apply flex flex-wrap gap-1.5 items-center px-1 py-1 border border-border rounded-md bg-slate-950/60 text-xs cursor-text;
+    }
+    .tag-chip {
+      @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800 text-[10px];
+    }
+    .tag-chip button {
+      @apply text-[10px] text-slate-400 hover:text-slate-100;
+    }
+    .tag-input input {
+      @apply bg-transparent outline-none border-none text-xs text-slate-100 min-w-[60px] px-1 py-0.5;
+    }
+  </style>
+
   <script>
-    // ---------- STATE & AUTOSAVE ----------
-    const STORAGE_KEY = "trading_sop_v1_state";
+    // ---------- STATE ----------
+    const STORAGE_KEY = "trading_sop_v1_full";
 
     function getInitialState() {
       return {
@@ -349,26 +329,32 @@
           bias: "",
           structure: "",
           confluenceTags: [],
-          ifthens: "",
+          scenarios: [], // {id, title, ifText, thenText}
           emotion: "",
           emotionNotes: "",
-          expectedEntryModels: []
+          expectedEntryModels: [],
+          nyImpulse: ""
         },
         module2: {
           sessionNotes: "",
-          watchTags: [],
+          watchEntries: [], // {time, emotion, tags[], notes}
+          surges: [],       // {time, emotion, description}
+          marketBehaviorNotes: "",
           energy: "",
-          energyNotes: ""
+          energyNotes: "",
+          adaptations: []   // {time, changed, reason, newPlan}
         },
         module3: {
-          trades: [] // array of trade objects
+          trades: [] // each trade object
         },
         module4: {
+          scenarioIds: [],
           dailySummary: "",
           marketBehavior: [],
           psychSummary: "",
           whatWentWell: "",
           whatWentWrong: "",
+          missedSummary: "",
           tomorrow: "",
           grade: ""
         }
@@ -383,7 +369,7 @@
         if (!raw) return getInitialState();
         return { ...getInitialState(), ...JSON.parse(raw) };
       } catch (e) {
-        console.error("Failed to load state:", e);
+        console.error("loadState error", e);
         return getInitialState();
       }
     }
@@ -393,7 +379,7 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
         setSaveStatus("Saved");
       } catch (e) {
-        console.error("Failed to save state:", e);
+        console.error("saveState error", e);
         setSaveStatus("Save error");
       }
     }
@@ -409,64 +395,73 @@
     }
 
     function resetDay() {
+      if (!confirm("Reset all journal data for this day?")) return;
       appState = getInitialState();
       saveState();
       renderAll();
     }
 
-    document.getElementById("resetDay").addEventListener("click", () => {
-      if (confirm("Reset all fields for the day?")) resetDay();
-    });
+    document.getElementById("resetDay").addEventListener("click", resetDay);
 
-    // ---------- GENERIC BINDING HELPERS ----------
-    function bindSimpleFields() {
-      const elements = document.querySelectorAll("[data-key]");
-      elements.forEach((el) => {
-        if (el.classList.contains("tag-input")) return; // handled separately
-        const keyPath = el.getAttribute("data-key");
-        // init value
-        el.value = getByPath(appState, keyPath) ?? "";
-        el.addEventListener("input", () => {
-          setByPath(appState, keyPath, el.value);
-          saveState();
-        });
-      });
-    }
-
+    // ---------- PATH HELPERS ----------
     function getByPath(obj, path) {
       return path.split(".").reduce((acc, k) => (acc ? acc[k] : undefined), obj);
     }
 
     function setByPath(obj, path, value) {
       const parts = path.split(".");
-      let current = obj;
+      let cur = obj;
       for (let i = 0; i < parts.length - 1; i++) {
         const k = parts[i];
-        if (!current[k]) current[k] = {};
-        current = current[k];
+        if (!cur[k]) cur[k] = {};
+        cur = cur[k];
       }
-      current[parts[parts.length - 1]] = value;
+      cur[parts[parts.length - 1]] = value;
     }
 
-    // ---------- TAG INPUT COMPONENT ----------
-    function initTagInputs() {
-      const tagInputs = document.querySelectorAll(".tag-input[data-key]");
-      tagInputs.forEach((container) => {
-        const keyPath = container.getAttribute("data-key");
-        const tags = getByPath(appState, keyPath) || [];
-        container.innerHTML = "";
-        renderTags(container, keyPath, tags);
-        attachTagInputBehavior(container, keyPath);
+    // ---------- SIMPLE FIELD BIND ----------
+    function bindSimpleFields() {
+      const els = document.querySelectorAll("[data-key]");
+      els.forEach((el) => {
+        if (el.classList.contains("tag-input")) return; // handled separately
+        const key = el.getAttribute("data-key");
+        const val = getByPath(appState, key);
+        if (el.tagName === "SELECT" && el.multiple) {
+          // multi-select scenarios
+          Array.from(el.options).forEach((opt) => {
+            opt.selected = (val || []).includes(opt.value);
+          });
+          el.addEventListener("change", () => {
+            const selected = Array.from(el.selectedOptions).map(o => o.value);
+            setByPath(appState, key, selected);
+            saveState();
+          });
+        } else {
+          el.value = val ?? "";
+          el.addEventListener("input", () => {
+            setByPath(appState, key, el.value);
+            saveState();
+          });
+        }
       });
     }
 
-    function renderTags(container, keyPath, tags) {
+    // ---------- TAG INPUT ----------
+    function initTagInputs() {
+      const containers = document.querySelectorAll(".tag-input[data-key]");
+      containers.forEach((container) => {
+        const key = container.getAttribute("data-key");
+        const tags = getByPath(appState, key) || [];
+        renderTagInput(container, key, tags);
+      });
+    }
+
+    function renderTagInput(container, keyPath, tags) {
       container.innerHTML = "";
       tags.forEach((tag, idx) => {
-        const span = document.createElement("span");
-        span.className = "tag";
-        span.textContent = tag;
-
+        const chip = document.createElement("span");
+        chip.className = "tag-chip";
+        chip.textContent = tag;
         const btn = document.createElement("button");
         btn.type = "button";
         btn.textContent = "×";
@@ -477,298 +472,971 @@
           saveState();
           initTagInputs();
         });
-
-        span.appendChild(btn);
-        container.appendChild(span);
+        chip.appendChild(btn);
+        container.appendChild(chip);
       });
-
       const input = document.createElement("input");
       input.type = "text";
-      input.placeholder = "add tag…";
+      input.placeholder = "add…";
       input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === "," || e.key === " ") {
+        if (e.key === "Enter" || e.key === "," ) {
           e.preventDefault();
-          commitTagInput(container, keyPath, input);
+          commitTagInput(input, keyPath);
         }
       });
       input.addEventListener("blur", () => {
-        commitTagInput(container, keyPath, input);
+        commitTagInput(input, keyPath);
       });
-
       container.appendChild(input);
       container.addEventListener("click", () => input.focus());
     }
 
-    function commitTagInput(container, keyPath, input) {
+    function commitTagInput(input, keyPath) {
       const raw = input.value.trim();
       if (!raw) return;
-      const pieces = raw.split(",").map((p) => p.trim()).filter(Boolean);
+      const pieces = raw.split(",").map(p => p.trim()).filter(Boolean);
       if (!pieces.length) {
         input.value = "";
         return;
       }
       const existing = new Set(getByPath(appState, keyPath) || []);
-      pieces.forEach((p) => existing.add(p));
+      pieces.forEach(p => existing.add(p));
       setByPath(appState, keyPath, Array.from(existing));
       input.value = "";
       saveState();
       initTagInputs();
     }
 
-    function attachTagInputBehavior(container, keyPath) {
-      // Already handled in renderTags
+    // ---------- MODULE 1: SCENARIOS ----------
+    function renderScenarios() {
+      const list = document.getElementById("scenarioList");
+      list.innerHTML = "";
+      const scenarios = appState.module1.scenarios || [];
+      scenarios.forEach((sc, idx) => {
+        const card = document.createElement("div");
+        card.className = "border border-border rounded-md p-2 space-y-1";
+
+        const top = document.createElement("div");
+        top.className = "flex items-center justify-between text-[11px]";
+        const label = document.createElement("span");
+        label.textContent = `Scenario ${sc.id || ("S" + (idx + 1))}`;
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.className = "text-[10px] text-red-400";
+        del.addEventListener("click", () => {
+          appState.module1.scenarios.splice(idx, 1);
+          saveState();
+          renderAll();
+        });
+        top.appendChild(label);
+        top.appendChild(del);
+        card.appendChild(top);
+
+        const title = document.createElement("input");
+        title.type = "text";
+        title.className = "input text-[11px]";
+        title.placeholder = "Title (e.g. 'NY Open Liquidity Grab → Reversal')";
+        title.value = sc.title || "";
+        title.addEventListener("input", () => {
+          sc.title = title.value;
+          sc.id = sc.id || ("S" + (idx + 1));
+          saveState();
+          updateScenarioSelects();
+        });
+        card.appendChild(title);
+
+        const ifBox = document.createElement("textarea");
+        ifBox.className = "input textarea text-[11px]";
+        ifBox.placeholder = "IF: condition...";
+        ifBox.value = sc.ifText || "";
+        ifBox.addEventListener("input", () => {
+          sc.ifText = ifBox.value;
+          saveState();
+        });
+        card.appendChild(ifBox);
+
+        const thenBox = document.createElement("textarea");
+        thenBox.className = "input textarea text-[11px]";
+        thenBox.placeholder = "THEN: expectation...";
+        thenBox.value = sc.thenText || "";
+        thenBox.addEventListener("input", () => {
+          sc.thenText = thenBox.value;
+          saveState();
+        });
+        card.appendChild(thenBox);
+
+        list.appendChild(card);
+      });
+      updateScenarioSelects();
     }
 
+    document.getElementById("addScenario").addEventListener("click", () => {
+      const scenarios = appState.module1.scenarios || [];
+      const id = "S" + (scenarios.length + 1);
+      scenarios.push({ id, title: "", ifText: "", thenText: "" });
+      appState.module1.scenarios = scenarios;
+      saveState();
+      renderScenarios();
+    });
+
+    function updateScenarioSelects() {
+      // update Module 4 scenario multi-select & trade scenario dropdowns
+      const scs = appState.module1.scenarios || [];
+      const m4Sel = document.querySelector("select[data-key='module4.scenarioIds']");
+      if (m4Sel) {
+        const current = appState.module4.scenarioIds || [];
+        m4Sel.innerHTML = "";
+        scs.forEach(sc => {
+          const opt = document.createElement("option");
+          opt.value = sc.id;
+          opt.textContent = sc.title || sc.id;
+          opt.selected = current.includes(sc.id);
+          m4Sel.appendChild(opt);
+        });
+      }
+
+      // trade scenario dropdowns
+      const tradeScenarioSelects = document.querySelectorAll("select[data-scenario-for-trade]");
+      tradeScenarioSelects.forEach(sel => {
+        const tradeIndex = Number(sel.getAttribute("data-scenario-for-trade"));
+        const trade = appState.module3.trades[tradeIndex];
+        const cur = trade.scenarioId || "";
+        sel.innerHTML = "<option value=''>– select –</option>";
+        scs.forEach(sc => {
+          const opt = document.createElement("option");
+          opt.value = sc.id;
+          opt.textContent = sc.title || sc.id;
+          if (cur === sc.id) opt.selected = true;
+          sel.appendChild(opt);
+        });
+      });
+    }
+
+    // ---------- MODULE 2: Watching / Surges / Adapt ----------
+    function renderModule2Dynamic() {
+      // Watching entries
+      const wList = document.getElementById("watchList");
+      wList.innerHTML = "";
+      const watchEntries = appState.module2.watchEntries || [];
+      watchEntries.forEach((w, idx) => {
+        const card = document.createElement("div");
+        card.className = "border border-border rounded-md p-2 space-y-1";
+
+        const top = document.createElement("div");
+        top.className = "flex justify-between items-center text-[10px]";
+        const t = document.createElement("span");
+        t.textContent = w.time || "Time?";
+        const del = document.createElement("button");
+        del.textContent = "×";
+        del.className = "text-red-400";
+        del.addEventListener("click", () => {
+          appState.module2.watchEntries.splice(idx, 1);
+          saveState();
+          renderModule2Dynamic();
+        });
+        top.appendChild(t);
+        top.appendChild(del);
+        card.appendChild(top);
+
+        const row = document.createElement("div");
+        row.className = "grid grid-cols-2 gap-1";
+        row.innerHTML = `
+          <div>
+            <label class="label">Time (EST)</label>
+            <input class="input text-[11px]" type="text" value="${w.time || ""}">
+          </div>
+          <div>
+            <label class="label">Emotion</label>
+            <input class="input text-[11px]" type="text" value="${w.emotion || ""}">
+          </div>
+        `;
+        const [timeInp, emoInp] = row.querySelectorAll("input");
+        timeInp.addEventListener("input", () => {
+          w.time = timeInp.value;
+          saveState();
+        });
+        emoInp.addEventListener("input", () => {
+          w.emotion = emoInp.value;
+          saveState();
+        });
+        card.appendChild(row);
+
+        const tagLabel = document.createElement("label");
+        tagLabel.className = "label";
+        tagLabel.textContent = "Interpretation Tags";
+        card.appendChild(tagLabel);
+        const tagsDiv = document.createElement("div");
+        tagsDiv.className = "tag-input";
+        const key = `module2.watchEntries.${idx}.tags`;
+        setByPath(appState, key, w.tags || []);
+        tagsDiv.setAttribute("data-key", key);
+        card.appendChild(tagsDiv);
+
+        const notes = document.createElement("textarea");
+        notes.className = "input textarea text-[11px]";
+        notes.placeholder = "Notes";
+        notes.value = w.notes || "";
+        notes.addEventListener("input", () => {
+          w.notes = notes.value;
+          saveState();
+        });
+        card.appendChild(notes);
+
+        wList.appendChild(card);
+      });
+
+      // Emotional surges
+      const sList = document.getElementById("surgeList");
+      sList.innerHTML = "";
+      const surges = appState.module2.surges || [];
+      surges.forEach((s, idx) => {
+        const card = document.createElement("div");
+        card.className = "border border-border rounded-md p-2 space-y-1";
+
+        const row = document.createElement("div");
+        row.className = "grid grid-cols-2 gap-1";
+        row.innerHTML = `
+          <div>
+            <label class="label">Time</label>
+            <input class="input text-[11px]" type="text" value="${s.time || ""}">
+          </div>
+          <div>
+            <label class="label">Emotion</label>
+            <input class="input text-[11px]" type="text" value="${s.emotion || ""}">
+          </div>
+        `;
+        const [time, emo] = row.querySelectorAll("input");
+        time.addEventListener("input", () => { s.time = time.value; saveState(); });
+        emo.addEventListener("input", () => { s.emotion = emo.value; saveState(); });
+        card.appendChild(row);
+
+        const desc = document.createElement("textarea");
+        desc.className = "input textarea text-[11px]";
+        desc.placeholder = "Description";
+        desc.value = s.description || "";
+        desc.addEventListener("input", () => { s.description = desc.value; saveState(); });
+        card.appendChild(desc);
+
+        const del = document.createElement("button");
+        del.textContent = "Delete Surge";
+        del.className = "text-[10px] text-red-400";
+        del.addEventListener("click", () => {
+          appState.module2.surges.splice(idx, 1);
+          saveState();
+          renderModule2Dynamic();
+        });
+        card.appendChild(del);
+
+        sList.appendChild(card);
+      });
+
+      // Adaptations
+      const aList = document.getElementById("adaptList");
+      aList.innerHTML = "";
+      const adaptations = appState.module2.adaptations || [];
+      adaptations.forEach((a, idx) => {
+        const card = document.createElement("div");
+        card.className = "border border-border rounded-md p-2 space-y-1";
+        const row = document.createElement("div");
+        row.className = "grid grid-cols-2 gap-1";
+        row.innerHTML = `
+          <div>
+            <label class="label">Time</label>
+            <input class="input text-[11px]" type="text" value="${a.time || ""}">
+          </div>
+          <div>
+            <label class="label">Expectation Changed?</label>
+            <select class="input text-[11px]">
+              <option value="">–</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        `;
+        const [time, sel] = row.querySelectorAll("input, select");
+        time.addEventListener("input", () => { a.time = time.value; saveState(); });
+        sel.value = a.changed || "";
+        sel.addEventListener("change", () => { a.changed = sel.value; saveState(); });
+        card.appendChild(row);
+
+        const reason = document.createElement("textarea");
+        reason.className = "input textarea text-[11px]";
+        reason.placeholder = "Reason / New plan";
+        reason.value = a.reason || "";
+        reason.addEventListener("input", () => { a.reason = reason.value; saveState(); });
+        card.appendChild(reason);
+
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.className = "text-[10px] text-red-400";
+        del.addEventListener("click", () => {
+          appState.module2.adaptations.splice(idx, 1);
+          saveState();
+          renderModule2Dynamic();
+        });
+        card.appendChild(del);
+
+        aList.appendChild(card);
+      });
+
+      initTagInputs();
+    }
+
+    document.getElementById("addWatchEntry").addEventListener("click", () => {
+      appState.module2.watchEntries.push({ time: "", emotion: "", tags: [], notes: "" });
+      saveState();
+      renderModule2Dynamic();
+    });
+    document.getElementById("addSurge").addEventListener("click", () => {
+      appState.module2.surges.push({ time: "", emotion: "", description: "" });
+      saveState();
+      renderModule2Dynamic();
+    });
+    document.getElementById("addAdapt").addEventListener("click", () => {
+      appState.module2.adaptations.push({ time: "", changed: "", reason: "" });
+      saveState();
+      renderModule2Dynamic();
+    });
+
     // ---------- MODULE 3: TRADES ----------
+    function newTrade() {
+      const trades = appState.module3.trades || [];
+      const id = "T" + (trades.length + 1);
+      return {
+        id,
+        type: "",
+
+        // Baseline
+        preEmotion: "",
+        preInterpTags: [],
+        preConfluenceTags: [],
+        preNotes: "",
+
+        // Signal
+        signalEmotion: "",
+        signalInterpTags: [],
+        signalConfluenceTags: [],
+        signalNotes: "",
+        entryModels: [],
+
+        // Executed-only
+        riskModel: "",
+        riskTags: [],
+        entryPrice: "",
+        slPrice: "",
+        rrExpect: "",
+        duringEmotion: "",
+        execBehaviorTags: [],
+        exitPlanned: "",
+        exitSame: "",
+        exitReasonTags: [],
+        exitNotes: "",
+        reentryNotes: "",
+        addonNotes: "",
+
+        // IF–THEN link
+        scenarioId: "",
+
+        // Outcomes
+        pnl: null,
+        realizedR: null,
+        missedR: null,
+
+        // Missed-only
+        missReasonTags: [],
+        missNotes: "",
+        missScenarioId: ""
+      };
+    }
+
     function renderTrades() {
       const container = document.getElementById("tradesContainer");
       container.innerHTML = "";
       const trades = appState.module3.trades || [];
-      trades.forEach((trade, idx) => {
+      const scenarios = appState.module1.scenarios || [];
+
+      trades.forEach((t, idx) => {
         const card = document.createElement("div");
-        card.style.border = "1px solid #1f2937";
-        card.style.borderRadius = "8px";
-        card.style.padding = "8px";
-        card.style.marginBottom = "8px";
-        card.style.background = "#020617";
+        card.className = "border border-border rounded-lg p-2 space-y-2";
 
+        // Header
         const header = document.createElement("div");
-        header.className = "section-header";
-        const title = document.createElement("h3");
-        title.textContent = `Trade #${idx + 1} — ${trade.type || "executed/missed?"}`;
-        title.style.fontSize = "0.9rem";
-        const controls = document.createElement("div");
+        header.className = "flex items-center justify-between gap-2";
+        const title = document.createElement("div");
+        title.className = "text-[11px] font-semibold";
+        title.textContent = `${t.id} — ${t.type || "type?"}`;
+        header.appendChild(title);
 
-        const typeSelect = document.createElement("select");
-        ["", "executed", "missed"].forEach((opt) => {
+        const right = document.createElement("div");
+        right.className = "flex items-center gap-2 text-[10px]";
+
+        const typeSel = document.createElement("select");
+        typeSel.className = "input text-[10px] w-24";
+        ["", "executed", "missed"].forEach(optVal => {
           const o = document.createElement("option");
-          o.value = opt;
-          o.textContent = opt || "type?";
-          if (trade.type === opt) o.selected = true;
-          typeSelect.appendChild(o);
+          o.value = optVal;
+          o.textContent = optVal || "type?";
+          if (t.type === optVal) o.selected = true;
+          typeSel.appendChild(o);
         });
-        typeSelect.addEventListener("change", () => {
-          trade.type = typeSelect.value || "";
+        typeSel.addEventListener("change", () => {
+          t.type = typeSel.value;
           saveState();
           renderTrades();
+          recomputePostMarket();
         });
+        right.appendChild(typeSel);
 
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "Delete";
-        delBtn.className = "btn-danger";
-        delBtn.style.fontSize = "0.7rem";
-        delBtn.addEventListener("click", () => {
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.className = "text-red-400";
+        del.addEventListener("click", () => {
           appState.module3.trades.splice(idx, 1);
           saveState();
           renderTrades();
           recomputePostMarket();
         });
+        right.appendChild(del);
 
-        controls.appendChild(typeSelect);
-        controls.appendChild(delBtn);
-        header.appendChild(title);
-        header.appendChild(controls);
+        header.appendChild(right);
         card.appendChild(header);
 
-        // Pre-trade baseline emotion
+        // Pre-Trade Baseline
         const baseline = document.createElement("div");
-        baseline.className = "row";
+        baseline.className = "space-y-1 border border-border rounded-md p-2";
         baseline.innerHTML = `
-          <div class="field-group">
-            <label>Pre-Trade Emotion</label>
-            <input type="text" value="${trade.preEmotion || ""}">
-          </div>
-          <div class="field-group">
-            <label>At-Signal Emotion</label>
-            <input type="text" value="${trade.signalEmotion || ""}">
+          <div class="text-[10px] font-semibold mb-1">A) Pre-Trade Baseline</div>
+          <div class="grid grid-cols-2 gap-1 mb-1">
+            <div>
+              <label class="label">Emotion</label>
+              <input class="input text-[11px]" type="text" value="${t.preEmotion || ""}">
+            </div>
+            <div>
+              <label class="label">Notes</label>
+              <input class="input text-[11px]" type="text" value="${t.preNotes || ""}">
+            </div>
           </div>
         `;
-        const [preInput, sigInput] = baseline.querySelectorAll("input");
-        preInput.addEventListener("input", () => {
-          trade.preEmotion = preInput.value;
-          saveState();
-        });
-        sigInput.addEventListener("input", () => {
-          trade.signalEmotion = sigInput.value;
-          saveState();
-        });
+        const [preEmoInput, preNotesInput] = baseline.querySelectorAll("input");
+        preEmoInput.addEventListener("input", () => { t.preEmotion = preEmoInput.value; saveState(); });
+        preNotesInput.addEventListener("input", () => { t.preNotes = preNotesInput.value; saveState(); });
+
+        const preInterpLabel = document.createElement("label");
+        preInterpLabel.className = "label";
+        preInterpLabel.textContent = "Interpretation Tags";
+        baseline.appendChild(preInterpLabel);
+        const preInterpTags = document.createElement("div");
+        preInterpTags.className = "tag-input";
+        const preInterpKey = `module3.trades.${idx}.preInterpTags`;
+        setByPath(appState, preInterpKey, t.preInterpTags || []);
+        preInterpTags.setAttribute("data-key", preInterpKey);
+        baseline.appendChild(preInterpTags);
+
+        const preConfLabel = document.createElement("label");
+        preConfLabel.className = "label";
+        preConfLabel.textContent = "Confluence Tags";
+        baseline.appendChild(preConfLabel);
+        const preConfTags = document.createElement("div");
+        preConfTags.className = "tag-input";
+        const preConfKey = `module3.trades.${idx}.preConfluenceTags`;
+        setByPath(appState, preConfKey, t.preConfluenceTags || []);
+        preConfTags.setAttribute("data-key", preConfKey);
+        baseline.appendChild(preConfTags);
+
         card.appendChild(baseline);
 
-        // Entry models (tag input)
-        const entryModelsGroup = document.createElement("div");
-        entryModelsGroup.className = "field-group";
+        // At the Signal
+        const signal = document.createElement("div");
+        signal.className = "space-y-1 border border-border rounded-md p-2";
+        signal.innerHTML = `
+          <div class="text-[10px] font-semibold mb-1">B) At The Signal</div>
+          <div class="grid grid-cols-2 gap-1 mb-1">
+            <div>
+              <label class="label">Emotion</label>
+              <input class="input text-[11px]" type="text" value="${t.signalEmotion || ""}">
+            </div>
+            <div>
+              <label class="label">Notes</label>
+              <input class="input text-[11px]" type="text" value="${t.signalNotes || ""}">
+            </div>
+          </div>
+        `;
+        const [sigEmoInput, sigNotesInput] = signal.querySelectorAll("input");
+        sigEmoInput.addEventListener("input", () => { t.signalEmotion = sigEmoInput.value; saveState(); });
+        sigNotesInput.addEventListener("input", () => { t.signalNotes = sigNotesInput.value; saveState(); });
+
+        const sigInterpLabel = document.createElement("label");
+        sigInterpLabel.className = "label";
+        sigInterpLabel.textContent = "Interpretation Tags";
+        signal.appendChild(sigInterpLabel);
+        const sigInterpDiv = document.createElement("div");
+        sigInterpDiv.className = "tag-input";
+        const sigInterpKey = `module3.trades.${idx}.signalInterpTags`;
+        setByPath(appState, sigInterpKey, t.signalInterpTags || []);
+        sigInterpDiv.setAttribute("data-key", sigInterpKey);
+        signal.appendChild(sigInterpDiv);
+
+        const sigConfLabel = document.createElement("label");
+        sigConfLabel.className = "label";
+        sigConfLabel.textContent = "Confluence Tags";
+        signal.appendChild(sigConfLabel);
+        const sigConfDiv = document.createElement("div");
+        sigConfDiv.className = "tag-input";
+        const sigConfKey = `module3.trades.${idx}.signalConfluenceTags`;
+        setByPath(appState, sigConfKey, t.signalConfluenceTags || []);
+        sigConfDiv.setAttribute("data-key", sigConfKey);
+        signal.appendChild(sigConfDiv);
+
         const emLabel = document.createElement("label");
-        emLabel.textContent = "Entry Models (At-Signal / Executed or Missed)";
-        entryModelsGroup.appendChild(emLabel);
+        emLabel.className = "label";
+        emLabel.textContent = "Entry Models (At Signal)";
+        signal.appendChild(emLabel);
+        const emTagDiv = document.createElement("div");
+        emTagDiv.className = "tag-input";
+        const emKey = `module3.trades.${idx}.entryModels`;
+        // carry from baseline expected if empty
+        if ((!t.entryModels || !t.entryModels.length) && appState.module1.expectedEntryModels?.length) {
+          t.entryModels = [...appState.module1.expectedEntryModels];
+        }
+        setByPath(appState, emKey, t.entryModels || []);
+        emTagDiv.setAttribute("data-key", emKey);
+        signal.appendChild(emTagDiv);
 
-        const emTags = document.createElement("div");
-        emTags.className = "tag-input";
-        const keyPath = `module3.trades.${idx}.entryModels`;
-        setByPath(appState, keyPath, trade.entryModels || []);
-        emTags.setAttribute("data-key", keyPath);
-        entryModelsGroup.appendChild(emTags);
-        card.appendChild(entryModelsGroup);
+        card.appendChild(signal);
 
-        // Risk model (executed only)
-        if (trade.type === "executed") {
+        // Executed vs Missed branch
+        if (t.type === "executed") {
+          const ex = document.createElement("div");
+          ex.className = "space-y-1 border border-border rounded-md p-2";
+          ex.innerHTML = `
+            <div class="text-[10px] font-semibold mb-1">Executed Trade</div>
+            <div class="grid grid-cols-3 gap-1 mb-1">
+              <div>
+                <label class="label">Entry</label>
+                <input class="input text-[11px]" type="number" step="0.01" value="${t.entryPrice || ""}">
+              </div>
+              <div>
+                <label class="label">SL</label>
+                <input class="input text-[11px]" type="number" step="0.01" value="${t.slPrice || ""}">
+              </div>
+              <div>
+                <label class="label">RR Expect.</label>
+                <input class="input text-[11px]" type="number" step="0.01" value="${t.rrExpect || ""}">
+              </div>
+            </div>
+          `;
+          const [entryInp, slInp, rrInp] = ex.querySelectorAll("input");
+          entryInp.addEventListener("input", () => { t.entryPrice = entryInp.value; saveState(); });
+          slInp.addEventListener("input", () => { t.slPrice = slInp.value; saveState(); });
+          rrInp.addEventListener("input", () => { t.rrExpect = rrInp.value; saveState(); });
+
           const riskRow = document.createElement("div");
-          riskRow.className = "row";
+          riskRow.className = "grid grid-cols-2 gap-1 mb-1";
           riskRow.innerHTML = `
-            <div class="field-group">
-              <label>Risk Model</label>
-              <select>
+            <div>
+              <label class="label">Risk Model</label>
+              <select class="input text-[11px]">
                 <option value="">– select –</option>
                 <option value="low">Low Risk</option>
                 <option value="medium">Medium Risk</option>
                 <option value="full">Full Risk</option>
               </select>
             </div>
-            <div class="field-group">
-              <label>Custom Risk Tags</label>
-              <div class="tag-input"></div>
+          `;
+          const riskSel = riskRow.querySelector("select");
+          riskSel.value = t.riskModel || "";
+          riskSel.addEventListener("change", () => { t.riskModel = riskSel.value; saveState(); });
+          ex.appendChild(riskRow);
+
+          const riskTagLabel = document.createElement("label");
+          riskTagLabel.className = "label";
+          riskTagLabel.textContent = "Custom Risk Tags";
+          ex.appendChild(riskTagLabel);
+          const riskTagDiv = document.createElement("div");
+          riskTagDiv.className = "tag-input";
+          const riskKey = `module3.trades.${idx}.riskTags`;
+          setByPath(appState, riskKey, t.riskTags || []);
+          riskTagDiv.setAttribute("data-key", riskKey);
+          ex.appendChild(riskTagDiv);
+
+          const duringRow = document.createElement("div");
+          duringRow.className = "grid grid-cols-2 gap-1 mb-1";
+          duringRow.innerHTML = `
+            <div>
+              <label class="label">During-Trade Emotion</label>
+              <input class="input text-[11px]" type="text" value="${t.duringEmotion || ""}">
             </div>
           `;
-          const select = riskRow.querySelector("select");
-          select.value = trade.riskModel || "";
-          select.addEventListener("change", () => {
-            trade.riskModel = select.value;
-            saveState();
+          const duringInput = duringRow.querySelector("input");
+          duringInput.addEventListener("input", () => { t.duringEmotion = duringInput.value; saveState(); });
+          ex.appendChild(duringRow);
+
+          const execLabel = document.createElement("label");
+          execLabel.className = "label";
+          execLabel.textContent = "Execution Behavior Tags";
+          ex.appendChild(execLabel);
+          const execTagDiv = document.createElement("div");
+          execTagDiv.className = "tag-input";
+          const execKey = `module3.trades.${idx}.execBehaviorTags`;
+          setByPath(appState, execKey, t.execBehaviorTags || []);
+          execTagDiv.setAttribute("data-key", execKey);
+          ex.appendChild(execTagDiv);
+
+          // Exit logic
+          const exitRow = document.createElement("div");
+          exitRow.className = "grid grid-cols-2 gap-1 mb-1";
+          exitRow.innerHTML = `
+            <div>
+              <label class="label">Planned Exit?</label>
+              <select class="input text-[11px]">
+                <option value="">–</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Actual = Planned?</label>
+              <select class="input text-[11px]">
+                <option value="">–</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          `;
+          const [plannedSel, sameSel] = exitRow.querySelectorAll("select");
+          plannedSel.value = t.exitPlanned || "";
+          sameSel.value = t.exitSame || "";
+          plannedSel.addEventListener("change", () => { t.exitPlanned = plannedSel.value; saveState(); });
+          sameSel.addEventListener("change", () => { t.exitSame = sameSel.value; saveState(); });
+          ex.appendChild(exitRow);
+
+          const exitReasonLabel = document.createElement("label");
+          exitReasonLabel.className = "label";
+          exitReasonLabel.textContent = "Exit Reason Tags";
+          ex.appendChild(exitReasonLabel);
+          const exitTagDiv = document.createElement("div");
+          exitTagDiv.className = "tag-input";
+          const exitKey = `module3.trades.${idx}.exitReasonTags`;
+          setByPath(appState, exitKey, t.exitReasonTags || []);
+          exitTagDiv.setAttribute("data-key", exitKey);
+          ex.appendChild(exitTagDiv);
+
+          const exitNotes = document.createElement("textarea");
+          exitNotes.className = "input textarea text-[11px]";
+          exitNotes.placeholder = "Exit notes";
+          exitNotes.value = t.exitNotes || "";
+          exitNotes.addEventListener("input", () => { t.exitNotes = exitNotes.value; saveState(); });
+          ex.appendChild(exitNotes);
+
+          const reAddRow = document.createElement("div");
+          reAddRow.className = "grid grid-cols-2 gap-1 mb-1";
+          reAddRow.innerHTML = `
+            <div>
+              <label class="label">Re-entry Notes</label>
+              <textarea class="input textarea text-[11px]">${t.reentryNotes || ""}</textarea>
+            </div>
+            <div>
+              <label class="label">Add-on Notes</label>
+              <textarea class="input textarea text-[11px]">${t.addonNotes || ""}</textarea>
+            </div>
+          `;
+          const [reNotes, adNotes] = reAddRow.querySelectorAll("textarea");
+          reNotes.addEventListener("input", () => { t.reentryNotes = reNotes.value; saveState(); });
+          adNotes.addEventListener("input", () => { t.addonNotes = adNotes.value; saveState(); });
+          ex.appendChild(reAddRow);
+
+          // Scenario link
+          const scRow = document.createElement("div");
+          scRow.className = "mt-1";
+          const scLabel = document.createElement("label");
+          scLabel.className = "label";
+          scLabel.textContent = "IF–THEN Scenario Followed";
+          scRow.appendChild(scLabel);
+          const scSel = document.createElement("select");
+          scSel.className = "input text-[11px]";
+          scSel.setAttribute("data-scenario-for-trade", idx);
+          scSel.innerHTML = "<option value=''>– select –</option>";
+          scenarios.forEach(sc => {
+            const o = document.createElement("option");
+            o.value = sc.id;
+            o.textContent = sc.title || sc.id;
+            if (t.scenarioId === sc.id) o.selected = true;
+            scSel.appendChild(o);
           });
+          scSel.addEventListener("change", () => {
+            t.scenarioId = scSel.value;
+            saveState();
+            recomputePostMarket();
+          });
+          scRow.appendChild(scSel);
+          ex.appendChild(scRow);
 
-          const customRiskKey = `module3.trades.${idx}.riskTags`;
-          setByPath(appState, customRiskKey, trade.riskTags || []);
-          const riskTagDiv = riskRow.querySelector(".tag-input");
-          riskTagDiv.setAttribute("data-key", customRiskKey);
+          // PnL / R
+          const pnlRow = document.createElement("div");
+          pnlRow.className = "grid grid-cols-3 gap-1 mt-1";
+          pnlRow.innerHTML = `
+            <div>
+              <label class="label">Realized PNL</label>
+              <input class="input text-[11px]" type="number" step="0.01" value="${t.pnl ?? ""}">
+            </div>
+            <div>
+              <label class="label">Realized R</label>
+              <input class="input text-[11px]" type="number" step="0.01" value="${t.realizedR ?? ""}">
+            </div>
+            <div>
+              <label class="label">Missed R (this trade)</label>
+              <input class="input text-[11px]" type="number" step="0.01" value="${t.missedR ?? ""}">
+            </div>
+          `;
+          const [pnlInp, rInp, mrInp] = pnlRow.querySelectorAll("input");
+          pnlInp.addEventListener("input", () => {
+            t.pnl = pnlInp.value === "" ? null : Number(pnlInp.value);
+            saveState(); recomputePostMarket();
+          });
+          rInp.addEventListener("input", () => {
+            t.realizedR = rInp.value === "" ? null : Number(rInp.value);
+            saveState(); recomputePostMarket();
+          });
+          mrInp.addEventListener("input", () => {
+            t.missedR = mrInp.value === "" ? null : Number(mrInp.value);
+            saveState(); recomputePostMarket();
+          });
+          ex.appendChild(pnlRow);
 
-          card.appendChild(riskRow);
+          card.appendChild(ex);
         }
 
-        // Basic PNL / R fields (for aggregation)
-        const pnlRow = document.createElement("div");
-        pnlRow.className = "row";
-        pnlRow.innerHTML = `
-          <div class="field-group">
-            <label>Realized PNL</label>
-            <input type="number" step="0.01" value="${trade.pnl ?? ""}">
-          </div>
-          <div class="field-group">
-            <label>Realized R</label>
-            <input type="number" step="0.01" value="${trade.realizedR ?? ""}">
-          </div>
-          <div class="field-group">
-            <label>Missed R (for this trade)</label>
-            <input type="number" step="0.01" value="${trade.missedR ?? ""}">
-          </div>
-        `;
-        const [pnlInput, rInput, mrInput] = pnlRow.querySelectorAll("input");
-        pnlInput.addEventListener("input", () => {
-          trade.pnl = pnlInput.value === "" ? null : Number(pnlInput.value);
-          saveState();
-        });
-        rInput.addEventListener("input", () => {
-          trade.realizedR = rInput.value === "" ? null : Number(rInput.value);
-          saveState();
-        });
-        mrInput.addEventListener("input", () => {
-          trade.missedR = mrInput.value === "" ? null : Number(mrInput.value);
-          saveState();
-        });
-        card.appendChild(pnlRow);
+        if (t.type === "missed") {
+          const miss = document.createElement("div");
+          miss.className = "space-y-1 border border-border rounded-md p-2";
+          miss.innerHTML = `
+            <div class="text-[10px] font-semibold mb-1">Missed Trade</div>
+          `;
+          const row = document.createElement("div");
+          row.className = "grid grid-cols-2 gap-1 mb-1";
+          row.innerHTML = `
+            <div>
+              <label class="label">Emotion (Watching)</label>
+              <input class="input text-[11px]" type="text" value="${t.missEmotion || ""}">
+            </div>
+          `;
+          const missEmoInput = row.querySelector("input");
+          missEmoInput.addEventListener("input", () => { t.missEmotion = missEmoInput.value; saveState(); });
+          miss.appendChild(row);
+
+          const missReasonLabel = document.createElement("label");
+          missReasonLabel.className = "label";
+          missReasonLabel.textContent = "Why Missed (tags)";
+          miss.appendChild(missReasonLabel);
+          const missTagsDiv = document.createElement("div");
+          missTagsDiv.className = "tag-input";
+          const missKey = `module3.trades.${idx}.missReasonTags`;
+          setByPath(appState, missKey, t.missReasonTags || []);
+          missTagsDiv.setAttribute("data-key", missKey);
+          miss.appendChild(missTagsDiv);
+
+          const missNotes = document.createElement("textarea");
+          missNotes.className = "input textarea text-[11px]";
+          missNotes.placeholder = "Missed-trade notes";
+          missNotes.value = t.missNotes || "";
+          missNotes.addEventListener("input", () => { t.missNotes = missNotes.value; saveState(); });
+          miss.appendChild(missNotes);
+
+          const scRow = document.createElement("div");
+          scRow.className = "mt-1";
+          const scLabel = document.createElement("label");
+          scLabel.className = "label";
+          scLabel.textContent = "IF–THEN Scenario Missed";
+          scRow.appendChild(scLabel);
+          const scSel = document.createElement("select");
+          scSel.className = "input text-[11px]";
+          scSel.innerHTML = "<option value=''>– select –</option>";
+          scenarios.forEach(sc => {
+            const o = document.createElement("option");
+            o.value = sc.id;
+            o.textContent = sc.title || sc.id;
+            if (t.missScenarioId === sc.id) o.selected = true;
+            scSel.appendChild(o);
+          });
+          scSel.addEventListener("change", () => {
+            t.missScenarioId = scSel.value;
+            saveState();
+            recomputePostMarket();
+          });
+          scRow.appendChild(scSel);
+          miss.appendChild(scRow);
+
+          const missRRow = document.createElement("div");
+          missRRow.className = "mt-1";
+          missRRow.innerHTML = `
+            <label class="label">Missed R (this opportunity)</label>
+            <input class="input text-[11px]" type="number" step="0.01" value="${t.missedR ?? ""}">
+          `;
+          const missRInp = missRRow.querySelector("input");
+          missRInp.addEventListener("input", () => {
+            t.missedR = missRInp.value === "" ? null : Number(missRInp.value);
+            saveState(); recomputePostMarket();
+          });
+          miss.appendChild(missRRow);
+
+          card.appendChild(miss);
+        }
 
         container.appendChild(card);
       });
 
       initTagInputs();
+      updateScenarioSelects();
     }
 
     document.getElementById("addTrade").addEventListener("click", () => {
-      appState.module3.trades.push({
-        type: "",
-        preEmotion: "",
-        signalEmotion: "",
-        entryModels: [],
-        riskModel: "",
-        riskTags: [],
-        pnl: null,
-        realizedR: null,
-        missedR: null
-      });
+      appState.module3.trades.push(newTrade());
       saveState();
       renderTrades();
     });
 
-    // ---------- MODULE 4: POST-MARKET COMPUTATIONS (V1 STUBS) ----------
+    // ---------- MODULE 4: POST-MARKET ENGINE ----------
     function recomputePostMarket() {
       const trades = appState.module3.trades || [];
+      let totalPnl = 0, totalR = 0, totalMissedR = 0, missedCount = 0;
+      let executedCount = 0;
 
-      let totalPnl = 0;
-      let totalR = 0;
-      let totalMissedR = 0;
-      let missedCount = 0;
-
-      trades.forEach((t) => {
+      trades.forEach(t => {
+        if (t.type === "executed") executedCount++;
         if (typeof t.pnl === "number") totalPnl += t.pnl;
         if (typeof t.realizedR === "number") totalR += t.realizedR;
         if (typeof t.missedR === "number") totalMissedR += t.missedR;
-        if (t.type === "missed") missedCount += 1;
+        if (t.type === "missed") missedCount++;
       });
 
       const dailySummary = [
+        `Trades: ${trades.length} (${executedCount} executed, ${missedCount} missed)`,
         `Total PNL: ${totalPnl.toFixed(2)}`,
-        `Total Realized R: ${totalR.toFixed(2)}`,
-        `Total Missed R: ${totalMissedR.toFixed(2)}`,
-        `Missed Opportunities: ${missedCount}`
+        `Total R: ${totalR.toFixed(2)}`,
+        `Missed R: ${totalMissedR.toFixed(2)}`
       ].join(" | ");
 
       appState.module4.dailySummary = dailySummary;
 
-      // Psych summary stub — V1: very simple narrative
-      const hasHesitation = trades.some(
-        (t) => (t.preEmotion || "").toLowerCase().includes("hesit") ||
-               (t.signalEmotion || "").toLowerCase().includes("hesit")
-      );
-      const hasAggression = trades.some(
-        (t) => (t.preEmotion || "").toLowerCase().includes("aggress") ||
-               (t.signalEmotion || "").toLowerCase().includes("aggress")
-      );
+      // Psychological engine (rule-based)
+      const emos = [];
+      if (appState.module1.emotion) emos.push(appState.module1.emotion.toLowerCase());
+      (appState.module2.watchEntries || []).forEach(w => w.emotion && emos.push(w.emotion.toLowerCase()));
+      trades.forEach(t => {
+        [t.preEmotion, t.signalEmotion, t.duringEmotion, t.missEmotion].forEach(e => {
+          if (e) emos.push(e.toLowerCase());
+        });
+      });
 
-      let psychSummary = "Psych pattern engine (V1): ";
-      if (hasHesitation && missedCount > 0) {
-        psychSummary +=
-          "Hesitation around the signal contributed to missed trades and unrealized R. ";
-      }
-      if (hasAggression && totalMissedR === 0 && totalR > 0) {
-        psychSummary +=
-          "Aggressive state aligned with execution and allowed you to capture R cleanly. ";
-      }
-      if (psychSummary === "Psych pattern engine (V1): ") {
-        psychSummary += "No clear dominant pattern detected yet.";
-      }
+      const text = buildPsychSummary(emos, trades, totalR, totalMissedR, missedCount);
+      appState.module4.psychSummary = text;
 
-      appState.module4.psychSummary = psychSummary;
+      // What went well / wrong autoseed
+      const { well, wrong, missedSummary } = buildPostNarratives(trades, totalR, totalMissedR, missedCount);
+      // Only overwrite if empty so you can edit
+      if (!appState.module4.whatWentWell) appState.module4.whatWentWell = well;
+      if (!appState.module4.whatWentWrong) appState.module4.whatWentWrong = wrong;
+      appState.module4.missedSummary = missedSummary;
 
       saveState();
-      // re-render simple bound fields
-      const dailyEl = document.getElementById("m4_daily");
-      const psychEl = document.getElementById("m4_psych");
-      if (dailyEl) dailyEl.value = dailySummary;
-      if (psychEl) psychEl.value = psychSummary;
+      // reflect in UI
+      document.getElementById("m4_daily").value = appState.module4.dailySummary;
+      document.getElementById("m4_psych").value = appState.module4.psychSummary;
+      document.getElementById("m4_well").value = appState.module4.whatWentWell;
+      document.getElementById("m4_wrong").value = appState.module4.whatWentWrong;
+      document.getElementById("m4_missed").value = appState.module4.missedSummary;
     }
 
-    document
-      .getElementById("recomputePostMarket")
-      .addEventListener("click", recomputePostMarket);
+    function buildPsychSummary(emos, trades, totalR, totalMissedR, missedCount) {
+      let out = "Psych pattern engine (V1): ";
 
-    // ---------- INITIALIZE ----------
+      const hes = emos.some(e => e.includes("hesit") || e.includes("doubt"));
+      const anx = emos.some(e => e.includes("anx") || e.includes("fear"));
+      const over = emos.some(e => e.includes("overconf") || e.includes("cocky"));
+      const imp = emos.some(e => e.includes("impuls") || e.includes("rage") || e.includes("angry"));
+
+      if (hes && missedCount > 0 && totalMissedR > 0) {
+        out += "Hesitation/doubt showed up around signals and led to missed trades and missed R. ";
+      }
+      if (anx && totalR < totalMissedR) {
+        out += "Anxious/fearful states seem to correlate more with missed opportunity than realized R. ";
+      }
+      if (over && totalR > 0 && totalMissedR === 0) {
+        out += "Confidence/overconfidence aligned with execution and capturing R cleanly today. ";
+      }
+      if (imp) {
+        out += "Impulsive or emotionally charged moments are present; review these trades closely. ";
+      }
+
+      if (out === "Psych pattern engine (V1): ") {
+        out += "No dominant emotional distortion stands out from today’s data.";
+      }
+      return out.trim();
+    }
+
+    function buildPostNarratives(trades, totalR, totalMissedR, missedCount) {
+      let well = "";
+      let wrong = "";
+      let missedSummary = "";
+
+      const goodExec = trades.filter(t => t.type === "executed" && (t.realizedR || 0) > 0);
+      const badExec = trades.filter(t => t.type === "executed" && (t.realizedR || 0) < 0);
+      const missWithHes = trades.filter(
+        t => t.type === "missed" &&
+        ((t.missReasonTags || []).some(tag => tag.toLowerCase().includes("hesit")) ||
+         (t.missEmotion || "").toLowerCase().includes("hesit"))
+      );
+
+      if (goodExec.length) {
+        const avgR = totalR / goodExec.length;
+        well += `You executed ${goodExec.length} winning trades with average R ≈ ${avgR.toFixed(2)}. `;
+      }
+      if (!goodExec.length && totalR > 0) {
+        well += `You still ended positive in R despite few clear winning trades. `;
+      }
+
+      if (badExec.length) {
+        wrong += `There were ${badExec.length} losing trades; revisit whether setups truly matched your model and invalidation was respected. `;
+      }
+
+      if (missWithHes.length) {
+        wrong += `Several missed trades were linked to hesitation or doubt at the signal. `;
+      }
+
+      if (totalMissedR > 0) {
+        missedSummary += `Total missed R across missed trades and under-managed winners: ${totalMissedR.toFixed(2)}. `;
+      }
+      if (missedCount > 0) {
+        missedSummary += `You logged ${missedCount} missed opportunities today. `;
+      }
+
+      if (!well) well = "No clear positives auto-detected — use this area to describe what you still did well.";
+      if (!wrong) wrong = "No clear issues auto-detected — if anything felt off, capture it here manually.";
+      if (!missedSummary) missedSummary = "No missed opportunities were logged today.";
+
+      return { well: well.trim(), wrong: wrong.trim(), missedSummary: missedSummary.trim() };
+    }
+
+    document.getElementById("recomputePostMarket").addEventListener("click", recomputePostMarket);
+
+    // ---------- INIT ----------
     function renderAll() {
       bindSimpleFields();
-      initTagInputs();
+      renderScenarios();
+      renderModule2Dynamic();
       renderTrades();
-      // reflect computed module4 values
-      const dailyEl = document.getElementById("m4_daily");
-      const psychEl = document.getElementById("m4_psych");
-      if (dailyEl) dailyEl.value = appState.module4.dailySummary || "";
-      if (psychEl) psychEl.value = appState.module4.psychSummary || "";
+      initTagInputs();
+      // reflect post-market
+      const d = document.getElementById("m4_daily");
+      const p = document.getElementById("m4_psych");
+      const w = document.getElementById("m4_well");
+      const wr = document.getElementById("m4_wrong");
+      const ms = document.getElementById("m4_missed");
+      if (d) d.value = appState.module4.dailySummary || "";
+      if (p) p.value = appState.module4.psychSummary || "";
+      if (w) w.value = appState.module4.whatWentWell || "";
+      if (wr) wr.value = appState.module4.whatWentWrong || "";
+      if (ms) ms.value = appState.module4.missedSummary || "";
     }
 
     renderAll();
