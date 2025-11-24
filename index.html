@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 007a</title>
+  <title>Trading SOP Journal — Build 007b</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -118,6 +118,16 @@
     label {
       font-size: 0.75rem;
       color: #9ca3af;
+    }
+
+    /* Scenario header (the row with label + green button) */
+    .scenario-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      gap: 8px;
     }
 
     /* Buttons */
@@ -275,9 +285,9 @@
 
     <div class="top-bar">
       <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 007a</h1>
+        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 007b</h1>
         <p class="small-text">
-          Accordion ✓ • M1 Scenarios ✓ • M2 Watching + Surges ✓ • Persistence ✓ • Per-card collapse/expand ✓ • Input focus bug fixed ✓
+          Accordion ✓ • M1 Scenarios ✓ • M2 Watching + Surges ✓ • Persistence ✓ • Per-card collapse/expand ✓ • Input focus bug fixed ✓ • Scenario header aligned ✓
         </p>
       </div>
       <div style="text-align:right;">
@@ -295,22 +305,18 @@
 
       <div class="accordion-content">
 
-        <!-- SESSION LEVELS MARKED -->
         <label>Session Levels</label>
         <div class="checkbox-row">
           <input type="checkbox" id="levels_done" />
           <label for="levels_done" style="margin: 0;">All required levels marked</label>
         </div>
 
-        <!-- PREVIOUS SESSIONS OBSERVED / BIAS -->
         <label>Previous Sessions Observed / Bias</label>
         <textarea id="prev_sessions" placeholder="Asia, London, combined bias…"></textarea>
 
-        <!-- HTF → LTF STRUCTURE -->
         <label>HTF → LTF Structure & Trend</label>
         <textarea id="htf_ltf" placeholder="15m → 5m → 1m structure…"></textarea>
 
-        <!-- IF–THEN SCENARIOS -->
         <label>IF–THEN Scenarios</label>
         <div class="scenario-header">
           <span style="font-size:0.8rem; font-weight:600;">Scenarios List</span>
@@ -322,7 +328,6 @@
         </p>
         <div id="scenarioList"></div>
 
-        <!-- EMOTIONAL STATE -->
         <label>Session-Start Emotional State</label>
         <select id="session_emotion">
           <option value="">– select –</option>
@@ -403,14 +408,13 @@
   </div>
 
   <script>
-    // ----------------- ACCORDION -----------------
+    // Accordion
     document.querySelectorAll(".accordion-header").forEach(header => {
       header.addEventListener("click", () => {
         header.parentNode.classList.toggle("open");
       });
     });
 
-    // ----------------- GLOBAL STATUS -----------------
     const statusEl = document.getElementById("statusText");
     function setStatus(msg) {
       if (!statusEl) return;
@@ -422,13 +426,11 @@
       }
     }
 
-    // ----------------- STORAGE KEYS -----------------
     const STORAGE_KEY_SCENARIOS = "sop_v1_scenarios_only";
     const STORAGE_KEY_MODULE2 = "sop_v1_module2";
-
     const resetDayBtn = document.getElementById("resetDayBtn");
 
-    // ----------------- MODULE 1: SCENARIOS -----------------
+    // --- Module 1: Scenarios ---
     let scenarios = [];
     let nextScenarioIndex = 1;
 
@@ -437,11 +439,10 @@
 
     function saveScenarios() {
       try {
-        const payload = { scenarios };
-        localStorage.setItem(STORAGE_KEY_SCENARIOS, JSON.stringify(payload));
+        localStorage.setItem(STORAGE_KEY_SCENARIOS, JSON.stringify({ scenarios }));
         setStatus("Scenarios saved");
       } catch (e) {
-        console.error("Error saving scenarios", e);
+        console.error(e);
         setStatus("Save error");
       }
     }
@@ -466,7 +467,7 @@
         });
         nextScenarioIndex = maxIndex + 1;
       } catch (e) {
-        console.error("Error loading scenarios", e);
+        console.error(e);
         scenarios = [];
         nextScenarioIndex = 1;
       }
@@ -474,18 +475,11 @@
 
     function createScenario() {
       const id = "S" + nextScenarioIndex++;
-      return {
-        id,
-        title: "",
-        ifText: "",
-        thenText: "",
-        collapsed: false
-      };
+      return { id, title: "", ifText: "", thenText: "", collapsed: false };
     }
 
     function renderScenarios() {
       scenarioListEl.innerHTML = "";
-
       if (!scenarios.length) {
         const empty = document.createElement("div");
         empty.style.fontSize = "0.75rem";
@@ -523,7 +517,7 @@
 
         const delBtn = document.createElement("button");
         delBtn.type = "button";
-        delBtn.className = "scenario-delete";
+        delBtn.className = "surge-delete-btn";
         delBtn.textContent = "Delete";
         delBtn.addEventListener("click", () => {
           scenarios.splice(index, 1);
@@ -542,9 +536,6 @@
 
         const titleLabel = document.createElement("label");
         titleLabel.textContent = "Title";
-        titleLabel.style.display = "block";
-        titleLabel.style.fontSize = "0.7rem";
-        titleLabel.style.color = "#9ca3af";
         body.appendChild(titleLabel);
 
         const titleInput = document.createElement("input");
@@ -558,9 +549,6 @@
 
         const ifLabel = document.createElement("label");
         ifLabel.textContent = "IF:";
-        ifLabel.style.display = "block";
-        ifLabel.style.fontSize = "0.7rem";
-        ifLabel.style.color = "#9ca3af";
         body.appendChild(ifLabel);
 
         const ifArea = document.createElement("textarea");
@@ -574,9 +562,6 @@
 
         const thenLabel = document.createElement("label");
         thenLabel.textContent = "THEN:";
-        thenLabel.style.display = "block";
-        thenLabel.style.fontSize = "0.7rem";
-        thenLabel.style.color = "#9ca3af";
         body.appendChild(thenLabel);
 
         const thenArea = document.createElement("textarea");
@@ -601,20 +586,13 @@
       });
     }
 
-    function getAllScenarios() {
-      return scenarios.slice();
-    }
-
-    function getScenarioById(id) {
-      return scenarios.find(sc => sc.id === id) || null;
-    }
-
+    // expose helpers
     window.SOP_SCENARIOS = {
-      getAllScenarios,
-      getScenarioById
+      getAllScenarios: () => scenarios.slice(),
+      getScenarioById: id => scenarios.find(sc => sc.id === id) || null
     };
 
-    // ----------------- MODULE 2: WATCHING + SURGES + PERSISTENCE -----------------
+    // --- Module 2: Watching + Surges ---
     const watchListEl = document.getElementById("watchList");
     const addWatchBtn = document.getElementById("addWatchBtn");
     const surgeListEl = document.getElementById("surgeList");
@@ -657,11 +635,13 @@
 
     function saveModule2() {
       try {
-        const payload = { watchEntries, surges };
-        localStorage.setItem(STORAGE_KEY_MODULE2, JSON.stringify(payload));
+        localStorage.setItem(
+          STORAGE_KEY_MODULE2,
+          JSON.stringify({ watchEntries, surges })
+        );
         setStatus("Module 2 saved");
       } catch (e) {
-        console.error("Error saving module 2", e);
+        console.error(e);
         setStatus("Save error");
       }
     }
@@ -678,22 +658,22 @@
         watchEntries = Array.isArray(parsed.watchEntries) ? parsed.watchEntries : [];
         surges = Array.isArray(parsed.surges) ? parsed.surges : [];
 
-        watchEntries.forEach(entry => {
-          if (!entry.presets) entry.presets = defaultPresets();
+        watchEntries.forEach(e => {
+          if (!e.presets) e.presets = defaultPresets();
           else {
             const def = defaultPresets();
             Object.keys(def).forEach(k => {
-              if (typeof entry.presets[k] !== "boolean") entry.presets[k] = false;
+              if (typeof e.presets[k] !== "boolean") e.presets[k] = false;
             });
           }
-          if (!entry.hasOwnProperty("collapsed")) entry.collapsed = false;
+          if (!e.hasOwnProperty("collapsed")) e.collapsed = false;
         });
 
-        surges.forEach(entry => {
-          if (!entry.hasOwnProperty("collapsed")) entry.collapsed = false;
+        surges.forEach(e => {
+          if (!e.hasOwnProperty("collapsed")) e.collapsed = false;
         });
       } catch (e) {
-        console.error("Error loading module 2", e);
+        console.error(e);
         watchEntries = [];
         surges = [];
       }
@@ -701,7 +681,6 @@
 
     function renderWatchEntries() {
       watchListEl.innerHTML = "";
-
       if (!watchEntries.length) {
         const empty = document.createElement("div");
         empty.style.fontSize = "0.75rem";
@@ -724,11 +703,10 @@
 
         const summary = document.createElement("div");
         summary.className = "watch-summary";
-        const setWatchSummary = () => {
-          const sumText = `${entry.time || "—"} | ${entry.emotion || "no emotion"}`;
-          summary.textContent = sumText;
+        const setSummary = () => {
+          summary.textContent = `${entry.time || "—"} | ${entry.emotion || "no emotion"}`;
         };
-        setWatchSummary();
+        setSummary();
 
         const right = document.createElement("div");
         right.style.display = "flex";
@@ -757,7 +735,6 @@
 
         right.appendChild(toggleBtn);
         right.appendChild(delBtn);
-
         headerRow.appendChild(left);
         headerRow.appendChild(summary);
         headerRow.appendChild(right);
@@ -785,12 +762,12 @@
 
         timeInput.addEventListener("input", () => {
           entry.time = timeInput.value;
-          setWatchSummary();
+          setSummary();
           saveModule2();
         });
         emoInput.addEventListener("input", () => {
           entry.emotion = emoInput.value;
-          setWatchSummary();
+          setSummary();
           saveModule2();
         });
 
@@ -803,12 +780,9 @@
         const options = document.createElement("div");
         options.className = "interp-options";
         const presets = [
-          ["chop", "Chop"],
-          ["compression", "Compression"],
-          ["sweep", "Sweep"],
-          ["displacement", "Displacement"],
-          ["indecision", "Indecision"],
-          ["stalling", "Stalling"]
+          ["chop", "Chop"], ["compression", "Compression"],
+          ["sweep", "Sweep"], ["displacement", "Displacement"],
+          ["indecision", "Indecision"], ["stalling", "Stalling"]
         ];
         presets.forEach(([key, text]) => {
           const wrap = document.createElement("label");
@@ -861,7 +835,6 @@
 
     function renderSurges() {
       surgeListEl.innerHTML = "";
-
       if (!surges.length) {
         const empty = document.createElement("div");
         empty.style.fontSize = "0.75rem";
@@ -884,11 +857,10 @@
 
         const summary = document.createElement("div");
         summary.className = "surge-summary";
-        const setSurgeSummary = () => {
-          const sumText = `${entry.time || "—"} | ${entry.emotion || "no label"}`;
-          summary.textContent = sumText;
+        const setSummary = () => {
+          summary.textContent = `${entry.time || "—"} | ${entry.emotion || "no label"}`;
         };
-        setSurgeSummary();
+        setSummary();
 
         const right = document.createElement("div");
         right.style.display = "flex";
@@ -917,7 +889,6 @@
 
         right.appendChild(toggleBtn);
         right.appendChild(delBtn);
-
         headerRow.appendChild(left);
         headerRow.appendChild(summary);
         headerRow.appendChild(right);
@@ -945,12 +916,12 @@
 
         timeInput.addEventListener("input", () => {
           entry.time = timeInput.value;
-          setSurgeSummary();
+          setSummary();
           saveModule2();
         });
         emoInput.addEventListener("input", () => {
           entry.emotion = emoInput.value;
-          setSurgeSummary();
+          setSummary();
           saveModule2();
         });
 
@@ -994,7 +965,7 @@
         saveModule2();
         renderWatchEntries();
       });
-    }
+    });
 
     if (addSurgeBtn) {
       addSurgeBtn.addEventListener("click", () => {
@@ -1004,7 +975,6 @@
       });
     }
 
-    // ----------------- RESET DAY (M1 + M2) -----------------
     function resetDayAll() {
       if (!confirm("Reset M1 scenarios and all Module 2 entries for this day? This cannot be undone.")) return;
 
@@ -1022,11 +992,9 @@
       setStatus("Day reset (M1 + M2)");
     }
 
-    if (resetDayBtn) {
-      resetDayBtn.addEventListener("click", resetDayAll);
-    }
+    resetDayBtn.addEventListener("click", resetDayAll);
 
-    // ----------------- INIT -----------------
+    // init
     loadScenarios();
     renderScenarios();
     loadModule2();
