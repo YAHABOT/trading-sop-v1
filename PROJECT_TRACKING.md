@@ -562,3 +562,88 @@ Directly integrates with R-calculation engine
 Influences psychological auto-analysis (e.g., low-risk = hesitation, full-risk = confidence/aggression)
 
 This completes the Risk Model architecture for Module 3 in SOP V1.
+
+✅ CHANGELOG — BUILD 001 (2025-11-24)
+Status: FAILED / UI REJECTED
+Summary: First attempt at full V1 front-end build did NOT match SOP requirements.
+What Happened
+
+Attempted to deliver full V1 interface in one single static HTML file
+
+UI became cluttered, misaligned, and inconsistent
+
+Multiple fields appeared that were not part of the V1 spec
+
+Layout broke:
+
+Module 1 + Module 2 rendered SIDE-BY-SIDE instead of accordion
+
+Text inputs were WHITE TEXT on WHITE BACKGROUND (unusable)
+
+Dropdowns had unreadable white-on-white theming
+
+IF–THEN scenario block layout was broken
+
+Module 3 flow incorrect (no baseline → signal → executed/missed flow)
+
+Random fields appeared (“emotion clarifier”, “expected entry models”, etc.)
+
+Interpretation tags and confluence tags placed in wrong modules
+
+Entire Module 3 structure not according to spec
+
+Add Trade button produced invalid/garbage layout
+
+Root Cause
+
+Build attempted to mix Tailwind + heavy dynamic JS in one pass without respecting the original UX structure
+
+Multiple assumptions were made outside the SOP spec
+
+No accordion system implemented
+
+Wrong module hierarchy rendered
+
+Styling inconsistencies due to Tailwind defaults overriding custom styles
+
+Trade flow logic incorrectly bundled into one component
+
+Outcome
+
+User confirmed Build 001 is not usable
+
+Build 001 officially marked as FAILED
+
+Complete UI refactor required
+
+Clean rebuild (Build 002) must start from scratch
+
+Actions for Build 002
+
+Implement full accordion interface for all 4 modules (per requirement)
+
+Restore proper vertical, structured layout
+
+Only include fields explicitly defined in SOP V1
+
+Remove unauthorized/undefined fields
+
+Implement correct flow for Module 3:
+
+Baseline → Signal → (Executed / Missed)
+
+Fix all input styling (dark inputs, visible text, readable dropdowns)
+
+Clean IF–THEN scenario UI (vertical stacked layout)
+
+Add interpretation tags + free text input
+
+Remove unexpected fields (“emotion clarifier”, expected entry models, etc.)
+
+Ensure layout matches EXACT SOP V1 spec
+
+No white-on-white elements
+
+No side-by-side modules
+
+Accordion = multiple open allowed (per final answer)
