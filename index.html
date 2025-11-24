@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 007c</title>
+  <title>Trading SOP Journal — Build 008</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -85,7 +85,8 @@
     /* Inputs */
     textarea,
     select,
-    input[type="text"] {
+    input[type="text"],
+    input[type="number"] {
       width: 100%;
       padding: 8px;
       margin-top: 4px;
@@ -136,6 +137,8 @@
     .watch-delete-btn,
     .surge-add-btn,
     .surge-delete-btn,
+    .adapt-add-btn,
+    .adapt-delete-btn,
     .card-toggle-btn {
       font-size: 0.7rem;
       padding: 4px 8px;
@@ -156,7 +159,8 @@
     }
 
     .watch-delete-btn,
-    .surge-delete-btn {
+    .surge-delete-btn,
+    .adapt-delete-btn {
       border: 1px solid #ef4444;
       background: #450a0a;
       color: #fecaca;
@@ -166,6 +170,12 @@
       border: 1px solid #f97316;
       background: #451a03;
       color: #fed7aa;
+    }
+
+    .adapt-add-btn {
+      border: 1px solid #a855f7;
+      background: #2e1065;
+      color: #e9d5ff;
     }
 
     .card-toggle-btn {
@@ -180,7 +190,8 @@
     /* Cards */
     .scenario-card,
     .watch-card,
-    .surge-card {
+    .surge-card,
+    .adapt-card {
       border: 1px solid #243045;
       border-radius: 6px;
       padding: 8px;
@@ -190,7 +201,8 @@
 
     .scenario-header-row,
     .watch-header-row,
-    .surge-header-row {
+    .surge-header-row,
+    .adapt-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -205,13 +217,15 @@
     }
 
     .watch-label,
-    .surge-label {
+    .surge-label,
+    .adapt-label {
       font-size: 0.7rem;
       color: #e5e7eb;
     }
 
     .watch-summary,
-    .surge-summary {
+    .surge-summary,
+    .adapt-summary {
       font-size: 0.7rem;
       color: #9ca3af;
       flex: 1;
@@ -224,13 +238,15 @@
 
     .scenario-body,
     .watch-body,
-    .surge-body {
+    .surge-body,
+    .adapt-body {
       margin-top: 4px;
     }
 
     .scenario-card.collapsed .scenario-body,
     .watch-card.collapsed .watch-body,
-    .surge-card.collapsed .surge-body {
+    .surge-card.collapsed .surge-body,
+    .adapt-card.collapsed .adapt-body {
       display: none;
     }
 
@@ -242,25 +258,29 @@
     }
 
     .watch-row,
-    .surge-row {
+    .surge-row,
+    .adapt-row {
       display: flex;
       gap: 8px;
       margin-bottom: 8px;
     }
 
     .watch-row > div,
-    .surge-row > div {
+    .surge-row > div,
+    .adapt-row > div {
       flex: 1;
     }
 
-    .interp-options {
+    .interp-options,
+    .adapt-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin: 4px 0 6px 0;
     }
 
-    .interp-options label {
+    .interp-options label,
+    .adapt-tags label {
       display: flex;
       align-items: center;
       gap: 4px;
@@ -268,8 +288,21 @@
       color: #cbd5f5;
     }
 
-    .interp-options input[type="checkbox"] {
+    .interp-options input[type="checkbox"],
+    .adapt-tags input[type="checkbox"] {
       margin: 0;
+    }
+
+    .energy-grid {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .energy-grid > div {
+      flex: 1;
+      min-width: 120px;
     }
 
     hr {
@@ -284,9 +317,9 @@
   <div class="container">
     <div class="top-bar">
       <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 007c</h1>
+        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 008</h1>
         <p class="small-text">
-          Accordion ✓ • M1 Scenarios ✓ • M2 Watching + Surges ✓ • Persistence ✓ • Per-card collapse/expand ✓ • Input focus fixed ✓ • Scenario header aligned ✓
+          M1 Scenarios ✓ • M2 Watching + Surges ✓ • Adaptation Windows ✓ • Session Energy & Market Type ✓ • Persistence + Reset Day wired
         </p>
       </div>
       <div style="text-align:right;">
@@ -374,6 +407,53 @@
 
         <div id="surgeList"></div>
 
+        <hr />
+
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Adaptation Windows</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Capture specific time windows where the market changed and you adapted (or failed to).
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="small-text">Adaptation entries</span>
+          <button type="button" id="addAdaptBtn" class="adapt-add-btn">+ Add Adaptation</button>
+        </div>
+
+        <div id="adaptList"></div>
+
+        <hr />
+
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Session Energy & Market Behavior</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Snapshot of how you and the market felt during the core session.
+        </p>
+
+        <div class="energy-grid">
+          <div>
+            <label>Trader Energy (0–10)</label>
+            <input type="number" id="trader_energy" min="0" max="10" step="1" placeholder="0–10" />
+          </div>
+          <div>
+            <label>Market Energy (0–10)</label>
+            <input type="number" id="market_energy" min="0" max="10" step="1" placeholder="0–10" />
+          </div>
+        </div>
+
+        <label>Market Type</label>
+        <select id="market_type">
+          <option value="">– select –</option>
+          <option value="choppy">Choppy</option>
+          <option value="directional">Directional</option>
+          <option value="trend">Trend</option>
+          <option value="range">Range</option>
+          <option value="manipulative">Manipulative</option>
+          <option value="slow_grind">Slow Grind</option>
+          <option value="high_volatility">High Volatility</option>
+        </select>
+
+        <label>Notes on Tempo / Behavior</label>
+        <textarea id="market_notes" placeholder="Describe tempo shifts, liquidity feel, sudden dead periods, etc."></textarea>
+
       </div>
     </div>
 
@@ -385,7 +465,7 @@
       </div>
       <div class="accordion-content">
         <p class="small-text">
-          Module 3 UI will be built in Phases 4–6 (Builds 008–015).
+          Module 3 UI will be built in Phases 4–6 (Builds 009–015).
         </p>
       </div>
     </div>
@@ -587,14 +667,28 @@
       });
     }
 
-    // ---------- Module 2: Watching + Surges ----------
+    // ---------- Module 2: Watching + Surges + Adaptation + Session State ----------
     const watchListEl = document.getElementById("watchList");
     const addWatchBtn = document.getElementById("addWatchBtn");
     const surgeListEl = document.getElementById("surgeList");
     const addSurgeBtn = document.getElementById("addSurgeBtn");
+    const adaptListEl = document.getElementById("adaptList");
+    const addAdaptBtn = document.getElementById("addAdaptBtn");
+
+    const traderEnergyInput = document.getElementById("trader_energy");
+    const marketEnergyInput = document.getElementById("market_energy");
+    const marketTypeSelect = document.getElementById("market_type");
+    const marketNotesArea = document.getElementById("market_notes");
 
     let watchEntries = [];
     let surges = [];
+    let adaptations = [];
+    let sessionState = {
+      traderEnergy: "",
+      marketEnergy: "",
+      marketType: "",
+      notes: ""
+    };
 
     function defaultPresets() {
       return {
@@ -628,11 +722,26 @@
       };
     }
 
+    function createAdaptationEntry() {
+      return {
+        startTime: "",
+        endTime: "",
+        tagStructShift: false,
+        tagTempoChange: false,
+        tagLiquidityChange: false,
+        tagOrderflowChange: false,
+        customTags: "",
+        whatChanged: "",
+        howAdapted: "",
+        collapsed: false
+      };
+    }
+
     function saveModule2() {
       try {
         localStorage.setItem(
           STORAGE_KEY_MODULE2,
-          JSON.stringify({ watchEntries, surges })
+          JSON.stringify({ watchEntries, surges, adaptations, sessionState })
         );
         setStatus("Module 2 saved");
       } catch (e) {
@@ -647,11 +756,25 @@
         if (!raw) {
           watchEntries = [];
           surges = [];
+          adaptations = [];
+          sessionState = {
+            traderEnergy: "",
+            marketEnergy: "",
+            marketType: "",
+            notes: ""
+          };
           return;
         }
         const parsed = JSON.parse(raw);
         watchEntries = Array.isArray(parsed.watchEntries) ? parsed.watchEntries : [];
         surges = Array.isArray(parsed.surges) ? parsed.surges : [];
+        adaptations = Array.isArray(parsed.adaptations) ? parsed.adaptations : [];
+        sessionState = parsed.sessionState || {
+          traderEnergy: "",
+          marketEnergy: "",
+          marketType: "",
+          notes: ""
+        };
 
         watchEntries.forEach(e => {
           if (!e.presets) e.presets = defaultPresets();
@@ -667,13 +790,32 @@
         surges.forEach(e => {
           if (!e.hasOwnProperty("collapsed")) e.collapsed = false;
         });
+
+        adaptations.forEach(e => {
+          if (!e.hasOwnProperty("collapsed")) e.collapsed = false;
+          if (typeof e.tagStructShift !== "boolean") e.tagStructShift = false;
+          if (typeof e.tagTempoChange !== "boolean") e.tagTempoChange = false;
+          if (typeof e.tagLiquidityChange !== "boolean") e.tagLiquidityChange = false;
+          if (typeof e.tagOrderflowChange !== "boolean") e.tagOrderflowChange = false;
+          if (typeof e.customTags !== "string") e.customTags = "";
+          if (typeof e.whatChanged !== "string") e.whatChanged = "";
+          if (typeof e.howAdapted !== "string") e.howAdapted = "";
+        });
       } catch (e) {
         console.error(e);
         watchEntries = [];
         surges = [];
+        adaptations = [];
+        sessionState = {
+          traderEnergy: "",
+          marketEnergy: "",
+          marketType: "",
+          notes: ""
+        };
       }
     }
 
+    // ----- Watching -----
     function renderWatchEntries() {
       watchListEl.innerHTML = "";
       if (!watchEntries.length) {
@@ -828,6 +970,7 @@
       });
     }
 
+    // ----- Surges -----
     function renderSurges() {
       surgeListEl.innerHTML = "";
       if (!surges.length) {
@@ -954,6 +1097,215 @@
       });
     }
 
+    // ----- Adaptations -----
+    function renderAdaptations() {
+      adaptListEl.innerHTML = "";
+      if (!adaptations.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.75rem";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No adaptation windows logged yet.";
+        adaptListEl.appendChild(empty);
+        return;
+      }
+
+      adaptations.forEach((entry, index) => {
+        const card = document.createElement("div");
+        card.className = "adapt-card" + (entry.collapsed ? " collapsed" : "");
+
+        const headerRow = document.createElement("div");
+        headerRow.className = "adapt-header-row";
+
+        const left = document.createElement("div");
+        left.className = "adapt-label";
+        left.textContent = `Adaptation #${index + 1}`;
+
+        const summary = document.createElement("div");
+        summary.className = "adapt-summary";
+        const setSummary = () => {
+          const windowLabel = (entry.startTime || "?") + "–" + (entry.endTime || "?");
+          const tags = [];
+          if (entry.tagStructShift) tags.push("struct shift");
+          if (entry.tagTempoChange) tags.push("tempo");
+          if (entry.tagLiquidityChange) tags.push("liquidity");
+          if (entry.tagOrderflowChange) tags.push("orderflow");
+          const tagStr = tags.length ? tags.join(", ") : "no tags";
+          summary.textContent = `${windowLabel} | ${tagStr}`;
+        };
+        setSummary();
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.alignItems = "center";
+        right.style.gap = "4px";
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.type = "button";
+        toggleBtn.className = "card-toggle-btn";
+        toggleBtn.textContent = entry.collapsed ? "+" : "−";
+        toggleBtn.addEventListener("click", () => {
+          entry.collapsed = !entry.collapsed;
+          saveModule2();
+          renderAdaptations();
+        });
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "adapt-delete-btn";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", () => {
+          adaptations.splice(index, 1);
+          saveModule2();
+          renderAdaptations();
+        });
+
+        right.appendChild(toggleBtn);
+        right.appendChild(delBtn);
+        headerRow.appendChild(left);
+        headerRow.appendChild(summary);
+        headerRow.appendChild(right);
+        card.appendChild(headerRow);
+
+        const body = document.createElement("div");
+        body.className = "adapt-body";
+
+        const row = document.createElement("div");
+        row.className = "adapt-row";
+        row.innerHTML = `
+          <div>
+            <label>Start Time (EST)</label>
+            <input type="text" placeholder="e.g. 10:15">
+          </div>
+          <div>
+            <label>End Time (EST)</label>
+            <input type="text" placeholder="e.g. 10:45">
+          </div>
+        `;
+        const startInput = row.querySelectorAll("input")[0];
+        const endInput = row.querySelectorAll("input")[1];
+        startInput.value = entry.startTime || "";
+        endInput.value = entry.endTime || "";
+
+        startInput.addEventListener("input", () => {
+          entry.startTime = startInput.value;
+          setSummary();
+          saveModule2();
+        });
+        endInput.addEventListener("input", () => {
+          entry.endTime = endInput.value;
+          setSummary();
+          saveModule2();
+        });
+
+        body.appendChild(row);
+
+        const tagsLabel = document.createElement("label");
+        tagsLabel.textContent = "What changed?";
+        body.appendChild(tagsLabel);
+
+        const tagsWrap = document.createElement("div");
+        tagsWrap.className = "adapt-tags";
+
+        const tagDefs = [
+          ["tagStructShift", "Structural shift"],
+          ["tagTempoChange", "Tempo change"],
+          ["tagLiquidityChange", "Liquidity behaviour change"],
+          ["tagOrderflowChange", "Orderflow / tape shift"]
+        ];
+
+        tagDefs.forEach(([key, labelText]) => {
+          const wrap = document.createElement("label");
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.checked = !!entry[key];
+          cb.addEventListener("change", () => {
+            entry[key] = cb.checked;
+            setSummary();
+            saveModule2();
+          });
+          const span = document.createElement("span");
+          span.textContent = labelText;
+          wrap.appendChild(cb);
+          wrap.appendChild(span);
+          tagsWrap.appendChild(wrap);
+        });
+
+        body.appendChild(tagsWrap);
+
+        const customTagsLabel = document.createElement("label");
+        customTagsLabel.textContent = "Custom tags (comma separated)";
+        body.appendChild(customTagsLabel);
+
+        const customInput = document.createElement("input");
+        customInput.type = "text";
+        customInput.placeholder = "e.g. news spike, VWAP reclaim, killzone flip";
+        customInput.value = entry.customTags || "";
+        customInput.addEventListener("input", () => {
+          entry.customTags = customInput.value;
+          saveModule2();
+        });
+        body.appendChild(customInput);
+
+        const whatChangedLabel = document.createElement("label");
+        whatChangedLabel.textContent = "Describe what changed in the market";
+        body.appendChild(whatChangedLabel);
+
+        const whatChangedArea = document.createElement("textarea");
+        whatChangedArea.placeholder = "Tape, volatility, structure, liquidity behaviour…";
+        whatChangedArea.value = entry.whatChanged || "";
+        whatChangedArea.addEventListener("input", () => {
+          entry.whatChanged = whatChangedArea.value;
+          saveModule2();
+        });
+        body.appendChild(whatChangedArea);
+
+        const howAdaptedLabel = document.createElement("label");
+        howAdaptedLabel.textContent = "How did you adapt (or fail to adapt)?";
+        body.appendChild(howAdaptedLabel);
+
+        const howAdaptedArea = document.createElement("textarea");
+        howAdaptedArea.placeholder = "Execution change: sizing, model, timing, or stayed stubborn…";
+        howAdaptedArea.value = entry.howAdapted || "";
+        howAdaptedArea.addEventListener("input", () => {
+          entry.howAdapted = howAdaptedArea.value;
+          saveModule2();
+        });
+        body.appendChild(howAdaptedArea);
+
+        card.appendChild(body);
+        adaptListEl.appendChild(card);
+      });
+    }
+
+    // ----- Session State -----
+    function initSessionStateUI() {
+      traderEnergyInput.value = sessionState.traderEnergy ?? "";
+      marketEnergyInput.value = sessionState.marketEnergy ?? "";
+      marketTypeSelect.value = sessionState.marketType ?? "";
+      marketNotesArea.value = sessionState.notes ?? "";
+
+      traderEnergyInput.addEventListener("input", () => {
+        sessionState.traderEnergy = traderEnergyInput.value;
+        saveModule2();
+      });
+
+      marketEnergyInput.addEventListener("input", () => {
+        sessionState.marketEnergy = marketEnergyInput.value;
+        saveModule2();
+      });
+
+      marketTypeSelect.addEventListener("change", () => {
+        sessionState.marketType = marketTypeSelect.value;
+        saveModule2();
+      });
+
+      marketNotesArea.addEventListener("input", () => {
+        sessionState.notes = marketNotesArea.value;
+        saveModule2();
+      });
+    }
+
+    // ----- Add buttons -----
     if (addWatchBtn) {
       addWatchBtn.addEventListener("click", () => {
         watchEntries.push(createWatchEntry());
@@ -970,6 +1322,15 @@
       });
     }
 
+    if (addAdaptBtn) {
+      addAdaptBtn.addEventListener("click", () => {
+        adaptations.push(createAdaptationEntry());
+        saveModule2();
+        renderAdaptations();
+      });
+    }
+
+    // ----- Reset Day -----
     function resetDayAll() {
       if (!confirm("Reset M1 scenarios and all Module 2 entries for this day? This cannot be undone.")) return;
 
@@ -980,9 +1341,22 @@
 
       watchEntries = [];
       surges = [];
+      adaptations = [];
+      sessionState = {
+        traderEnergy: "",
+        marketEnergy: "",
+        marketType: "",
+        notes: ""
+      };
       localStorage.removeItem(STORAGE_KEY_MODULE2);
       renderWatchEntries();
       renderSurges();
+      renderAdaptations();
+
+      traderEnergyInput.value = "";
+      marketEnergyInput.value = "";
+      marketTypeSelect.value = "";
+      marketNotesArea.value = "";
 
       setStatus("Day reset (M1 + M2)");
     }
@@ -997,6 +1371,8 @@
     loadModule2();
     renderWatchEntries();
     renderSurges();
+    renderAdaptations();
+    initSessionStateUI();
   </script>
 
 </body>
