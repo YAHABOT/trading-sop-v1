@@ -468,3 +468,97 @@ Module 4 finalized
 
 Autosave logic confirmed (instant)
 
+[2025-11-24 — Module 3 Entry Model System Added]
+✅ Entry Model Tagging System Implemented Across Modules 1–3
+
+A complete Entry Model architecture was added and integrated throughout the trade-flow sequence.
+
+Key Additions:
+
+Entry Model field added to:
+
+Pre-Trade Baseline (optional)
+
+At-The-Signal (mandatory)
+
+Executed Trade (auto-prefilled from At-Signal + editable)
+
+Missed Trade (auto-prefilled from At-Signal + editable)
+
+Carry-forward logic:
+
+If selected in Baseline → suggested at At-Signal
+
+If selected at At-Signal → auto-copied to Executed/Missed
+
+Trader can add/remove/edit at any stage
+
+Entry Model Library V1 added:
+
+Liquidity-based models
+
+Structure-based models
+
+Inducement models
+
+Continuation models
+
+Reversal models
+
+Hybrid models
+
+Entry-style models (executed trades only)
+
+Free-text Tag Engine integrated:
+
+Typing “model1, model2, model3” creates individual tags
+
+Custom tags saved to global library
+
+Dropdown includes both predefined + custom entries
+
+Purpose:
+Establishes a unified and flexible entry-model classification system for:
+
+signal detection
+
+trade idea tracking
+
+missed-trade logic
+
+automated emotional chain reconstruction
+
+post-market scoring and pattern modeling
+
+Entry Model system is now finalized for SOP V1.
+
+[2025-11-24 — Module 3 Risk Model Added]
+✅ Risk Model field added to Executed Trades (Module 3)
+
+A standardized risk-allocation selector was added to the Entry Details block for executed trades.
+
+Key Additions:
+
+Risk Model (executed trades only):
+
+Low Risk
+
+Medium Risk
+
+Full Risk
+
+Custom risk tags allowed (free-type, comma+space → tag creation)
+
+Logic:
+
+Required ONLY when a trade is taken
+
+Not present in missed trades
+
+Does NOT carry forward from Pre-Baseline or At-The-Signal
+
+Directly integrates with R-calculation engine
+
+Influences psychological auto-analysis (e.g., low-risk = hesitation, full-risk = confidence/aggression)
+
+This completes the Risk Model architecture for Module 3 in SOP V1.
