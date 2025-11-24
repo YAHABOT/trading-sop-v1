@@ -705,5 +705,30 @@ Accordion = multiple open allowed (per final answer)
 - Scenarios are kept in **front-end memory only** for now (no localStorage yet).
 - Refreshing the page clears the scenarios (persistence will be added in Build 004).
 - No linking to trades or post-market yet; this UI is a standalone editor in Module 1.
+### Build 004 — Scenario Persistence + Reset + Helpers  
+**Status:** Done / Passed  
+
+**Scope:**
+1. Persist IF–THEN scenarios using localStorage  
+2. Add a “Reset Day (Scenarios)” action to clear them  
+3. Expose read-only helpers so other modules can read scenarios by ID  
+
+**What Was Implemented:**
+- Added a dedicated localStorage key: `sop_v1_scenarios_only`.
+- Scenarios created in Module 1 (S1, S2, S3, …) are now:
+  - Saved automatically on every change (title, IF, THEN).
+  - Restored on page load.
+  - Kept with correct ID sequencing after reload.
+- Added a **Reset Day (Scenarios)** button in the top bar:
+  - Confirms with the user before clearing.
+  - Wipes scenarios from memory and localStorage.
+- Implemented helper functions and exposed them on `window`:
+  - `SOP_SCENARIOS.getAllScenarios()` → returns a shallow copy of all scenarios.
+  - `SOP_SCENARIOS.getScenarioById(id)` → returns a single scenario or `null`.
+
+**Notes / Limitations (by design):**
+- Only **scenarios** are persisted in this build; other fields (Module 1 textareas, emotion, etc.) are still non-persistent.
+- No linkage yet to trades or post-market logic; this is pre-work for Module 3 and 4 integration.
+
 
 
