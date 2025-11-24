@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 002</title>
+  <title>Trading SOP Journal — Build 003</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -92,15 +92,72 @@
       color: #9ca3af;
     }
 
+    /* Scenario block */
+    .scenario-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    .scenario-header span {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .scenario-add-btn {
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #22c55e;
+      background: #052e16;
+      color: #bbf7d0;
+      cursor: pointer;
+    }
+
+    .scenario-card {
+      border: 1px solid #243045;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #020617;
+    }
+
+    .scenario-id {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      margin-bottom: 4px;
+    }
+
+    .scenario-delete {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #ef4444;
+      background: #450a0a;
+      color: #fecaca;
+      cursor: pointer;
+      float: right;
+    }
+
+    .helper-text {
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: -6px;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
 
-    <h1 style="font-size: 1.4rem; margin-bottom: 6px;">Trading SOP Journal — Build 002</h1>
+    <h1 style="font-size: 1.4rem; margin-bottom: 6px;">Trading SOP Journal — Build 003</h1>
     <p style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 20px;">
-      Accordion system ✓ • Module 1 UI ✓ • Dark theme ✓
+      Accordion system ✓ • Module 1 UI ✓ • Dark theme ✓ • IF–THEN Scenario UI ✓
     </p>
 
     <!-- MODULE 1 -->
@@ -121,21 +178,26 @@
 
         <!-- PREVIOUS SESSIONS OBSERVED / BIAS -->
         <label>Previous Sessions Observed / Bias</label>
-        <textarea placeholder="Asia, London, combined bias…"></textarea>
+        <textarea id="prev_sessions" placeholder="Asia, London, combined bias…"></textarea>
 
         <!-- HTF → LTF STRUCTURE -->
         <label>HTF → LTF Structure & Trend</label>
-        <textarea placeholder="15m → 5m → 1m structure…"></textarea>
+        <textarea id="htf_ltf" placeholder="15m → 5m → 1m structure…"></textarea>
 
-        <!-- IF–THEN SCENARIOS PLACEHOLDER -->
-        <label>IF–THEN Scenarios (added in Build 003)</label>
-        <div style="padding: 10px; background:#0d1524; border:1px solid #243045; border-radius:6px; font-size:0.75rem; color:#64748b;">
-          Scenario system will be added in Build 003 (IF / THEN / Title / ID).
+        <!-- IF–THEN SCENARIOS (Build 003) -->
+        <label>IF–THEN Scenarios</label>
+        <div class="scenario-header">
+          <span>Scenarios List</span>
+          <button type="button" id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
         </div>
+        <p class="helper-text">
+          Each scenario gets an ID (S1, S2, ...) and contains: Title, IF, THEN. No linking logic yet (Build 004+).
+        </p>
+        <div id="scenarioList"></div>
 
         <!-- EMOTIONAL STATE -->
         <label>Session-Start Emotional State</label>
-        <select>
+        <select id="session_emotion">
           <option value="">– select –</option>
           <option value="calm">Calm</option>
           <option value="focused">Focused</option>
@@ -155,7 +217,9 @@
         <span>▼</span>
       </div>
       <div class="accordion-content">
-        <p style="font-size:0.75rem; color:#64748b;">Module 2 UI will be built in Phases 3 (Builds 005–007).</p>
+        <p style="font-size:0.75rem; color:#64748b;">
+          Module 2 UI will be built in Phase 3 (Builds 005–007).
+        </p>
       </div>
     </div>
 
@@ -166,7 +230,9 @@
         <span>▼</span>
       </div>
       <div class="accordion-content">
-        <p style="font-size:0.75rem; color:#64748b;">Module 3 UI will be built in Phases 4–6 (Builds 008–015).</p>
+        <p style="font-size:0.75rem; color:#64748b;">
+          Module 3 UI will be built in Phases 4–6 (Builds 008–015).
+        </p>
       </div>
     </div>
 
@@ -177,19 +243,140 @@
         <span>▼</span>
       </div>
       <div class="accordion-content">
-        <p style="font-size:0.75rem; color:#64748b;">Module 4 UI will be built in Phases 7–8 (Builds 016–020).</p>
+        <p style="font-size:0.75rem; color:#64748b;">
+          Module 4 UI will be built in Phases 7–8 (Builds 016–020).
+        </p>
       </div>
     </div>
 
   </div>
 
   <script>
-    // accordion toggle logic
+    // ----------------- ACCORDION -----------------
     document.querySelectorAll(".accordion-header").forEach(header => {
       header.addEventListener("click", () => {
         header.parentNode.classList.toggle("open");
       });
     });
+
+    // ----------------- BUILD 003: SCENARIO UI -----------------
+    let scenarios = [];
+    let nextScenarioIndex = 1;
+
+    const scenarioListEl = document.getElementById("scenarioList");
+    const addScenarioBtn = document.getElementById("addScenarioBtn");
+
+    function createScenario() {
+      const id = "S" + nextScenarioIndex++;
+      return {
+        id,
+        title: "",
+        ifText: "",
+        thenText: ""
+      };
+    }
+
+    function renderScenarios() {
+      scenarioListEl.innerHTML = "";
+
+      if (!scenarios.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.75rem";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No scenarios added yet.";
+        scenarioListEl.appendChild(empty);
+        return;
+      }
+
+      scenarios.forEach((sc, index) => {
+        const card = document.createElement("div");
+        card.className = "scenario-card";
+
+        // ID row + delete button
+        const idRow = document.createElement("div");
+        idRow.style.display = "flex";
+        idRow.style.justifyContent = "space-between";
+        idRow.style.alignItems = "center";
+        idRow.style.marginBottom = "4px";
+
+        const idLabel = document.createElement("div");
+        idLabel.className = "scenario-id";
+        idLabel.textContent = sc.id;
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "scenario-delete";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", () => {
+          scenarios.splice(index, 1);
+          renderScenarios();
+        });
+
+        idRow.appendChild(idLabel);
+        idRow.appendChild(delBtn);
+        card.appendChild(idRow);
+
+        // Title
+        const titleLabel = document.createElement("label");
+        titleLabel.textContent = "Title";
+        titleLabel.style.display = "block";
+        titleLabel.style.fontSize = "0.7rem";
+        titleLabel.style.color = "#9ca3af";
+        card.appendChild(titleLabel);
+
+        const titleInput = document.createElement("input");
+        titleInput.type = "text";
+        titleInput.value = sc.title || "";
+        titleInput.addEventListener("input", () => {
+          sc.title = titleInput.value;
+        });
+        card.appendChild(titleInput);
+
+        // IF
+        const ifLabel = document.createElement("label");
+        ifLabel.textContent = "IF:";
+        ifLabel.style.display = "block";
+        ifLabel.style.fontSize = "0.7rem";
+        ifLabel.style.color = "#9ca3af";
+        card.appendChild(ifLabel);
+
+        const ifArea = document.createElement("textarea");
+        ifArea.value = sc.ifText || "";
+        ifArea.placeholder = "Condition (price behavior, level interaction, time window, etc.)";
+        ifArea.addEventListener("input", () => {
+          sc.ifText = ifArea.value;
+        });
+        card.appendChild(ifArea);
+
+        // THEN
+        const thenLabel = document.createElement("label");
+        thenLabel.textContent = "THEN:";
+        thenLabel.style.display = "block";
+        thenLabel.style.fontSize = "0.7rem";
+        thenLabel.style.color = "#9ca3af";
+        card.appendChild(thenLabel);
+
+        const thenArea = document.createElement("textarea");
+        thenArea.value = sc.thenText || "";
+        thenArea.placeholder = "Execution expectation (direction, entry model, TP/SL behavior, etc.)";
+        thenArea.addEventListener("input", () => {
+          sc.thenText = thenArea.value;
+        });
+        card.appendChild(thenArea);
+
+        scenarioListEl.appendChild(card);
+      });
+    }
+
+    if (addScenarioBtn) {
+      addScenarioBtn.addEventListener("click", () => {
+        scenarios.push(createScenario());
+        renderScenarios();
+      });
+    }
+
+    // initial render
+    renderScenarios();
   </script>
 
 </body>
