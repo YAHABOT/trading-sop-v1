@@ -2,45 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 009</title>
+  <title>Trading SOP Journal — Build 008</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
+  
 </head>
 <body>
 
   <div class="container">
     <div class="top-bar">
       <div>
-        <h1>Trading SOP Journal — Build 009</h1>
-        <p class="small-text">(M1 + M2 stable) • M3 initialized</p>
+        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 008</h1>
+        <p class="small-text">
+          M1 Scenarios ✓ • M2 Watching + Surges ✓ • Adaptation Windows ✓ • Session Energy & Market Type ✓ • Persistence + Reset Day wired
+        </p>
       </div>
-      <button id="resetDayBtn" class="reset-btn">Reset Day</button>
+      <div style="text-align:right;">
+        <button type="button" id="resetDayBtn" class="reset-btn">Reset Day (M1 + M2)</button>
+        <div id="statusText" class="small-text"></div>
+      </div>
     </div>
 
     <!-- MODULE 1 -->
-    <div class="accordion-item" data-acc>
-      <div class="accordion-header" data-acc-trigger>
-        <span>Module 1 — Pre-Market</span><span>▼</span>
+    <div class="accordion-item" id="module1">
+      <div class="accordion-header">
+        <span>Module 1 — Pre-Market</span>
+        <span>▼</span>
       </div>
       <div class="accordion-content">
 
         <label>Session Levels</label>
         <div class="checkbox-row">
-          <input type="checkbox" id="levels_done">
-          <label>All required levels marked</label>
+          <input type="checkbox" id="levels_done" />
+          <label for="levels_done" style="margin: 0;">All required levels marked</label>
         </div>
 
         <label>Previous Sessions Observed / Bias</label>
-        <textarea id="prev_sessions"></textarea>
+        <textarea id="prev_sessions" placeholder="Asia, London, combined bias…"></textarea>
 
-        <label>HTF → LTF Structure</label>
-        <textarea id="htf_ltf"></textarea>
+        <label>HTF → LTF Structure & Trend</label>
+        <textarea id="htf_ltf" placeholder="15m → 5m → 1m structure…"></textarea>
 
         <label>IF–THEN Scenarios</label>
         <div class="scenario-header">
-          <span>Scenario List</span>
-          <button id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
+          <span style="font-size:0.8rem; font-weight:600;">Scenarios List</span>
+          <button type="button" id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
         </div>
+        <p class="helper-text">
+          Each scenario gets an ID (S1, S2, ...) and contains: Title, IF, THEN.
+          Scenarios are saved locally and cleared with "Reset Day".
+        </p>
         <div id="scenarioList"></div>
 
         <label>Session-Start Emotional State</label>
@@ -48,88 +59,122 @@
           <option value="">– select –</option>
           <option value="calm">Calm</option>
           <option value="focused">Focused</option>
+          <option value="hesitant">Hesitant</option>
           <option value="anxious">Anxious</option>
           <option value="impatient">Impatient</option>
           <option value="overconfident">Overconfident</option>
         </select>
+
       </div>
     </div>
 
     <!-- MODULE 2 -->
-    <div class="accordion-item" data-acc>
-      <div class="accordion-header" data-acc-trigger>
-        <span>Module 2 — During Session (Global)</span><span>▼</span>
+    <div class="accordion-item" id="module2">
+      <div class="accordion-header">
+        <span>Module 2 — During Session (Global)</span>
+        <span>▼</span>
       </div>
       <div class="accordion-content">
 
-        <h3>Watching Price (Flat)</h3>
-        <div class="header-row">
-          <span>Watching entries</span>
-          <button id="addWatchBtn" class="watch-add-btn">+ Add</button>
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Watching Price (Flat State)</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Log moments where you're flat but actively watching price, including your emotion and how the tape/structure looks.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="small-text">Watching entries</span>
+          <button type="button" id="addWatchBtn" class="watch-add-btn">+ Add Watching Entry</button>
         </div>
+
         <div id="watchList"></div>
 
-        <hr>
+        <hr />
 
-        <h3>Emotional Surges</h3>
-        <div class="header-row">
-          <span>Surges</span>
-          <button id="addSurgeBtn" class="surge-add-btn">+ Add</button>
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Emotional Surges</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Log spikes in emotion during the session.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="small-text">Surge entries</span>
+          <button type="button" id="addSurgeBtn" class="surge-add-btn">+ Add Emotional Surge</button>
         </div>
+
         <div id="surgeList"></div>
 
-        <hr>
+        <hr />
 
-        <h3>Adaptation Windows</h3>
-        <div class="header-row">
-          <span>Adapt entries</span>
-          <button id="addAdaptBtn" class="adapt-add-btn">+ Add</button>
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Adaptation Windows</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Capture time windows where the market changed and you adapted.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="small-text">Adaptation entries</span>
+          <button type="button" id="addAdaptBtn" class="adapt-add-btn">+ Add Adaptation</button>
         </div>
+
         <div id="adaptList"></div>
 
-        <hr>
+        <hr />
 
-        <h3>Session Energy & Market Behavior</h3>
-        <div class="row-2">
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Session Energy & Market Behavior</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Snapshot of how you and the market felt during the core session.
+        </p>
+
+        <div class="energy-grid">
           <div>
             <label>Trader Energy (0–10)</label>
-            <input type="number" id="trader_energy" min="0" max="10">
+            <input type="number" id="trader_energy" min="0" max="10" step="1" placeholder="0–10" />
           </div>
           <div>
             <label>Market Energy (0–10)</label>
-            <input type="number" id="market_energy" min="0" max="10">
+            <input type="number" id="market_energy" min="0" max="10" step="1" placeholder="0–10" />
           </div>
         </div>
 
         <label>Market Type</label>
         <select id="market_type">
           <option value="">– select –</option>
+          <option value="choppy">Choppy</option>
+          <option value="directional">Directional</option>
           <option value="trend">Trend</option>
           <option value="range">Range</option>
-          <option value="choppy">Choppy</option>
+          <option value="manipulative">Manipulative</option>
+          <option value="slow_grind">Slow Grind</option>
+          <option value="high_volatility">High Volatility</option>
         </select>
 
-        <label>Notes</label>
-        <textarea id="market_notes"></textarea>
+        <label>Notes on Tempo / Behavior</label>
+        <textarea id="market_notes" placeholder="Describe tempo shifts, liquidity feel, sudden dead periods, etc."></textarea>
+
       </div>
     </div>
 
     <!-- MODULE 3 -->
-    <div class="accordion-item" data-acc>
-      <div class="accordion-header" data-acc-trigger>
-        <span>Module 3 — Trade Idea Logic</span><span>▼</span>
+    <div class="accordion-item">
+      <div class="accordion-header">
+        <span>Module 3 — Trade Idea Logic</span>
+        <span>▼</span>
       </div>
       <div class="accordion-content">
+        <p class="small-text">
+          Module 3 UI will be built in Phases 4–6 (Builds 009–015).
+        </p>
+      </div>
+    </div>
 
-        <div class="header-row">
-          <span>Trade Ideas</span>
-          <button id="addTradeIdeaBtn" class="tradeidea-add-btn">+ Add Trade Idea</button>
-        </div>
-
-        <p class="small-text">Full flow: Baseline → Signal → Trade Taken or Missed</p>
-
-        <div id="tradeIdeaList"></div>
-
+    <!-- MODULE 4 -->
+    <div class="accordion-item">
+      <div class="accordion-header">
+        <span>Module 4 — Post-Market Review</span>
+        <span>▼</span>
+      </div>
+      <div class="accordion-content">
+        <p class="small-text">
+          Module 4 UI will be built in Phases 7–8 (Builds 016–020).
+        </p>
       </div>
     </div>
 
