@@ -133,14 +133,37 @@ Deliver the complete **Trading SOP Journal V1**:
 
 ## Phase 3 — Module 2 (During Session) UI
 
-### Build 005 — Watching Price Block  
-**Status:** Planned  
+### Build 005 — Watching Price UI (Module 2)  
+**Status:** Done / Passed  
+
 **Scope:**
-1. Add **“Watching Price” entries** list in Module 2.  
-   - Fields per entry: time, emotion, notes.  
-2. Add **Interpretation tags** for each watching entry:  
-   - Preset options (e.g. “chop”, “compression”, “sweep”, “displacement”, “indecision”, “stalling”).  
-3. Allow **custom interpretation tags** via tag input (type + Enter/comma).
+1. Add “Watching Price” entries list in Module 2  
+2. Each entry captures time, emotion, interpretation (preset + manual) and notes  
+3. Add controls to add/delete watching entries (in-memory only)
+
+**What Was Implemented:**
+- In **Module 2 — During Session (Global)** added a `Watching Price (Flat State)` section:
+  - Context text explaining this is for when the trader is flat but actively watching price.
+- For each **Watching Entry**:
+  - `Time (EST)` — free text input (e.g. 09:45, 10:10).
+  - `Emotion` — free text input (e.g. calm, hesitant, FOMO).
+  - `Interpretation (how the market looks)` using preset checkboxes:
+    - Chop
+    - Compression
+    - Sweep
+    - Displacement
+    - Indecision
+    - Stalling
+  - `Custom interpretation tags (manual)` — free text (comma-separated if needed).
+  - `Notes` — textarea for short description of what was seen and how it influenced thinking.
+- Controls:
+  - `+ Add Watching Entry` button → appends a new entry card.
+  - `Delete` button per entry → removes that specific card.
+
+**Notes / Limitations (by design):**
+- `watchEntries` are stored in front-end memory only (no persistence in this build).
+- Page refresh clears all watching entries.
+- No emotional surges / adaptation logic added yet (planned in Builds 006–007).
 
 ### Build 006 — Emotional Surges  
 **Status:** Planned  
