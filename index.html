@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 006</title>
+  <title>Trading SOP Journal — Build 007</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -120,26 +120,13 @@
       color: #9ca3af;
     }
 
-    /* Scenario block */
-    .scenario-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
-      margin-bottom: 8px;
-    }
-
-    .scenario-header span {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
+    /* Buttons */
     .scenario-add-btn,
     .watch-add-btn,
     .watch-delete-btn,
     .surge-add-btn,
-    .surge-delete-btn {
+    .surge-delete-btn,
+    .card-toggle-btn {
       font-size: 0.7rem;
       padding: 4px 8px;
       border-radius: 999px;
@@ -165,40 +152,23 @@
       color: #fecaca;
     }
 
-    .scenario-card {
-      border: 1px solid #243045;
-      border-radius: 6px;
-      padding: 8px;
-      margin-bottom: 8px;
+    .surge-add-btn {
+      border: 1px solid #f97316;
+      background: #451a03;
+      color: #fed7aa;
+    }
+
+    .card-toggle-btn {
+      border: 1px solid #4b5563;
       background: #020617;
-    }
-
-    .scenario-id {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #a5b4fc;
-      margin-bottom: 4px;
-    }
-
-    .scenario-delete {
-      font-size: 0.7rem;
+      color: #e5e7eb;
       padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid #ef4444;
-      background: #450a0a;
-      color: #fecaca;
-      cursor: pointer;
-      float: right;
+      min-width: 26px;
+      text-align: center;
     }
 
-    .helper-text {
-      font-size: 0.7rem;
-      color: #64748b;
-      margin-top: -6px;
-      margin-bottom: 8px;
-    }
-
-    /* Watching Price / Surges cards */
+    /* Scenario / Watching / Surge cards */
+    .scenario-card,
     .watch-card,
     .surge-card {
       border: 1px solid #243045;
@@ -206,6 +176,59 @@
       padding: 8px;
       margin-bottom: 8px;
       background: #020617;
+    }
+
+    .scenario-header-row,
+    .watch-header-row,
+    .surge-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      gap: 6px;
+    }
+
+    .scenario-id {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #a5b4fc;
+    }
+
+    .watch-label,
+    .surge-label {
+      font-size: 0.7rem;
+      color: #e5e7eb;
+    }
+
+    .watch-summary,
+    .surge-summary {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      flex: 1;
+      text-align: right;
+      padding-right: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .scenario-body,
+    .watch-body,
+    .surge-body {
+      margin-top: 4px;
+    }
+
+    .scenario-card.collapsed .scenario-body,
+    .watch-card.collapsed .watch-body,
+    .surge-card.collapsed .surge-body {
+      display: none;
+    }
+
+    .helper-text {
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: -6px;
+      margin-bottom: 8px;
     }
 
     .watch-row,
@@ -238,6 +261,12 @@
     .interp-options input[type="checkbox"] {
       margin: 0;
     }
+
+    hr {
+      border: none;
+      border-top: 1px solid #1f2933;
+      margin: 12px 0;
+    }
   </style>
 </head>
 <body>
@@ -246,13 +275,13 @@
 
     <div class="top-bar">
       <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 006</h1>
+        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 007</h1>
         <p class="small-text">
-          Accordion ✓ • Module 1 UI ✓ • Dark theme ✓ • IF–THEN UI ✓ • Scenario persistence ✓ • Watching Price UI ✓ • Module 2 persistence + Emotional Surges ✓
+          Accordion ✓ • M1 Scenarios ✓ • M2 Watching + Surges ✓ • Persistence ✓ • Per-card collapse/expand (Scenarios / Watching / Surges) ✓
         </p>
       </div>
       <div style="text-align:right;">
-        <button type="button" id="resetDayBtn" class="reset-btn">Reset Day (M1 Scenarios + M2)</button>
+        <button type="button" id="resetDayBtn" class="reset-btn">Reset Day (M1 + M2)</button>
         <div id="statusText" class="small-text"></div>
       </div>
     </div>
@@ -284,7 +313,7 @@
         <!-- IF–THEN SCENARIOS -->
         <label>IF–THEN Scenarios</label>
         <div class="scenario-header">
-          <span>Scenarios List</span>
+          <span style="font-size:0.8rem; font-weight:600;">Scenarios List</span>
           <button type="button" id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
         </div>
         <p class="helper-text">
@@ -328,7 +357,7 @@
 
         <div id="watchList"></div>
 
-        <hr style="border:none; border-top:1px solid #1f2933; margin: 12px 0;" />
+        <hr />
 
         <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Emotional Surges</h3>
         <p class="small-text" style="margin-bottom: 6px;">
@@ -337,9 +366,7 @@
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <span class="small-text">Surge entries</span>
-          <button type="button" id="addSurgeBtn" class="surge-add-btn" style="border:1px solid #f97316; background:#451a03; color:#fed7aa;">
-            + Add Emotional Surge
-          </button>
+          <button type="button" id="addSurgeBtn" class="surge-add-btn">+ Add Emotional Surge</button>
         </div>
 
         <div id="surgeList"></div>
@@ -431,6 +458,7 @@
         scenarios = Array.isArray(parsed.scenarios) ? parsed.scenarios : [];
         let maxIndex = 0;
         scenarios.forEach(sc => {
+          if (!sc.hasOwnProperty("collapsed")) sc.collapsed = false;
           if (sc.id && sc.id.startsWith("S")) {
             const n = parseInt(sc.id.slice(1), 10);
             if (!isNaN(n) && n > maxIndex) maxIndex = n;
@@ -450,7 +478,8 @@
         id,
         title: "",
         ifText: "",
-        thenText: ""
+        thenText: "",
+        collapsed: false
       };
     }
 
@@ -468,17 +497,29 @@
 
       scenarios.forEach((sc, index) => {
         const card = document.createElement("div");
-        card.className = "scenario-card";
+        card.className = "scenario-card" + (sc.collapsed ? " collapsed" : "");
 
-        const idRow = document.createElement("div");
-        idRow.style.display = "flex";
-        idRow.style.justifyContent = "space-between";
-        idRow.style.alignItems = "center";
-        idRow.style.marginBottom = "4px";
+        const headerRow = document.createElement("div");
+        headerRow.className = "scenario-header-row";
 
-        const idLabel = document.createElement("div");
-        idLabel.className = "scenario-id";
-        idLabel.textContent = sc.id;
+        const left = document.createElement("div");
+        left.className = "scenario-id";
+        left.textContent = sc.id + (sc.title ? " — " + sc.title : "");
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.alignItems = "center";
+        right.style.gap = "4px";
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.type = "button";
+        toggleBtn.className = "card-toggle-btn";
+        toggleBtn.textContent = sc.collapsed ? "+" : "−";
+        toggleBtn.addEventListener("click", () => {
+          sc.collapsed = !sc.collapsed;
+          saveScenarios();
+          renderScenarios();
+        });
 
         const delBtn = document.createElement("button");
         delBtn.type = "button";
@@ -490,16 +531,21 @@
           renderScenarios();
         });
 
-        idRow.appendChild(idLabel);
-        idRow.appendChild(delBtn);
-        card.appendChild(idRow);
+        right.appendChild(toggleBtn);
+        right.appendChild(delBtn);
+        headerRow.appendChild(left);
+        headerRow.appendChild(right);
+        card.appendChild(headerRow);
+
+        const body = document.createElement("div");
+        body.className = "scenario-body";
 
         const titleLabel = document.createElement("label");
         titleLabel.textContent = "Title";
         titleLabel.style.display = "block";
         titleLabel.style.fontSize = "0.7rem";
         titleLabel.style.color = "#9ca3af";
-        card.appendChild(titleLabel);
+        body.appendChild(titleLabel);
 
         const titleInput = document.createElement("input");
         titleInput.type = "text";
@@ -508,14 +554,14 @@
           sc.title = titleInput.value;
           saveScenarios();
         });
-        card.appendChild(titleInput);
+        body.appendChild(titleInput);
 
         const ifLabel = document.createElement("label");
         ifLabel.textContent = "IF:";
         ifLabel.style.display = "block";
         ifLabel.style.fontSize = "0.7rem";
         ifLabel.style.color = "#9ca3af";
-        card.appendChild(ifLabel);
+        body.appendChild(ifLabel);
 
         const ifArea = document.createElement("textarea");
         ifArea.value = sc.ifText || "";
@@ -524,14 +570,14 @@
           sc.ifText = ifArea.value;
           saveScenarios();
         });
-        card.appendChild(ifArea);
+        body.appendChild(ifArea);
 
         const thenLabel = document.createElement("label");
         thenLabel.textContent = "THEN:";
         thenLabel.style.display = "block";
         thenLabel.style.fontSize = "0.7rem";
         thenLabel.style.color = "#9ca3af";
-        card.appendChild(thenLabel);
+        body.appendChild(thenLabel);
 
         const thenArea = document.createElement("textarea");
         thenArea.value = sc.thenText || "";
@@ -540,8 +586,9 @@
           sc.thenText = thenArea.value;
           saveScenarios();
         });
-        card.appendChild(thenArea);
+        body.appendChild(thenArea);
 
+        card.appendChild(body);
         scenarioListEl.appendChild(card);
       });
     }
@@ -554,7 +601,6 @@
       });
     }
 
-    // Helpers for future modules
     function getAllScenarios() {
       return scenarios.slice();
     }
@@ -594,7 +640,8 @@
         emotion: "",
         presets: defaultPresets(),
         customInterp: "",
-        notes: ""
+        notes: "",
+        collapsed: false
       };
     }
 
@@ -603,7 +650,8 @@
         time: "",
         emotion: "",
         trigger: "",
-        notes: ""
+        notes: "",
+        collapsed: false
       };
     }
 
@@ -630,7 +678,6 @@
         watchEntries = Array.isArray(parsed.watchEntries) ? parsed.watchEntries : [];
         surges = Array.isArray(parsed.surges) ? parsed.surges : [];
 
-        // Ensure presets exist on watch entries
         watchEntries.forEach(entry => {
           if (!entry.presets) entry.presets = defaultPresets();
           else {
@@ -639,6 +686,11 @@
               if (typeof entry.presets[k] !== "boolean") entry.presets[k] = false;
             });
           }
+          if (!entry.hasOwnProperty("collapsed")) entry.collapsed = false;
+        });
+
+        surges.forEach(entry => {
+          if (!entry.hasOwnProperty("collapsed")) entry.collapsed = false;
         });
       } catch (e) {
         console.error("Error loading module 2", e);
@@ -661,18 +713,34 @@
 
       watchEntries.forEach((entry, index) => {
         const card = document.createElement("div");
-        card.className = "watch-card";
+        card.className = "watch-card" + (entry.collapsed ? " collapsed" : "");
 
-        const topRow = document.createElement("div");
-        topRow.style.display = "flex";
-        topRow.style.justifyContent = "space-between";
-        topRow.style.alignItems = "center";
-        topRow.style.marginBottom = "4px";
+        const headerRow = document.createElement("div");
+        headerRow.className = "watch-header-row";
 
-        const label = document.createElement("div");
-        label.style.fontSize = "0.7rem";
-        label.style.color = "#e5e7eb";
-        label.textContent = `Watching Entry #${index + 1}`;
+        const left = document.createElement("div");
+        left.className = "watch-label";
+        left.textContent = `Watching Entry #${index + 1}`;
+
+        const summary = document.createElement("div");
+        summary.className = "watch-summary";
+        const sumText = `${entry.time || "—"} | ${entry.emotion || "no emotion"}`;
+        summary.textContent = sumText;
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.alignItems = "center";
+        right.style.gap = "4px";
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.type = "button";
+        toggleBtn.className = "card-toggle-btn";
+        toggleBtn.textContent = entry.collapsed ? "+" : "−";
+        toggleBtn.addEventListener("click", () => {
+          entry.collapsed = !entry.collapsed;
+          saveModule2();
+          renderWatchEntries();
+        });
 
         const delBtn = document.createElement("button");
         delBtn.type = "button";
@@ -684,9 +752,16 @@
           renderWatchEntries();
         });
 
-        topRow.appendChild(label);
-        topRow.appendChild(delBtn);
-        card.appendChild(topRow);
+        right.appendChild(toggleBtn);
+        right.appendChild(delBtn);
+
+        headerRow.appendChild(left);
+        headerRow.appendChild(summary);
+        headerRow.appendChild(right);
+        card.appendChild(headerRow);
+
+        const body = document.createElement("div");
+        body.className = "watch-body";
 
         const row = document.createElement("div");
         row.className = "watch-row";
@@ -708,17 +783,19 @@
         timeInput.addEventListener("input", () => {
           entry.time = timeInput.value;
           saveModule2();
+          renderWatchEntries(); // update summary
         });
         emoInput.addEventListener("input", () => {
           entry.emotion = emoInput.value;
           saveModule2();
+          renderWatchEntries(); // update summary
         });
 
-        card.appendChild(row);
+        body.appendChild(row);
 
         const interpLabel = document.createElement("label");
         interpLabel.textContent = "Interpretation (how the market looks)";
-        card.appendChild(interpLabel);
+        body.appendChild(interpLabel);
 
         const options = document.createElement("div");
         options.className = "interp-options";
@@ -745,11 +822,11 @@
           wrap.appendChild(span);
           options.appendChild(wrap);
         });
-        card.appendChild(options);
+        body.appendChild(options);
 
         const customLabel = document.createElement("label");
         customLabel.textContent = "Custom interpretation tags (manual)";
-        card.appendChild(customLabel);
+        body.appendChild(customLabel);
 
         const customInput = document.createElement("input");
         customInput.type = "text";
@@ -759,11 +836,11 @@
           entry.customInterp = customInput.value;
           saveModule2();
         });
-        card.appendChild(customInput);
+        body.appendChild(customInput);
 
         const notesLabel = document.createElement("label");
         notesLabel.textContent = "Notes";
-        card.appendChild(notesLabel);
+        body.appendChild(notesLabel);
 
         const notesArea = document.createElement("textarea");
         notesArea.placeholder = "Short description of what you saw and how it influenced your thinking.";
@@ -772,8 +849,9 @@
           entry.notes = notesArea.value;
           saveModule2();
         });
-        card.appendChild(notesArea);
+        body.appendChild(notesArea);
 
+        card.appendChild(body);
         watchListEl.appendChild(card);
       });
     }
@@ -792,18 +870,34 @@
 
       surges.forEach((entry, index) => {
         const card = document.createElement("div");
-        card.className = "surge-card";
+        card.className = "surge-card" + (entry.collapsed ? " collapsed" : "");
 
-        const topRow = document.createElement("div");
-        topRow.style.display = "flex";
-        topRow.style.justifyContent = "space-between";
-        topRow.style.alignItems = "center";
-        topRow.style.marginBottom = "4px";
+        const headerRow = document.createElement("div");
+        headerRow.className = "surge-header-row";
 
-        const label = document.createElement("div");
-        label.style.fontSize = "0.7rem";
-        label.style.color = "#fbbf24";
-        label.textContent = `Surge #${index + 1}`;
+        const left = document.createElement("div");
+        left.className = "surge-label";
+        left.textContent = `Surge #${index + 1}`;
+
+        const summary = document.createElement("div");
+        summary.className = "surge-summary";
+        const sumText = `${entry.time || "—"} | ${entry.emotion || "no label"}`;
+        summary.textContent = sumText;
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.alignItems = "center";
+        right.style.gap = "4px";
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.type = "button";
+        toggleBtn.className = "card-toggle-btn";
+        toggleBtn.textContent = entry.collapsed ? "+" : "−";
+        toggleBtn.addEventListener("click", () => {
+          entry.collapsed = !entry.collapsed;
+          saveModule2();
+          renderSurges();
+        });
 
         const delBtn = document.createElement("button");
         delBtn.type = "button";
@@ -815,9 +909,16 @@
           renderSurges();
         });
 
-        topRow.appendChild(label);
-        topRow.appendChild(delBtn);
-        card.appendChild(topRow);
+        right.appendChild(toggleBtn);
+        right.appendChild(delBtn);
+
+        headerRow.appendChild(left);
+        headerRow.appendChild(summary);
+        headerRow.appendChild(right);
+        card.appendChild(headerRow);
+
+        const body = document.createElement("div");
+        body.className = "surge-body";
 
         const row = document.createElement("div");
         row.className = "surge-row";
@@ -839,17 +940,19 @@
         timeInput.addEventListener("input", () => {
           entry.time = timeInput.value;
           saveModule2();
+          renderSurges(); // update summary
         });
         emoInput.addEventListener("input", () => {
           entry.emotion = emoInput.value;
           saveModule2();
+          renderSurges(); // update summary
         });
 
-        card.appendChild(row);
+        body.appendChild(row);
 
         const triggerLabel = document.createElement("label");
         triggerLabel.textContent = "Trigger (what caused the surge)";
-        card.appendChild(triggerLabel);
+        body.appendChild(triggerLabel);
 
         const triggerInput = document.createElement("input");
         triggerInput.type = "text";
@@ -859,11 +962,11 @@
           entry.trigger = triggerInput.value;
           saveModule2();
         });
-        card.appendChild(triggerInput);
+        body.appendChild(triggerInput);
 
         const notesLabel = document.createElement("label");
         notesLabel.textContent = "Notes / Reaction";
-        card.appendChild(notesLabel);
+        body.appendChild(notesLabel);
 
         const notesArea = document.createElement("textarea");
         notesArea.placeholder = "How you reacted, what you did next, whether you regained control.";
@@ -872,8 +975,9 @@
           entry.notes = notesArea.value;
           saveModule2();
         });
-        card.appendChild(notesArea);
+        body.appendChild(notesArea);
 
+        card.appendChild(body);
         surgeListEl.appendChild(card);
       });
     }
@@ -898,13 +1002,11 @@
     function resetDayAll() {
       if (!confirm("Reset M1 scenarios and all Module 2 entries for this day? This cannot be undone.")) return;
 
-      // Clear scenarios
       scenarios = [];
       nextScenarioIndex = 1;
       localStorage.removeItem(STORAGE_KEY_SCENARIOS);
       renderScenarios();
 
-      // Clear module 2
       watchEntries = [];
       surges = [];
       localStorage.removeItem(STORAGE_KEY_MODULE2);
