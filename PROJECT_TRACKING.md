@@ -923,3 +923,83 @@ Module 2’s real-time session logic is now fully operational:
 
 Watching → emotional spikes → adaptation windows → session state
 All tracked, persisted, collapsible, and clean.
+
+✅ Final Changelog (Stabilization Release)
+
+Version: Build 008 — Stabilized Split-File Architecture
+Date: 24 Nov 2025
+Status: ✔ Fully deployed, ✔ Fully functional, ✔ Zero Codex corruption
+
+🔥 What Changed (Simple, crisp, accurate)
+1. Full migration from monolithic index.html → 3-file architecture
+
+We officially split the app into:
+
+index.html → markup only
+
+style.css → all styling
+
+script.js → all logic + localStorage system
+
+This makes the project:
+
+Faster to load
+
+Way easier to maintain
+
+Impossible for Codex or anyone to “corrupt the whole universe” by touching one HTML block
+
+2. Restored all original Build 008 functionality
+
+Everything that broke is now back to stable, including:
+
+Accordion expanding/collapsing ✔
+
+Module 1 (Scenarios) full CRUD + collapse state ✔
+
+Module 2 (Watching entries) full CRUD + interpretation presets ✔
+
+Emotional Surges system ✔
+
+Adaptation Window system ✔
+
+Session Energy + Market Type snapshot ✔
+
+LocalStorage persistence for all modules ✔
+
+Reset Day button fully resets M1 + M2 ✔
+
+No regressions. No missing features.
+
+3. Removed all corrupted Codex-generated elements
+
+We ripped out:
+
+All broken data-accordion logic
+
+All nonfunctional CSS from the Codex diff
+
+All “weird UI” from the failed Build 009 mutation
+
+All broken script calls and mismatched ID selectors
+
+We restored the exact pre-Codex UI/UX.
+
+4. Reorganized + optimized all core JS logic
+
+Shared functions cleaned
+
+Old logic re-synced with UI
+
+Stable card toggling
+
+Cleaner event wiring
+
+Namespacing for localStorage keys
+
+Zero runtime errors
+
+5. Build 009 deferred (clean base restored)
+
+We didn’t half-bake Build 009 on top of a corrupted file.
+We reset to stable base so 009 can be built clean.
