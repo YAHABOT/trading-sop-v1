@@ -1,305 +1,234 @@
-    body {
-      margin: 0;
-      padding: 0;
-      background: #0a0f1c;
-      color: #e5e7eb;
-      font-family: system-ui, sans-serif;
-    }
+/* === BASE RESET === */
+body, h1, p, label, textarea, input, select, button, div, span {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
 
-    .container {
-      max-width: 950px;
-      margin: 0 auto;
-      padding: 16px;
-    }
+body {
+  background: #111;
+  color: #eee;
+  padding: 20px;
+}
 
-    /* Top bar */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+}
 
-    .reset-btn {
-      font-size: 0.7rem;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid #ef4444;
-      background: #450a0a;
-      color: #fecaca;
-      cursor: pointer;
-    }
+.small-text {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
 
-    .reset-btn:hover {
-      background: #7f1d1d;
-    }
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
 
-    .small-text {
-      font-size: 0.7rem;
-      color: #9ca3af;
-    }
+/* === ACCORDION === */
+.accordion-item {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
 
-    /* Accordion */
-    .accordion-item {
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      background: #111827;
-    }
+.accordion-header {
+  padding: 10px 14px;
+  background: #222;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  user-select: none;
+}
 
-    .accordion-header {
-      padding: 12px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0f172a;
-      border-radius: 8px;
-    }
+.accordion-content {
+  padding: 14px;
+  display: none;
+}
 
-    .accordion-header:hover {
-      background: #1e293b;
-    }
+.accordion-item.active .accordion-content {
+  display: block;
+}
 
-    .accordion-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.25s ease;
-    }
+/* === FORM ELEMENTS === */
+textarea, select, input[type="text"], input[type="number"] {
+  width: 100%;
+  background: #111;
+  color: #eee;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
 
-    .open .accordion-content {
-      max-height: 4000px;
-      padding: 14px;
-    }
+input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-right: 6px;
+}
 
-    /* Inputs */
-    textarea,
-    select,
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      margin-bottom: 12px;
-      background: #0d1524;
-      border: 1px solid #243045;
-      border-radius: 6px;
-      color: #e5e7eb;
-      font-size: 0.85rem;
-      box-sizing: border-box;
-    }
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
 
-    textarea {
-      min-height: 60px;
-      resize: vertical;
-    }
+hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 18px 0;
+}
 
-    select {
-      color: #e5e7eb;
-    }
+/* === BUTTONS === */
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+}
 
-    label {
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
+.reset-btn {
+  background: #802020;
+  color: #fff;
+}
 
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-      margin-bottom: 12px;
-    }
+.scenario-add-btn,
+.watch-add-btn,
+.surge-add-btn,
+.adapt-add-btn {
+  background: #2a2a2a;
+  color: #ddd;
+  border: 1px solid #3a3a3a;
+}
 
-    /* Scenario header row (label + Add button) */
-    .scenario-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
-      margin-bottom: 8px;
-      gap: 8px;
-    }
+.delete-btn {
+  background: #552222;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  margin-left: 6px;
+}
 
-    /* Buttons */
-    .scenario-add-btn,
-    .watch-add-btn,
-    .watch-delete-btn,
-    .surge-add-btn,
-    .surge-delete-btn,
-    .adapt-add-btn,
-    .adapt-delete-btn,
-    .card-toggle-btn {
-      font-size: 0.7rem;
-      padding: 4px 8px;
-      border-radius: 999px;
-      cursor: pointer;
-    }
+/* === LIST CONTAINERS (Module 2 style) === */
+.entry-card {
+  background: #111;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
 
-    .scenario-add-btn {
-      border: 1px solid #22c55e;
-      background: #052e16;
-      color: #bbf7d0;
-    }
+.entry-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
 
-    .watch-add-btn {
-      border: 1px solid #38bdf8;
-      background: #0b1120;
-      color: #e0f2fe;
-    }
+.entry-card-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
 
-    .watch-delete-btn,
-    .surge-delete-btn,
-    .adapt-delete-btn {
-      border: 1px solid #ef4444;
-      background: #450a0a;
-      color: #fecaca;
-    }
+.entry-card-body {
+  display: none;
+  margin-top: 10px;
+}
 
-    .surge-add-btn {
-      border: 1px solid #f97316;
-      background: #451a03;
-      color: #fed7aa;
-    }
+.entry-card.active .entry-card-body {
+  display: block;
+}
 
-    .adapt-add-btn {
-      border: 1px solid #a855f7;
-      background: #2e1065;
-      color: #e9d5ff;
-    }
+.energy-grid {
+  display: flex;
+  gap: 14px;
+}
+.energy-grid div {
+  flex: 1;
+}
 
-    .card-toggle-btn {
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      padding: 2px 6px;
-      min-width: 26px;
-      text-align: center;
-    }
+/* === MODULE 3 — TRADE IDEA CARD STYLING (Module 2 style matching) === */
 
-    /* Cards */
-    .scenario-card,
-    .watch-card,
-    .surge-card,
-    .adapt-card {
-      border: 1px solid #243045;
-      border-radius: 6px;
-      padding: 8px;
-      margin-bottom: 8px;
-      background: #020617;
-    }
+.trade-idea-card {
+  background: #111;
+  border: 1px solid #333;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  padding: 10px;
+}
 
-    .scenario-header-row,
-    .watch-header-row,
-    .surge-header-row,
-    .adapt-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-      gap: 6px;
-    }
+.trade-idea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
 
-    .scenario-id {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #a5b4fc;
-    }
+.trade-idea-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #eee;
+}
 
-    .watch-label,
-    .surge-label,
-    .adapt-label {
-      font-size: 0.7rem;
-      color: #e5e7eb;
-    }
+.trade-idea-body {
+  display: none;
+  margin-top: 10px;
+}
 
-    .watch-summary,
-    .surge-summary,
-    .adapt-summary {
-      font-size: 0.7rem;
-      color: #9ca3af;
-      flex: 1;
-      text-align: right;
-      padding-right: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+.trade-idea-card.active .trade-idea-body {
+  display: block;
+}
 
-    .scenario-body,
-    .watch-body,
-    .surge-body,
-    .adapt-body {
-      margin-top: 4px;
-    }
+.trade-section {
+  background: #0d0d0d;
+  border: 1px solid #222;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
 
-    .scenario-card.collapsed .scenario-body,
-    .watch-card.collapsed .watch-body,
-    .surge-card.collapsed .surge-body,
-    .adapt-card.collapsed .adapt-body {
-      display: none;
-    }
+.trade-section-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
 
-    .helper-text {
-      font-size: 0.7rem;
-      color: #64748b;
-      margin-top: -6px;
-      margin-bottom: 8px;
-    }
+.trade-section-body {
+  display: none;
+}
 
-    .watch-row,
-    .surge-row,
-    .adapt-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
+.trade-section.active .trade-section-body {
+  display: block;
+}
 
-    .watch-row > div,
-    .surge-row > div,
-    .adapt-row > div {
-      flex: 1;
-    }
+.trade-action-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
 
-    .interp-options,
-    .adapt-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 4px 0 6px 0;
-    }
+.trade-action-btn {
+  background: #222;
+  color: #eee;
+  border: 1px solid #444;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  flex: 1;
+  margin-right: 6px;
+}
 
-    .interp-options label,
-    .adapt-tags label {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.7rem;
-      color: #cbd5f5;
-    }
-
-    .interp-options input[type="checkbox"],
-    .adapt-tags input[type="checkbox"] {
-      margin: 0;
-    }
-
-    .energy-grid {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-
-    .energy-grid > div {
-      flex: 1;
-      min-width: 120px;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid #1f2933;
-      margin: 12px 0;
-    }
+.trade-action-btn:last-child {
+  margin-right: 0;
+}
