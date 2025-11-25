@@ -1,185 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 009</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
-</head>
+<div class="module module-pre-market" id="module1">
+    <h2>Module 1 — Pre-Market</h2>
 
-<body>
-
-  <div class="container">
-    <div class="top-bar">
-      <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 009</h1>
-        <p class="small-text">
-          M1 ✓ • M2 ✓ • M3 Baseline→Signal ✓ • Trade Ideas ✓ • Persistence ✓ • Full Reset wired
-        </p>
-      </div>
-      <div style="text-align:right;">
-        <button type="button" id="resetDayBtn" class="reset-btn">Reset Day (M1 + M2 + M3)</button>
-        <div id="statusText" class="small-text"></div>
-      </div>
+    <!-- LEVELS MARKED -->
+    <div class="card">
+        <h3>1. Levels Marked</h3>
+        <label>
+            <input type="checkbox" id="levelsMarkedCheckbox">
+            Levels Marked Completed
+        </label>
+        <textarea id="levelsMarkedObservation" placeholder="Observation..."></textarea>
+        <input id="levelsMarkedTags" placeholder="Tags (comma separated)" />
     </div>
 
-    <!-- MODULE 1 -->
-    <div class="accordion-item" id="module1">
-      <div class="accordion-header">
-        <span>Module 1 — Pre-Market</span>
-        <span>▼</span>
-      </div>
-      <div class="accordion-content">
+    <!-- NEWS CHECKED -->
+    <div class="card">
+        <h3>2. News Checked</h3>
+        <label>
+            <input type="checkbox" id="newsCheckedCheckbox">
+            News Checked
+        </label>
+        <textarea id="newsCheckedObservation" placeholder="Observation..."></textarea>
+        <input id="newsCheckedTags" placeholder="Tags (comma separated)" />
+    </div>
 
-        <label>Session Levels</label>
-        <div class="checkbox-row">
-          <input type="checkbox" id="levels_done" />
-          <label for="levels_done" style="margin: 0;">All required levels marked</label>
-        </div>
+    <!-- HTF CHECK -->
+    <div class="card">
+        <h3>3. HTF Check</h3>
+        <label>
+            <input type="checkbox" id="htfCheckedCheckbox">
+            HTF Check Completed
+        </label>
+        <textarea id="htfObservation" placeholder="Observation..."></textarea>
+        <input id="htfTags" placeholder="Tags (comma separated)" />
+    </div>
 
-        <label>Previous Sessions Observed / Bias</label>
-        <textarea id="prev_sessions" placeholder="Asia, London, combined bias…"></textarea>
+    <!-- LTF ALIGNMENT -->
+    <div class="card">
+        <h3>4. LTF Alignment</h3>
+        <label>
+            <select id="ltfAlignment">
+                <option value="">Select...</option>
+                <option value="yes">Yes (Aligned)</option>
+                <option value="no">No (Not Aligned)</option>
+            </select>
+        </label>
+        <textarea id="ltfObservation" placeholder="Observation..."></textarea>
+        <input id="ltfTags" placeholder="Tags (comma separated)" />
+    </div>
 
-        <label>HTF → LTF Structure & Trend</label>
-        <textarea id="htf_ltf" placeholder="15m → 5m → 1m structure…"></textarea>
-
-        <label>IF–THEN Scenarios</label>
-        <div class="scenario-header">
-          <span style="font-size:0.8rem; font-weight:600;">Scenarios List</span>
-          <button type="button" id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
-        </div>
-        <p class="helper-text">
-          Each scenario gets an ID (S1, S2, ...) and contains: Title, IF, THEN.
-          Scenarios are saved locally and cleared with "Reset Day".
-        </p>
+    <!-- IF–THEN SCENARIOS -->
+    <div class="card">
+        <h3>5. IF–THEN Scenarios</h3>
         <div id="scenarioList"></div>
-
-        <label>Session-Start Emotional State</label>
-        <select id="session_emotion">
-          <option value="">– select –</option>
-          <option value="calm">Calm</option>
-          <option value="focused">Focused</option>
-          <option value="hesitant">Hesitant</option>
-          <option value="anxious">Anxious</option>
-          <option value="impatient">Impatient</option>
-          <option value="overconfident">Overconfident</option>
-        </select>
-
-      </div>
+        <button id="addScenarioBtn">Add Scenario</button>
     </div>
 
-    <!-- MODULE 2 -->
-    <div class="accordion-item" id="module2">
-      <div class="accordion-header">
-        <span>Module 2 — During Session (Global)</span>
-        <span>▼</span>
-      </div>
-      <div class="accordion-content">
-
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Watching Price (Flat State)</h3>
-        <p class="small-text" style="margin-bottom: 6px;">Log moments where you're flat but actively watching price.</p>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span class="small-text">Watching entries</span>
-          <button type="button" id="addWatchBtn" class="watch-add-btn">+ Add Watching Entry</button>
-        </div>
-
-        <div id="watchList"></div>
-
-        <hr />
-
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Emotional Surges</h3>
-        <p class="small-text" style="margin-bottom: 6px;">
-          Log spikes in emotion during the session.
-        </p>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span class="small-text">Surge entries</span>
-          <button type="button" id="addSurgeBtn" class="surge-add-btn">+ Add Emotional Surge</button>
-        </div>
-
-        <div id="surgeList"></div>
-
-        <hr />
-
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Adaptation Windows</h3>
-        <p class="small-text" style="margin-bottom: 6px;">
-          Capture time windows where the market changed and you adapted.
-        </p>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span class="small-text">Adaptation entries</span>
-          <button type="button" id="addAdaptBtn" class="adapt-add-btn">+ Add Adaptation</button>
-        </div>
-
-        <div id="adaptList"></div>
-
-        <hr />
-
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Session Energy & Market Behavior</h3>
-        <p class="small-text" style="margin-bottom: 6px;">Snapshot of how you and the market felt during the core session.</p>
-
-        <div class="energy-grid">
-          <div>
-            <label>Trader Energy (0–10)</label>
-            <input type="number" id="trader_energy" min="0" max="10" step="1" placeholder="0–10" />
-          </div>
-          <div>
-            <label>Market Energy (0–10)</label>
-            <input type="number" id="market_energy" min="0" max="10" step="1" placeholder="0–10" />
-          </div>
-        </div>
-
-        <label>Market Type</label>
-        <select id="market_type">
-          <option value="">– select –</option>
-          <option value="choppy">Choppy</option>
-          <option value="directional">Directional</option>
-          <option value="trend">Trend</option>
-          <option value="range">Range</option>
-          <option value="manipulative">Manipulative</option>
-          <option value="slow_grind">Slow Grind</option>
-          <option value="high_volatility">High Volatility</option>
-        </select>
-
-        <label>Notes on Tempo / Behavior</label>
-        <textarea id="market_notes"></textarea>
-      </div>
+    <!-- NY OPENING IMPULSE -->
+    <div class="card">
+        <h3>6. NY Opening Impulse Expectation</h3>
+        <textarea id="nyImpulse" placeholder="Describe expected impulse..."></textarea>
     </div>
 
-    <!-- MODULE 3 — BUILD 009 -->
-    <div class="accordion-item" id="module3">
-      <div class="accordion-header">
-        <span>Module 3 — Trade Idea Logic</span>
-        <span>▼</span>
-      </div>
-      <div class="accordion-content">
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span class="small-text">Trade Ideas</span>
-          <button type="button" id="addTradeIdeaBtn" class="scenario-add-btn">+ Add Trade Idea</button>
-        </div>
-
-        <div id="tradeIdeaList"></div>
-
-      </div>
+    <!-- EMOTIONAL BASELINE -->
+    <div class="card">
+        <h3>7. Emotion Coming Into Session</h3>
+        <input id="emotionBaseline" placeholder="Emotion..." />
+        <textarea id="emotionBaselineNotes" placeholder="Notes..."></textarea>
     </div>
-
-    <!-- MODULE 4 -->
-    <div class="accordion-item">
-      <div class="accordion-header">
-        <span>Module 4 — Post-Market Review</span>
-        <span>▼</span>
-      </div>
-      <div class="accordion-content">
-        <p class="small-text">
-          Module 4 UI will be built in Phase 7–8.
-        </p>
-      </div>
-    </div>
-
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+</div>
