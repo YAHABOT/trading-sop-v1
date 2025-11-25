@@ -126,3 +126,33 @@ but to deepen muscle memory and eliminate hesitation.
 This is not a corporate product.  
 This is a weapon — built by me, for me —  
 to forge the trader I know I can become.
+
+# PRODUCT VISION — V1.1 Update
+
+The trading journal aims to mirror the cognitive structure of a disciplined 
+intraday trader. The system should feel like a sequence of mental states 
+represented as modules:
+
+1. Preparation (Module 1)
+2. Observation (Module 2)
+3. Decision & Execution (Module 3)
+4. Reflection (Module 4)
+
+The new horizontal design reflects the reality that these states coexist 
+and influence each other in real-time, rather than behaving as a linear 
+form.
+
+Trade Ideas are now first-class citizens in the system: they begin before 
+the signal prints, may evolve into trades, may be missed, or may be 
+abandoned mid-formation. This mirrors real human cognition around setups.
+
+IF–THEN scenarios form the backbone of decision integrity and are now 
+attached at the earliest stage (Pre-Trade Baseline). Emotional data is 
+captured across all modules and reconstructed into a complete emotional 
+chain during post-market review. Executions now support multi-add-on 
+structures, conditional re-entry logic, and universal missed-R accounting.
+
+The vision is to create a tool that behaves exactly like a world-class 
+trader’s mind: structured, self-aware, scenario-driven, and brutally 
+accountable.
+
