@@ -1003,3 +1003,54 @@ Zero runtime errors
 
 We didn’t half-bake Build 009 on top of a corrupted file.
 We reset to stable base so 009 can be built clean.
+
+# [2025-11-25] — V1.1 Architecture Update (FINALIZED)
+
+A full structural rebuild of the journaling system has been completed and approved. 
+This version replaces outdated logic across Modules 1, 3, and 4, and restructures Module 
+2’s integration points.
+
+Key additions & modifications:
+
+## MODULE 1 — PRE-MARKET
+- Levels Marked updated to include observation + tags.
+- News Check updated with observation + preset tag support.
+- HTF Check now includes a completion checkbox + observation + tags.
+- LTF Alignment updated with Yes/No state + observation + tags.
+- Previous session and confluence-preparation sections removed.
+- IF–THEN Scenarios unchanged in behavior.
+- NY Opening Impulse unchanged.
+- Emotional baseline unchanged.
+- Entire module restructured to support clean data flow into Module 3.
+
+## MODULE 2 — DURING SESSION
+- No structural changes, but emotional fields and market-state data now link 
+  directly into Module 4’s Emotional Chain Engine.
+
+## MODULE 3 — TRADE IDEA + TRADE LOGIC
+- NEW ENTRY POINT: “Start New Trade Idea”.
+- Pre-Trade Baseline now becomes the Trade Idea object.
+- IF–THEN Scenarios are assigned at Stage A and auto-suggested in later stages.
+- Abandoned Trade Idea logic added (IF partial triggers but setup fails).
+- At-The-Signal stage unchanged except for IF–THEN preloading.
+- EXECUTED TRADE ORDER REBUILT:
+  1. Entry Details (first)
+  2. Execution Behavior Tags
+  3. IF–THEN Consistency
+  4. Emotion During Trade
+  5. Exit Logic
+  6. Re-entry Logic (conditional)
+  7. Add-On Logic (multi-add-on support)
+- Missed Trade updated to include Missed R.
+- Re-entry and Add-on now include emotional tagging.
+- Target adjustment logic limited to re-entry and add-ons only.
+- Missed R added universally (initial entry, re-entry, add-ons).
+
+## MODULE 4 — POST-MARKET
+- Total Missed R now aggregates: 
+  - missed trades 
+  - re-entry missed R 
+  - add-on missed R.
+- Emotional Chain integrates emotions from Modules 1–3.
+- Scenario Resolution includes abandoned ideas.
+- All analytics updated to reflect new execution structure.
