@@ -20,7 +20,6 @@
     // Storage keys
     const STORAGE_KEY_SCENARIOS = "sop_v1_scenarios_only";
     const STORAGE_KEY_MODULE2 = "sop_v1_module2";
-    const STORAGE_KEY_MODULE3 = "sop_v1_module3";
 
     const resetDayBtn = document.getElementById("resetDayBtn");
 
@@ -50,30 +49,16 @@
           return;
         }
         const parsed = JSON.parse(raw);
-        if (!parsed || !Array.isArray(parsed.scenarios)) {
-          scenarios = [];
-          nextScenarioIndex = 1;
-          return;
-        }
-        scenarios = parsed.scenarios.map((sc, idx) => {
-          const id = sc.id || `S${idx + 1}`;
-          return {
-            id,
-            title: sc.title || "",
-            ifText: sc.ifText || "",
-            thenText: sc.thenText || "",
-            collapsed: !!sc.collapsed
-          };
+        scenarios = Array.isArray(parsed.scenarios) ? parsed.scenarios : [];
+        let maxIndex = 0;
+        scenarios.forEach(sc => {
+          if (!sc.hasOwnProperty("collapsed")) sc.collapsed = false;
+          if (sc.id && sc.id.startsWith("S")) {
+            const n = parseInt(sc.id.slice(1), 10);
+            if (!isNaN(n) && n > maxIndex) maxIndex = n;
+          }
         });
-        if (scenarios.length > 0) {
-          const nums = scenarios
-            .map(s => parseInt(String(s.id).replace(/\D/g, ""), 10))
-            .filter(n => !isNaN(n));
-          const maxNum = nums.length ? Math.max(...nums) : scenarios.length;
-          nextScenarioIndex = maxNum + 1;
-        } else {
-          nextScenarioIndex = 1;
-        }
+        nextScenarioIndex = maxIndex + 1;
       } catch (e) {
         console.error(e);
         scenarios = [];
@@ -82,40 +67,31 @@
     }
 
     function createScenario() {
-      const id = `S${nextScenarioIndex++}`;
-      return {
-        id,
-        title: "",
-        ifText: "",
-        thenText: "",
-        collapsed: false
-      };
+      const id = "S" + nextScenarioIndex++;
+      return { id, title: "", ifText: "", thenText: "", collapsed: false };
     }
 
     function renderScenarios() {
-      if (!scenarioListEl) return;
       scenarioListEl.innerHTML = "";
+      if (!scenarios.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.75rem";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No scenarios added yet.";
+        scenarioListEl.appendChild(empty);
+        return;
+      }
 
       scenarios.forEach((sc, index) => {
         const card = document.createElement("div");
-        card.className = "scenario-card";
-        if (sc.collapsed) {
-          card.classList.add("collapsed");
-        }
+        card.className = "scenario-card" + (sc.collapsed ? " collapsed" : "");
 
         const headerRow = document.createElement("div");
         headerRow.className = "scenario-header-row";
 
         const left = document.createElement("div");
-        const idSpan = document.createElement("span");
-        idSpan.className = "scenario-id";
-        idSpan.textContent = sc.id;
-        left.appendChild(idSpan);
-
-        const titleSpan = document.createElement("span");
-        titleSpan.className = "small-text";
-        titleSpan.textContent = sc.title || "(no title)";
-        left.appendChild(titleSpan);
+        left.className = "scenario-id";
+        left.textContent = sc.id + (sc.title ? " — " + sc.title : "");
 
         const right = document.createElement("div");
         right.style.display = "flex";
@@ -134,7 +110,7 @@
 
         const delBtn = document.createElement("button");
         delBtn.type = "button";
-        delBtn.className = "scenario-delete-btn";
+        delBtn.className = "surge-delete-btn";
         delBtn.textContent = "Delete";
         delBtn.addEventListener("click", () => {
           scenarios.splice(index, 1);
@@ -165,11 +141,12 @@
         body.appendChild(titleInput);
 
         const ifLabel = document.createElement("label");
-        ifLabel.textContent = "IF (setup / trigger conditions)";
+        ifLabel.textContent = "IF:";
         body.appendChild(ifLabel);
 
         const ifArea = document.createElement("textarea");
         ifArea.value = sc.ifText || "";
+        ifArea.placeholder = "Condition (price behavior, level interaction, time window, etc.)";
         ifArea.addEventListener("input", () => {
           sc.ifText = ifArea.value;
           saveScenarios();
@@ -177,11 +154,12 @@
         body.appendChild(ifArea);
 
         const thenLabel = document.createElement("label");
-        thenLabel.textContent = "THEN (execution / management)";
+        thenLabel.textContent = "THEN:";
         body.appendChild(thenLabel);
 
         const thenArea = document.createElement("textarea");
         thenArea.value = sc.thenText || "";
+        thenArea.placeholder = "Execution expectation (direction, entry model, TP/SL behavior, etc.)";
         thenArea.addEventListener("input", () => {
           sc.thenText = thenArea.value;
           saveScenarios();
@@ -192,16 +170,6 @@
         scenarioListEl.appendChild(card);
       });
     }
-
-    // expose helper on window for future builds
-    window.SOP_SCENARIOS = {
-      getAllScenarios() {
-        return scenarios.map(s => ({ ...s }));
-      },
-      getScenarioById(id) {
-        return scenarios.find(s => s.id === id) || null;
-      }
-    };
 
     if (addScenarioBtn) {
       addScenarioBtn.addEventListener("click", () => {
@@ -234,29 +202,43 @@
       notes: ""
     };
 
+    function defaultPresets() {
+      return {
+        chop: false,
+        compression: false,
+        sweep: false,
+        displacement: false,
+        indecision: false,
+        stalling: false
+      };
+    }
+
     function createWatchEntry() {
       return {
-        timestamp: new Date().toISOString(),
-        structure: "",
+        time: "",
         emotion: "",
-        narrative: "",
+        presets: defaultPresets(),
+        customInterp: "",
+        notes: "",
         collapsed: false
       };
     }
 
     function createSurgeEntry() {
       return {
-        timestamp: new Date().toISOString(),
-        intensity: "",
+        time: "",
         emotion: "",
-        narrative: "",
+        trigger: "",
+        notes: "",
         collapsed: false
       };
     }
 
     function createAdaptationEntry() {
       return {
-        timestamp: new Date().toISOString(),
+        startTime: "",
+        endTime: "",
+        tagStructShift: false,
         tagTempoChange: false,
         tagLiquidityChange: false,
         tagOrderflowChange: false,
@@ -296,18 +278,6 @@
           return;
         }
         const parsed = JSON.parse(raw);
-        if (!parsed || typeof parsed !== "object") {
-          watchEntries = [];
-          surges = [];
-          adaptations = [];
-          sessionState = {
-            traderEnergy: "",
-            marketEnergy: "",
-            marketType: "",
-            notes: ""
-          };
-          return;
-        }
         watchEntries = Array.isArray(parsed.watchEntries) ? parsed.watchEntries : [];
         surges = Array.isArray(parsed.surges) ? parsed.surges : [];
         adaptations = Array.isArray(parsed.adaptations) ? parsed.adaptations : [];
@@ -319,23 +289,23 @@
         };
 
         watchEntries.forEach(e => {
-          if (typeof e.timestamp !== "string") e.timestamp = new Date().toISOString();
-          if (typeof e.structure !== "string") e.structure = "";
-          if (typeof e.emotion !== "string") e.emotion = "";
-          if (typeof e.narrative !== "string") e.narrative = "";
-          if (typeof e.collapsed !== "boolean") e.collapsed = false;
+          if (!e.presets) e.presets = defaultPresets();
+          else {
+            const def = defaultPresets();
+            Object.keys(def).forEach(k => {
+              if (typeof e.presets[k] !== "boolean") e.presets[k] = false;
+            });
+          }
+          if (!e.hasOwnProperty("collapsed")) e.collapsed = false;
         });
 
         surges.forEach(e => {
-          if (typeof e.timestamp !== "string") e.timestamp = new Date().toISOString();
-          if (typeof e.intensity !== "string") e.intensity = "";
-          if (typeof e.emotion !== "string") e.emotion = "";
-          if (typeof e.narrative !== "string") e.narrative = "";
-          if (typeof e.collapsed !== "boolean") e.collapsed = false;
+          if (!e.hasOwnProperty("collapsed")) e.collapsed = false;
         });
 
         adaptations.forEach(e => {
-          if (typeof e.timestamp !== "string") e.timestamp = new Date().toISOString();
+          if (!e.hasOwnProperty("collapsed")) e.collapsed = false;
+          if (typeof e.tagStructShift !== "boolean") e.tagStructShift = false;
           if (typeof e.tagTempoChange !== "boolean") e.tagTempoChange = false;
           if (typeof e.tagLiquidityChange !== "boolean") e.tagLiquidityChange = false;
           if (typeof e.tagOrderflowChange !== "boolean") e.tagOrderflowChange = false;
@@ -359,30 +329,33 @@
 
     // ----- Watching -----
     function renderWatchEntries() {
-      if (!watchListEl) return;
       watchListEl.innerHTML = "";
+      if (!watchEntries.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.75rem";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No watching entries logged yet.";
+        watchListEl.appendChild(empty);
+        return;
+      }
 
       watchEntries.forEach((entry, index) => {
         const card = document.createElement("div");
-        card.className = "watch-card";
-        if (entry.collapsed) {
-          card.classList.add("collapsed");
-        }
+        card.className = "watch-card" + (entry.collapsed ? " collapsed" : "");
 
         const headerRow = document.createElement("div");
         headerRow.className = "watch-header-row";
 
         const left = document.createElement("div");
-        const label = document.createElement("span");
-        label.className = "watch-label";
-        label.textContent = `Watching ${index + 1}`;
-        left.appendChild(label);
+        left.className = "watch-label";
+        left.textContent = `Watching Entry #${index + 1}`;
 
-        const summary = document.createElement("span");
+        const summary = document.createElement("div");
         summary.className = "watch-summary";
-        const ts = new Date(entry.timestamp);
-        const timeStr = ts.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        summary.textContent = `${timeStr} • ${entry.structure || "No structure"}`;
+        const setSummary = () => {
+          summary.textContent = `${entry.time || "—"} | ${entry.emotion || "no emotion"}`;
+        };
+        setSummary();
 
         const right = document.createElement("div");
         right.style.display = "flex";
@@ -419,40 +392,87 @@
         const body = document.createElement("div");
         body.className = "watch-body";
 
-        const structureLabel = document.createElement("label");
-        structureLabel.textContent = "Structure / Area being watched";
-        body.appendChild(structureLabel);
+        const row = document.createElement("div");
+        row.className = "watch-row";
+        row.innerHTML = `
+          <div>
+            <label>Time (EST)</label>
+            <input type="text" placeholder="09:45, 10:10, etc.">
+          </div>
+          <div>
+            <label>Emotion</label>
+            <input type="text" placeholder="calm, hesitant, FOMO, etc.">
+          </div>
+        `;
+        const timeInput = row.querySelectorAll("input")[0];
+        const emoInput = row.querySelectorAll("input")[1];
+        timeInput.value = entry.time || "";
+        emoInput.value = entry.emotion || "";
 
-        const structureInput = document.createElement("input");
-        structureInput.type = "text";
-        structureInput.value = entry.structure || "";
-        structureInput.addEventListener("input", () => {
-          entry.structure = structureInput.value;
+        timeInput.addEventListener("input", () => {
+          entry.time = timeInput.value;
+          setSummary();
           saveModule2();
         });
-        body.appendChild(structureInput);
-
-        const emotionLabel = document.createElement("label");
-        emotionLabel.textContent = "Emotion while watching";
-        body.appendChild(emotionLabel);
-
-        const emotionInput = document.createElement("input");
-        emotionInput.type = "text";
-        emotionInput.value = entry.emotion || "";
-        emotionInput.addEventListener("input", () => {
-          entry.emotion = emotionInput.value;
+        emoInput.addEventListener("input", () => {
+          entry.emotion = emoInput.value;
+          setSummary();
           saveModule2();
         });
-        body.appendChild(emotionInput);
+
+        body.appendChild(row);
+
+        const interpLabel = document.createElement("label");
+        interpLabel.textContent = "Interpretation (how the market looks)";
+        body.appendChild(interpLabel);
+
+        const options = document.createElement("div");
+        options.className = "interp-options";
+        const presets = [
+          ["chop", "Chop"], ["compression", "Compression"],
+          ["sweep", "Sweep"], ["displacement", "Displacement"],
+          ["indecision", "Indecision"], ["stalling", "Stalling"]
+        ];
+        presets.forEach(([key, text]) => {
+          const wrap = document.createElement("label");
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.checked = !!entry.presets[key];
+          cb.addEventListener("change", () => {
+            entry.presets[key] = cb.checked;
+            saveModule2();
+          });
+          const span = document.createElement("span");
+          span.textContent = text;
+          wrap.appendChild(cb);
+          wrap.appendChild(span);
+          options.appendChild(wrap);
+        });
+        body.appendChild(options);
+
+        const customLabel = document.createElement("label");
+        customLabel.textContent = "Custom interpretation tags (manual)";
+        body.appendChild(customLabel);
+
+        const customInput = document.createElement("input");
+        customInput.type = "text";
+        customInput.placeholder = "e.g. liquidity hunt, grind up, fake pump (comma separated if needed)";
+        customInput.value = entry.customInterp || "";
+        customInput.addEventListener("input", () => {
+          entry.customInterp = customInput.value;
+          saveModule2();
+        });
+        body.appendChild(customInput);
 
         const notesLabel = document.createElement("label");
-        notesLabel.textContent = "Narrative";
+        notesLabel.textContent = "Notes";
         body.appendChild(notesLabel);
 
         const notesArea = document.createElement("textarea");
-        notesArea.value = entry.narrative || "";
+        notesArea.placeholder = "Short description of what you saw and how it influenced your thinking.";
+        notesArea.value = entry.notes || "";
         notesArea.addEventListener("input", () => {
-          entry.narrative = notesArea.value;
+          entry.notes = notesArea.value;
           saveModule2();
         });
         body.appendChild(notesArea);
@@ -464,30 +484,33 @@
 
     // ----- Surges -----
     function renderSurges() {
-      if (!surgeListEl) return;
       surgeListEl.innerHTML = "";
+      if (!surges.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.75rem";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No emotional surges logged yet.";
+        surgeListEl.appendChild(empty);
+        return;
+      }
 
       surges.forEach((entry, index) => {
         const card = document.createElement("div");
-        card.className = "surge-card";
-        if (entry.collapsed) {
-          card.classList.add("collapsed");
-        }
+        card.className = "surge-card" + (entry.collapsed ? " collapsed" : "");
 
         const headerRow = document.createElement("div");
         headerRow.className = "surge-header-row";
 
         const left = document.createElement("div");
-        const label = document.createElement("span");
-        label.className = "surge-label";
-        label.textContent = `Surge ${index + 1}`;
-        left.appendChild(label);
+        left.className = "surge-label";
+        left.textContent = `Surge #${index + 1}`;
 
-        const summary = document.createElement("span");
+        const summary = document.createElement("div");
         summary.className = "surge-summary";
-        const ts = new Date(entry.timestamp);
-        const timeStr = ts.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        summary.textContent = `${timeStr} • ${entry.emotion || "No emotion"}`;
+        const setSummary = () => {
+          summary.textContent = `${entry.time || "—"} | ${entry.emotion || "no label"}`;
+        };
+        setSummary();
 
         const right = document.createElement("div");
         right.style.display = "flex";
@@ -524,40 +547,59 @@
         const body = document.createElement("div");
         body.className = "surge-body";
 
-        const intensityLabel = document.createElement("label");
-        intensityLabel.textContent = "Intensity (1–10 or description)";
-        body.appendChild(intensityLabel);
+        const row = document.createElement("div");
+        row.className = "surge-row";
+        row.innerHTML = `
+          <div>
+            <label>Time (EST)</label>
+            <input type="text" placeholder="10:05, 11:32, etc.">
+          </div>
+          <div>
+            <label>Emotion Spike</label>
+            <input type="text" placeholder="panic, tilt, anger, FOMO, etc.">
+          </div>
+        `;
+        const timeInput = row.querySelectorAll("input")[0];
+        const emoInput = row.querySelectorAll("input")[1];
+        timeInput.value = entry.time || "";
+        emoInput.value = entry.emotion || "";
 
-        const intensityInput = document.createElement("input");
-        intensityInput.type = "text";
-        intensityInput.value = entry.intensity || "";
-        intensityInput.addEventListener("input", () => {
-          entry.intensity = intensityInput.value;
+        timeInput.addEventListener("input", () => {
+          entry.time = timeInput.value;
+          setSummary();
           saveModule2();
         });
-        body.appendChild(intensityInput);
-
-        const emotionLabel = document.createElement("label");
-        emotionLabel.textContent = "Emotion";
-        body.appendChild(emotionLabel);
-
-        const emotionInput = document.createElement("input");
-        emotionInput.type = "text";
-        emotionInput.value = entry.emotion || "";
-        emotionInput.addEventListener("input", () => {
-          entry.emotion = emotionInput.value;
+        emoInput.addEventListener("input", () => {
+          entry.emotion = emoInput.value;
+          setSummary();
           saveModule2();
         });
-        body.appendChild(emotionInput);
+
+        body.appendChild(row);
+
+        const triggerLabel = document.createElement("label");
+        triggerLabel.textContent = "Trigger (what caused the surge)";
+        body.appendChild(triggerLabel);
+
+        const triggerInput = document.createElement("input");
+        triggerInput.type = "text";
+        triggerInput.placeholder = "e.g. candle spike against position, missed entry, sudden drawdown, etc.";
+        triggerInput.value = entry.trigger || "";
+        triggerInput.addEventListener("input", () => {
+          entry.trigger = triggerInput.value;
+          saveModule2();
+        });
+        body.appendChild(triggerInput);
 
         const notesLabel = document.createElement("label");
-        notesLabel.textContent = "Narrative";
+        notesLabel.textContent = "Notes / Reaction";
         body.appendChild(notesLabel);
 
         const notesArea = document.createElement("textarea");
-        notesArea.value = entry.narrative || "";
+        notesArea.placeholder = "How you reacted, what you did next, whether you regained control.";
+        notesArea.value = entry.notes || "";
         notesArea.addEventListener("input", () => {
-          entry.narrative = notesArea.value;
+          entry.notes = notesArea.value;
           saveModule2();
         });
         body.appendChild(notesArea);
@@ -569,30 +611,40 @@
 
     // ----- Adaptations -----
     function renderAdaptations() {
-      if (!adaptListEl) return;
       adaptListEl.innerHTML = "";
+      if (!adaptations.length) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.75rem";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No adaptation windows logged yet.";
+        adaptListEl.appendChild(empty);
+        return;
+      }
 
       adaptations.forEach((entry, index) => {
         const card = document.createElement("div");
-        card.className = "adapt-card";
-        if (entry.collapsed) {
-          card.classList.add("collapsed");
-        }
+        card.className = "adapt-card" + (entry.collapsed ? " collapsed" : "");
 
         const headerRow = document.createElement("div");
         headerRow.className = "adapt-header-row";
 
         const left = document.createElement("div");
-        const label = document.createElement("span");
-        label.className = "adapt-label";
-        label.textContent = `Adaptation ${index + 1}`;
-        left.appendChild(label);
+        left.className = "adapt-label";
+        left.textContent = `Adaptation #${index + 1}`;
 
-        const summary = document.createElement("span");
+        const summary = document.createElement("div");
         summary.className = "adapt-summary";
-        const ts = new Date(entry.timestamp);
-        const timeStr = ts.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        summary.textContent = `${timeStr} • ${entry.customTags || "No tags"}`;
+        const setSummary = () => {
+          const windowLabel = (entry.startTime || "?") + "–" + (entry.endTime || "?");
+          const tags = [];
+          if (entry.tagStructShift) tags.push("struct shift");
+          if (entry.tagTempoChange) tags.push("tempo");
+          if (entry.tagLiquidityChange) tags.push("liquidity");
+          if (entry.tagOrderflowChange) tags.push("orderflow");
+          const tagStr = tags.length ? tags.join(", ") : "no tags";
+          summary.textContent = `${windowLabel} | ${tagStr}`;
+        };
+        setSummary();
 
         const right = document.createElement("div");
         right.style.display = "flex";
@@ -629,78 +681,89 @@
         const body = document.createElement("div");
         body.className = "adapt-body";
 
+        const row = document.createElement("div");
+        row.className = "adapt-row";
+        row.innerHTML = `
+          <div>
+            <label>Start Time (EST)</label>
+            <input type="text" placeholder="e.g. 10:15">
+          </div>
+          <div>
+            <label>End Time (EST)</label>
+            <input type="text" placeholder="e.g. 10:45">
+          </div>
+        `;
+        const startInput = row.querySelectorAll("input")[0];
+        const endInput = row.querySelectorAll("input")[1];
+        startInput.value = entry.startTime || "";
+        endInput.value = entry.endTime || "";
+
+        startInput.addEventListener("input", () => {
+          entry.startTime = startInput.value;
+          setSummary();
+          saveModule2();
+        });
+        endInput.addEventListener("input", () => {
+          entry.endTime = endInput.value;
+          setSummary();
+          saveModule2();
+        });
+
+        body.appendChild(row);
+
         const tagsLabel = document.createElement("label");
-        tagsLabel.textContent = "Tags (what changed?)";
+        tagsLabel.textContent = "What changed?";
         body.appendChild(tagsLabel);
 
-        const tagsRow = document.createElement("div");
-        tagsRow.style.display = "flex";
-        tagsRow.style.flexWrap = "wrap";
-        tagsRow.style.gap = "4px";
-        tagsRow.style.marginBottom = "6px";
+        const tagsWrap = document.createElement("div");
+        tagsWrap.className = "adapt-tags";
 
-        const tempoLabel = document.createElement("label");
-        tempoLabel.className = "small-text";
-        const tempoCheckbox = document.createElement("input");
-        tempoCheckbox.type = "checkbox";
-        tempoCheckbox.checked = !!entry.tagTempoChange;
-        tempoCheckbox.style.marginRight = "4px";
-        tempoCheckbox.addEventListener("change", () => {
-          entry.tagTempoChange = tempoCheckbox.checked;
-          saveModule2();
+        const tagDefs = [
+          ["tagStructShift", "Structural shift"],
+          ["tagTempoChange", "Tempo change"],
+          ["tagLiquidityChange", "Liquidity behaviour change"],
+          ["tagOrderflowChange", "Orderflow / tape shift"]
+        ];
+
+        tagDefs.forEach(([key, labelText]) => {
+          const wrap = document.createElement("label");
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.checked = !!entry[key];
+          cb.addEventListener("change", () => {
+            entry[key] = cb.checked;
+            setSummary();
+            saveModule2();
+          });
+          const span = document.createElement("span");
+          span.textContent = labelText;
+          wrap.appendChild(cb);
+          wrap.appendChild(span);
+          tagsWrap.appendChild(wrap);
         });
-        tempoLabel.appendChild(tempoCheckbox);
-        tempoLabel.appendChild(document.createTextNode("Tempo change"));
-        tagsRow.appendChild(tempoLabel);
 
-        const liqLabel = document.createElement("label");
-        liqLabel.className = "small-text";
-        const liqCheckbox = document.createElement("input");
-        liqCheckbox.type = "checkbox";
-        liqCheckbox.checked = !!entry.tagLiquidityChange;
-        liqCheckbox.style.marginRight = "4px";
-        liqCheckbox.addEventListener("change", () => {
-          entry.tagLiquidityChange = liqCheckbox.checked;
-          saveModule2();
-        });
-        liqLabel.appendChild(liqCheckbox);
-        liqLabel.appendChild(document.createTextNode("Liquidity change"));
-        tagsRow.appendChild(liqLabel);
-
-        const ofLabel = document.createElement("label");
-        ofLabel.className = "small-text";
-        const ofCheckbox = document.createElement("input");
-        ofCheckbox.type = "checkbox";
-        ofCheckbox.checked = !!entry.tagOrderflowChange;
-        ofCheckbox.style.marginRight = "4px";
-        ofCheckbox.addEventListener("change", () => {
-          entry.tagOrderflowChange = ofCheckbox.checked;
-          saveModule2();
-        });
-        ofLabel.appendChild(ofCheckbox);
-        ofLabel.appendChild(document.createTextNode("Orderflow change"));
-        tagsRow.appendChild(ofLabel);
-
-        body.appendChild(tagsRow);
+        body.appendChild(tagsWrap);
 
         const customTagsLabel = document.createElement("label");
-        customTagsLabel.textContent = "Custom tags";
+        customTagsLabel.textContent = "Custom tags (comma separated)";
         body.appendChild(customTagsLabel);
 
-        const customTagsInput = document.createElement("input");
-        customTagsInput.type = "text";
-        customTagsInput.value = entry.customTags || "";
-        customTagsInput.addEventListener("input", () => {
-          entry.customTags = customTagsInput.value;
+        const customInput = document.createElement("input");
+        customInput.type = "text";
+        customInput.placeholder = "e.g. news spike, VWAP reclaim, killzone flip";
+        customInput.value = entry.customTags || "";
+        customInput.addEventListener("input", () => {
+          entry.customTags = customInput.value;
           saveModule2();
         });
-        body.appendChild(customTagsInput);
+        body.appendChild(customInput);
 
         const whatChangedLabel = document.createElement("label");
-        whatChangedLabel.textContent = "What changed?";
+        whatChangedLabel.textContent = "Describe what changed in the market";
         body.appendChild(whatChangedLabel);
 
         const whatChangedArea = document.createElement("textarea");
+        whatChangedArea.placeholder = "Tape, volatility, structure, liquidity behaviour…";
         whatChangedArea.value = entry.whatChanged || "";
         whatChangedArea.addEventListener("input", () => {
           entry.whatChanged = whatChangedArea.value;
@@ -709,10 +772,11 @@
         body.appendChild(whatChangedArea);
 
         const howAdaptedLabel = document.createElement("label");
-        howAdaptedLabel.textContent = "How did you adapt?";
+        howAdaptedLabel.textContent = "How did you adapt (or fail to adapt)?";
         body.appendChild(howAdaptedLabel);
 
         const howAdaptedArea = document.createElement("textarea");
+        howAdaptedArea.placeholder = "Execution change: sizing, model, timing, or stayed stubborn…";
         howAdaptedArea.value = entry.howAdapted || "";
         howAdaptedArea.addEventListener("input", () => {
           entry.howAdapted = howAdaptedArea.value;
@@ -725,13 +789,12 @@
       });
     }
 
+    // ----- Session State -----
     function initSessionStateUI() {
-      if (!traderEnergyInput || !marketEnergyInput || !marketTypeSelect || !marketNotesArea) return;
-
-      traderEnergyInput.value = sessionState.traderEnergy || "";
-      marketEnergyInput.value = sessionState.marketEnergy || "";
-      marketTypeSelect.value = sessionState.marketType || "";
-      marketNotesArea.value = sessionState.notes || "";
+      traderEnergyInput.value = sessionState.traderEnergy ?? "";
+      marketEnergyInput.value = sessionState.marketEnergy ?? "";
+      marketTypeSelect.value = sessionState.marketType ?? "";
+      marketNotesArea.value = sessionState.notes ?? "";
 
       traderEnergyInput.addEventListener("input", () => {
         sessionState.traderEnergy = traderEnergyInput.value;
@@ -754,123 +817,40 @@
       });
     }
 
+    // ----- Add buttons -----
+    if (addWatchBtn) {
+      addWatchBtn.addEventListener("click", () => {
+        watchEntries.push(createWatchEntry());
+        saveModule2();
+        renderWatchEntries();
+      });
+    }
+
+    if (addSurgeBtn) {
+      addSurgeBtn.addEventListener("click", () => {
+        surges.push(createSurgeEntry());
+        saveModule2();
+        renderSurges();
+      });
+    }
+
+    if (addAdaptBtn) {
+      addAdaptBtn.addEventListener("click", () => {
+        adaptations.push(createAdaptationEntry());
+        saveModule2();
+        renderAdaptations();
+      });
+    }
+
     // ----- Reset Day -----
-
-    // ---------- Module 3: Trade Idea Logic (Baseline + Signal) ----------
-    const pretradeEmotionSelect = document.getElementById("pretrade_emotion");
-    const pretradeNotesArea = document.getElementById("pretrade_notes");
-    const signalEmotionSelect = document.getElementById("signal_emotion");
-    const signalNotesArea = document.getElementById("signal_notes");
-    const entryTagsInput = document.getElementById("entry_tags");
-
-    let module3State = {
-      pretradeEmotion: "",
-      pretradeNotes: "",
-      signalEmotion: "",
-      signalNotes: "",
-      entryTags: ""
-    };
-
-    function saveModule3() {
-      try {
-        localStorage.setItem(STORAGE_KEY_MODULE3, JSON.stringify(module3State));
-        setStatus("Module 3 saved");
-      } catch (e) {
-        console.error(e);
-        setStatus("Save error");
-      }
-    }
-
-    function loadModule3() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY_MODULE3);
-        if (!raw) {
-          module3State = {
-            pretradeEmotion: "",
-            pretradeNotes: "",
-            signalEmotion: "",
-            signalNotes: "",
-            entryTags: ""
-          };
-          return;
-        }
-        const parsed = JSON.parse(raw);
-        if (typeof parsed !== "object" || parsed === null) {
-          module3State = {
-            pretradeEmotion: "",
-            pretradeNotes: "",
-            signalEmotion: "",
-            signalNotes: "",
-            entryTags: ""
-          };
-          return;
-        }
-        module3State = {
-          pretradeEmotion: parsed.pretradeEmotion || "",
-          pretradeNotes: parsed.pretradeNotes || "",
-          signalEmotion: parsed.signalEmotion || "",
-          signalNotes: parsed.signalNotes || "",
-          entryTags: parsed.entryTags || ""
-        };
-      } catch (e) {
-        console.error(e);
-        module3State = {
-          pretradeEmotion: "",
-          pretradeNotes: "",
-          signalEmotion: "",
-          signalNotes: "",
-          entryTags: ""
-        };
-      }
-    }
-
-    function initModule3UI() {
-      if (!pretradeEmotionSelect || !pretradeNotesArea || !signalEmotionSelect || !signalNotesArea || !entryTagsInput) {
-        return;
-      }
-
-      pretradeEmotionSelect.value = module3State.pretradeEmotion || "";
-      pretradeNotesArea.value = module3State.pretradeNotes || "";
-      signalEmotionSelect.value = module3State.signalEmotion || "";
-      signalNotesArea.value = module3State.signalNotes || "";
-      entryTagsInput.value = module3State.entryTags || "";
-
-      pretradeEmotionSelect.addEventListener("change", () => {
-        module3State.pretradeEmotion = pretradeEmotionSelect.value;
-        saveModule3();
-      });
-
-      pretradeNotesArea.addEventListener("input", () => {
-        module3State.pretradeNotes = pretradeNotesArea.value;
-        saveModule3();
-      });
-
-      signalEmotionSelect.addEventListener("change", () => {
-        module3State.signalEmotion = signalEmotionSelect.value;
-        saveModule3();
-      });
-
-      signalNotesArea.addEventListener("input", () => {
-        module3State.signalNotes = signalNotesArea.value;
-        saveModule3();
-      });
-
-      entryTagsInput.addEventListener("input", () => {
-        module3State.entryTags = entryTagsInput.value;
-        saveModule3();
-      });
-    }
-
     function resetDayAll() {
-      if (!confirm("Reset M1 scenarios, all Module 2 entries, and Module 3 trade logic for this day? This cannot be undone.")) return;
+      if (!confirm("Reset M1 scenarios and all Module 2 entries for this day? This cannot be undone.")) return;
 
-      // Module 1
       scenarios = [];
       nextScenarioIndex = 1;
       localStorage.removeItem(STORAGE_KEY_SCENARIOS);
       renderScenarios();
 
-      // Module 2
       watchEntries = [];
       surges = [];
       adaptations = [];
@@ -885,28 +865,12 @@
       renderSurges();
       renderAdaptations();
 
-      if (traderEnergyInput) traderEnergyInput.value = "";
-      if (marketEnergyInput) marketEnergyInput.value = "";
-      if (marketTypeSelect) marketTypeSelect.value = "";
-      if (marketNotesArea) marketNotesArea.value = "";
+      traderEnergyInput.value = "";
+      marketEnergyInput.value = "";
+      marketTypeSelect.value = "";
+      marketNotesArea.value = "";
 
-      // Module 3
-      module3State = {
-        pretradeEmotion: "",
-        pretradeNotes: "",
-        signalEmotion: "",
-        signalNotes: "",
-        entryTags: ""
-      };
-      localStorage.removeItem(STORAGE_KEY_MODULE3);
-
-      if (pretradeEmotionSelect) pretradeEmotionSelect.value = "";
-      if (pretradeNotesArea) pretradeNotesArea.value = "";
-      if (signalEmotionSelect) signalEmotionSelect.value = "";
-      if (signalNotesArea) signalNotesArea.value = "";
-      if (entryTagsInput) entryTagsInput.value = "";
-
-      setStatus("Day reset (M1 + M2 + M3)");
+      setStatus("Day reset (M1 + M2)");
     }
 
     if (resetDayBtn) {
@@ -921,5 +885,3 @@
     renderSurges();
     renderAdaptations();
     initSessionStateUI();
-    loadModule3();
-    initModule3UI();
