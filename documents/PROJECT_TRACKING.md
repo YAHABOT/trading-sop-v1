@@ -1054,3 +1054,36 @@ Key additions & modifications:
 - Emotional Chain integrates emotions from Modules 1–3.
 - Scenario Resolution includes abandoned ideas.
 - All analytics updated to reflect new execution structure.
+
+- # [2025-11-25] — V1.1 Build Plan Reset (Option B Selected)
+
+We officially reset the build plan to V1.1 using Option B.
+
+This reset merges:
+- All successful elements from Builds 001–008,
+- Removes outdated sections no longer valid after the V1.1 Module redesign,
+- Adds all new architectural changes to Module 1 and Module 3,
+- Consolidates the system into a clean Build 001 → Build 024 roadmap,
+- Establishes V1.1 as the canonical baseline for further development.
+
+Reason for Reset:
+The old build plan was tightly coupled to outdated logic:
+- Old Module 1 fields & confluence structure
+- Old Module 3 trade flow (no trade idea engine)
+- No abandoned-trade-idea logic
+- No multi-add-on support
+- No re-entry conditional logic
+- No universal Missed-R accounting
+- IF–THEN applied too late in the flow
+- Exit logic outdated relative to new execution model
+
+Therefore, continuing sequential build numbers from the old plan would create a hybrid system mixing old architecture with new architecture, leading to technical inconsistencies.
+
+Action Taken:
+The build plan has been rewritten from scratch as “V1.1 BUILD PLAN,” beginning at Build 001 and ending at Build 024. This new plan incorporates everything accomplished in earlier builds while aligning with all new structural and behavioral upgrades.
+
+Next Steps:
+- Replace the entire contents of `V1_BUILD_PLAN.md` with the new V1.1 Build Plan.
+- Mark all previous builds (1–8) as deprecated in favor of the new roadmap.
+- Development will continue from Build 001 of the V1.1 plan.
+
