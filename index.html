@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 009</title>
+  <title>Trading SOP Journal — Build 008</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
   
@@ -12,15 +12,14 @@
   <div class="container">
     <div class="top-bar">
       <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 009</h1>
+        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 008</h1>
         <p class="small-text">
-          V1 prototype — local-only journal. Data is stored in your browser using localStorage.
-          Use one browser per trader to keep things isolated.
+          M1 Scenarios ✓ • M2 Watching + Surges ✓ • Adaptation Windows ✓ • Session Energy & Market Type ✓ • Persistence + Reset Day wired
         </p>
       </div>
-      <div class="top-bar-actions">
-        <button id="resetDayBtn" class="reset-btn">Reset Day (Scenarios + Module 2 + Module 3)</button>
-        <span id="statusText" class="status-text"></span>
+      <div style="text-align:right;">
+        <button type="button" id="resetDayBtn" class="reset-btn">Reset Day (M1 + M2)</button>
+        <div id="statusText" class="small-text"></div>
       </div>
     </div>
 
@@ -35,14 +34,25 @@
         <label>Session Levels</label>
         <div class="checkbox-row">
           <input type="checkbox" id="levels_done" />
-          <label for="levels_done" class="inline-label">Levels marked on chart</label>
+          <label for="levels_done" style="margin: 0;">All required levels marked</label>
         </div>
 
-        <label>Environmental Checks</label>
-        <div class="checkbox-row">
-          <input type="checkbox" id="env_done" />
-          <label for="env_done" class="inline-label">Sleep, caffeine, interruptions, etc. noted</label>
+        <label>Previous Sessions Observed / Bias</label>
+        <textarea id="prev_sessions" placeholder="Asia, London, combined bias…"></textarea>
+
+        <label>HTF → LTF Structure & Trend</label>
+        <textarea id="htf_ltf" placeholder="15m → 5m → 1m structure…"></textarea>
+
+        <label>IF–THEN Scenarios</label>
+        <div class="scenario-header">
+          <span style="font-size:0.8rem; font-weight:600;">Scenarios List</span>
+          <button type="button" id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
         </div>
+        <p class="helper-text">
+          Each scenario gets an ID (S1, S2, ...) and contains: Title, IF, THEN.
+          Scenarios are saved locally and cleared with "Reset Day".
+        </p>
+        <div id="scenarioList"></div>
 
         <label>Session-Start Emotional State</label>
         <select id="session_emotion">
@@ -55,21 +65,6 @@
           <option value="overconfident">Overconfident</option>
         </select>
 
-        <label>Notes to Self</label>
-        <textarea id="notes_to_self" placeholder="What do you need to remember about today's conditions, your energy, and your weaknesses?"></textarea>
-
-        <hr />
-
-        <div class="scenario-header">
-          <span class="small-text">IF–THEN Scenarios</span>
-          <button type="button" id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
-        </div>
-        <p class="helper-text">
-          Each scenario gets an ID (S1, S2, ...) and contains: Title, IF, THEN.
-          Scenarios are saved locally and cleared with "Reset Day".
-        </p>
-        <div id="scenarioList"></div>
-
       </div>
     </div>
 
@@ -81,7 +76,7 @@
       </div>
       <div class="accordion-content">
 
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Watching Price</h3>
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Watching Price (Flat State)</h3>
         <p class="small-text" style="margin-bottom: 6px;">
           Log moments where you're flat but actively watching price, including your emotion and how the tape/structure looks.
         </p>
@@ -125,26 +120,27 @@
 
         <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Session Energy & Market Behavior</h3>
         <p class="small-text" style="margin-bottom: 6px;">
-          Quick snapshot of how you and the market felt through the session.
+          Snapshot of how you and the market felt during the core session.
         </p>
 
         <div class="energy-grid">
           <div>
-            <label for="trader_energy">Trader Energy (1–10)</label>
-            <input id="trader_energy" type="number" min="1" max="10" />
+            <label>Trader Energy (0–10)</label>
+            <input type="number" id="trader_energy" min="0" max="10" step="1" placeholder="0–10" />
           </div>
           <div>
-            <label for="market_energy">Market Energy (1–10)</label>
-            <input id="market_energy" type="number" min="1" max="10" />
+            <label>Market Energy (0–10)</label>
+            <input type="number" id="market_energy" min="0" max="10" step="1" placeholder="0–10" />
           </div>
         </div>
 
-        <label for="market_type">Market Type</label>
+        <label>Market Type</label>
         <select id="market_type">
           <option value="">– select –</option>
+          <option value="choppy">Choppy</option>
+          <option value="directional">Directional</option>
           <option value="trend">Trend</option>
           <option value="range">Range</option>
-          <option value="chop">Chop</option>
           <option value="manipulative">Manipulative</option>
           <option value="slow_grind">Slow Grind</option>
           <option value="high_volatility">High Volatility</option>
@@ -157,83 +153,14 @@
     </div>
 
     <!-- MODULE 3 -->
-    <div class="accordion-item" id="module3">
+    <div class="accordion-item">
       <div class="accordion-header">
         <span>Module 3 — Trade Idea Logic</span>
         <span>▼</span>
       </div>
       <div class="accordion-content">
-        <p class="small-text" style="margin-bottom: 6px;">
-          Capture the core decision path of a single trade idea:
-          <strong>Pre-Trade Baseline → At The Signal</strong>. Executed / Missed branches will be added in later builds.
-        </p>
-
-        <div class="trade-logic-steps">
-
-          <!-- Pre-Trade Baseline -->
-          <div class="trade-logic-card">
-            <div class="trade-logic-header">
-              <span class="trade-logic-title">Step 1 — Pre-Trade Baseline</span>
-              <span class="trade-logic-step-pill">Baseline</span>
-            </div>
-
-            <label for="pretrade_emotion">Pre-trade emotional state</label>
-            <select id="pretrade_emotion">
-              <option value="">– select –</option>
-              <option value="calm">Calm</option>
-              <option value="focused">Focused</option>
-              <option value="hesitant">Hesitant</option>
-              <option value="anxious">Anxious</option>
-              <option value="impatient">Impatient</option>
-              <option value="overconfident">Overconfident</option>
-            </select>
-
-            <label for="pretrade_notes">Pre-trade baseline notes</label>
-            <textarea
-              id="pretrade_notes"
-              placeholder="Describe your baseline before the signal: energy, expectations, biases, context."
-            ></textarea>
-          </div>
-
-          <!-- At The Signal -->
-          <div class="trade-logic-card">
-            <div class="trade-logic-header">
-              <span class="trade-logic-title">Step 2 — At The Signal</span>
-              <span class="trade-logic-step-pill">Signal</span>
-            </div>
-
-            <label for="signal_emotion">At-signal emotional state</label>
-            <select id="signal_emotion">
-              <option value="">– select –</option>
-              <option value="calm">Calm</option>
-              <option value="focused">Focused</option>
-              <option value="hesitant">Hesitant</option>
-              <option value="anxious">Anxious</option>
-              <option value="impatient">Impatient</option>
-              <option value="overconfident">Overconfident</option>
-            </select>
-
-            <label for="signal_notes">Signal notes</label>
-            <textarea
-              id="signal_notes"
-              placeholder="What exactly did you see at the signal? Structure, liquidity, time of day, confluence."
-            ></textarea>
-
-            <label for="entry_tags">Entry model tags</label>
-            <input
-              id="entry_tags"
-              type="text"
-              placeholder="e.g. NY open sweep, VWAP bounce, 15m FVG, Asia high sweep → continuation"
-            />
-            <p class="small-text" style="margin-top: 4px;">
-              Use free-text tags for now. Library + autocomplete will come in later builds.
-            </p>
-          </div>
-
-        </div>
-
-        <p class="trade-logic-flow-note">
-          Flow: Baseline → At The Signal → (Executed / Missed branches in future builds).
+        <p class="small-text">
+          Module 3 UI will be built in Phases 4–6 (Builds 009–015).
         </p>
       </div>
     </div>
@@ -241,7 +168,7 @@
     <!-- MODULE 4 -->
     <div class="accordion-item">
       <div class="accordion-header">
-        <span>Module 4 — Post-Market (Coming Later)</span>
+        <span>Module 4 — Post-Market Review</span>
         <span>▼</span>
       </div>
       <div class="accordion-content">
