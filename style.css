@@ -16,79 +16,102 @@
     .top-bar {
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .top-bar-actions {
+      display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     .reset-btn {
-      font-size: 0.7rem;
       padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid #ef4444;
-      background: #450a0a;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid #f97373;
+      background: #111827;
       color: #fecaca;
       cursor: pointer;
     }
 
     .reset-btn:hover {
-      background: #7f1d1d;
+      background: #b91c1c;
+      color: #fee2e2;
+    }
+
+    .status-text {
+      font-size: 0.7rem;
+      color: #a5b4fc;
+      min-height: 1em;
     }
 
     .small-text {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       color: #9ca3af;
+    }
+
+    .helper-text {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-bottom: 6px;
     }
 
     /* Accordion */
     .accordion-item {
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      background: #111827;
+      border: 1px solid #1f2933;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: #020617;
     }
 
     .accordion-header {
-      padding: 12px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 600;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #0f172a;
-      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      background: #0b1120;
+      border-bottom: 1px solid #111827;
+      font-size: 0.85rem;
     }
 
-    .accordion-header:hover {
-      background: #1e293b;
+    .accordion-header span:last-child {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    .accordion-item.open .accordion-content {
+      display: block;
     }
 
     .accordion-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.25s ease;
+      display: none;
+      padding: 10px 10px 10px 10px;
     }
 
-    .open .accordion-content {
-      max-height: 4000px;
-      padding: 14px;
+    /* Form elements */
+    label {
+      display: block;
+      font-size: 0.8rem;
+      margin: 8px 0 2px 0;
     }
 
-    /* Inputs */
-    textarea,
-    select,
     input[type="text"],
-    input[type="number"] {
+    input[type="number"],
+    select,
+    textarea {
       width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      margin-bottom: 12px;
-      background: #0d1524;
-      border: 1px solid #243045;
-      border-radius: 6px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      border-radius: 4px;
+      padding: 4px 6px;
       color: #e5e7eb;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       box-sizing: border-box;
     }
 
@@ -97,90 +120,53 @@
       resize: vertical;
     }
 
-    select {
-      color: #e5e7eb;
-    }
-
-    label {
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
-
     .checkbox-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-      margin-bottom: 12px;
+      gap: 6px;
+      margin-bottom: 4px;
+      margin-top: 4px;
     }
 
-    /* Scenario header row (label + Add button) */
+    .inline-label {
+      font-size: 0.8rem;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #1f2933;
+      margin: 12px 0;
+    }
+
+    /* Scenario cards */
     .scenario-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 4px;
-      margin-bottom: 8px;
-      gap: 8px;
+      margin-bottom: 6px;
+      gap: 6px;
     }
 
-    /* Buttons */
     .scenario-add-btn,
     .watch-add-btn,
-    .watch-delete-btn,
     .surge-add-btn,
-    .surge-delete-btn,
-    .adapt-add-btn,
-    .adapt-delete-btn,
-    .card-toggle-btn {
-      font-size: 0.7rem;
-      padding: 4px 8px;
-      border-radius: 999px;
-      cursor: pointer;
-    }
-
-    .scenario-add-btn {
-      border: 1px solid #22c55e;
-      background: #052e16;
-      color: #bbf7d0;
-    }
-
-    .watch-add-btn {
-      border: 1px solid #38bdf8;
-      background: #0b1120;
-      color: #e0f2fe;
-    }
-
-    .watch-delete-btn,
-    .surge-delete-btn,
-    .adapt-delete-btn {
-      border: 1px solid #ef4444;
-      background: #450a0a;
-      color: #fecaca;
-    }
-
-    .surge-add-btn {
-      border: 1px solid #f97316;
-      background: #451a03;
-      color: #fed7aa;
-    }
-
     .adapt-add-btn {
-      border: 1px solid #a855f7;
-      background: #2e1065;
-      color: #e9d5ff;
-    }
-
-    .card-toggle-btn {
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      border-radius: 4px;
       border: 1px solid #4b5563;
       background: #020617;
       color: #e5e7eb;
-      padding: 2px 6px;
-      min-width: 26px;
-      text-align: center;
+      cursor: pointer;
     }
 
-    /* Cards */
+    .scenario-add-btn:hover,
+    .watch-add-btn:hover,
+    .surge-add-btn:hover,
+    .adapt-add-btn:hover {
+      background: #111827;
+    }
+
     .scenario-card,
     .watch-card,
     .surge-card,
@@ -234,6 +220,7 @@
     .surge-body,
     .adapt-body {
       margin-top: 4px;
+      font-size: 0.8rem;
     }
 
     .scenario-card.collapsed .scenario-body,
@@ -243,52 +230,37 @@
       display: none;
     }
 
-    .helper-text {
+    .card-toggle-btn,
+    .scenario-delete-btn,
+    .watch-delete-btn,
+    .surge-delete-btn,
+    .adapt-delete-btn {
+      padding: 2px 6px;
       font-size: 0.7rem;
-      color: #64748b;
-      margin-top: -6px;
-      margin-bottom: 8px;
+      border-radius: 4px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      cursor: pointer;
     }
 
-    .watch-row,
-    .surge-row,
-    .adapt-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
+    .card-toggle-btn {
+      width: 24px;
+      text-align: center;
     }
 
-    .watch-row > div,
-    .surge-row > div,
-    .adapt-row > div {
-      flex: 1;
+    .card-toggle-btn:hover,
+    .scenario-delete-btn:hover,
+    .watch-delete-btn:hover,
+    .surge-delete-btn:hover,
+    .adapt-delete-btn:hover {
+      background: #111827;
     }
 
-    .interp-options,
-    .adapt-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 4px 0 6px 0;
-    }
-
-    .interp-options label,
-    .adapt-tags label {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.7rem;
-      color: #cbd5f5;
-    }
-
-    .interp-options input[type="checkbox"],
-    .adapt-tags input[type="checkbox"] {
-      margin: 0;
-    }
-
+    /* Energy grid */
     .energy-grid {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       margin-bottom: 8px;
       flex-wrap: wrap;
     }
@@ -298,8 +270,46 @@
       min-width: 120px;
     }
 
-    hr {
-      border: none;
-      border-top: 1px solid #1f2933;
-      margin: 12px 0;
+    /* Module 3 — Trade Idea Logic */
+    .trade-logic-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .trade-logic-card {
+      border: 1px solid #243045;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #020617;
+    }
+
+    .trade-logic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      gap: 6px;
+    }
+
+    .trade-logic-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .trade-logic-step-pill {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      color: #9ca3af;
+    }
+
+    .trade-logic-flow-note {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 6px;
     }
