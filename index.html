@@ -105,4 +105,154 @@
           <button type="button" id="addSurgeBtn" class="surge-add-btn">+ Add Emotional Surge</button>
         </div>
 
-        <div
+        <div id="surgeList"></div>
+
+        <hr />
+
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Adaptation Windows</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Capture time windows where the market changed and you adapted.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="small-text">Adaptation entries</span>
+          <button type="button" id="addAdaptBtn" class="adapt-add-btn">+ Add Adaptation</button>
+        </div>
+
+        <div id="adaptList"></div>
+
+        <hr />
+
+        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Session Energy & Market Behavior</h3>
+        <p class="small-text" style="margin-bottom: 6px;">
+          Quick snapshot of how you and the market felt through the session.
+        </p>
+
+        <div class="energy-grid">
+          <div>
+            <label for="trader_energy">Trader Energy (1–10)</label>
+            <input id="trader_energy" type="number" min="1" max="10" />
+          </div>
+          <div>
+            <label for="market_energy">Market Energy (1–10)</label>
+            <input id="market_energy" type="number" min="1" max="10" />
+          </div>
+        </div>
+
+        <label for="market_type">Market Type</label>
+        <select id="market_type">
+          <option value="">– select –</option>
+          <option value="trend">Trend</option>
+          <option value="range">Range</option>
+          <option value="chop">Chop</option>
+          <option value="manipulative">Manipulative</option>
+          <option value="slow_grind">Slow Grind</option>
+          <option value="high_volatility">High Volatility</option>
+        </select>
+
+        <label>Notes on Tempo / Behavior</label>
+        <textarea id="market_notes" placeholder="Describe tempo shifts, liquidity feel, sudden dead periods, etc."></textarea>
+
+      </div>
+    </div>
+
+    <!-- MODULE 3 -->
+    <div class="accordion-item" id="module3">
+      <div class="accordion-header">
+        <span>Module 3 — Trade Idea Logic</span>
+        <span>▼</span>
+      </div>
+      <div class="accordion-content">
+        <p class="small-text" style="margin-bottom: 6px;">
+          Capture the core decision path of a single trade idea:
+          <strong>Pre-Trade Baseline → At The Signal</strong>. Executed / Missed branches will be added in later builds.
+        </p>
+
+        <div class="trade-logic-steps">
+
+          <!-- Pre-Trade Baseline -->
+          <div class="trade-logic-card">
+            <div class="trade-logic-header">
+              <span class="trade-logic-title">Step 1 — Pre-Trade Baseline</span>
+              <span class="trade-logic-step-pill">Baseline</span>
+            </div>
+
+            <label for="pretrade_emotion">Pre-trade emotional state</label>
+            <select id="pretrade_emotion">
+              <option value="">– select –</option>
+              <option value="calm">Calm</option>
+              <option value="focused">Focused</option>
+              <option value="hesitant">Hesitant</option>
+              <option value="anxious">Anxious</option>
+              <option value="impatient">Impatient</option>
+              <option value="overconfident">Overconfident</option>
+            </select>
+
+            <label for="pretrade_notes">Pre-trade baseline notes</label>
+            <textarea
+              id="pretrade_notes"
+              placeholder="Describe your baseline before the signal: energy, expectations, biases, context."
+            ></textarea>
+          </div>
+
+          <!-- At The Signal -->
+          <div class="trade-logic-card">
+            <div class="trade-logic-header">
+              <span class="trade-logic-title">Step 2 — At The Signal</span>
+              <span class="trade-logic-step-pill">Signal</span>
+            </div>
+
+            <label for="signal_emotion">At-signal emotional state</label>
+            <select id="signal_emotion">
+              <option value="">– select –</option>
+              <option value="calm">Calm</option>
+              <option value="focused">Focused</option>
+              <option value="hesitant">Hesitant</option>
+              <option value="anxious">Anxious</option>
+              <option value="impatient">Impatient</option>
+              <option value="overconfident">Overconfident</option>
+            </select>
+
+            <label for="signal_notes">Signal notes</label>
+            <textarea
+              id="signal_notes"
+              placeholder="What exactly did you see at the signal? Structure, liquidity, time of day, confluence."
+            ></textarea>
+
+            <label for="entry_tags">Entry model tags</label>
+            <input
+              id="entry_tags"
+              type="text"
+              placeholder="e.g. NY open sweep, VWAP bounce, 15m FVG, Asia high sweep → continuation"
+            />
+            <p class="small-text" style="margin-top: 4px;">
+              Use free-text tags for now. Library + autocomplete will come in later builds.
+            </p>
+          </div>
+
+        </div>
+
+        <p class="trade-logic-flow-note">
+          Flow: Baseline → At The Signal → (Executed / Missed branches in future builds).
+        </p>
+      </div>
+    </div>
+
+    <!-- MODULE 4 -->
+    <div class="accordion-item">
+      <div class="accordion-header">
+        <span>Module 4 — Post-Market (Coming Later)</span>
+        <span>▼</span>
+      </div>
+      <div class="accordion-content">
+        <p class="small-text">
+          Module 4 UI will be built in Phases 7–8 (Builds 016–020).
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
