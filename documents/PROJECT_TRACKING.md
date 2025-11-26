@@ -1086,4 +1086,135 @@ Next Steps:
 - Replace the entire contents of `V1_BUILD_PLAN.md` with the new V1.1 Build Plan.
 - Mark all previous builds (1–8) as deprecated in favor of the new roadmap.
 - Development will continue from Build 001 of the V1.1 plan.
+[Build 002 — UI Overhaul + V1.1 Module-1 Integration]
+✔ Major UI Upgrade
 
+Replaced legacy Build-008 visual layout with a new Figma-style modern UI.
+
+All Module sections converted to accordion-based cards with:
+
+Rounded dark navy panels
+
+Proper spacing
+
+Figma hierarchy (header, subheader, body)
+
+Action buttons aligned to the right
+
+Build-008 button colors preserved (blue / red / orange / purple).
+
+✔ Module 1 — Fully Upgraded to V1.1
+
+Added all new V1.1 fields inside the correct Build-008 accordion structure:
+
+Levels Marked
+
+Checkbox, observation, tags
+
+News Checked
+
+Checkbox, observation, tags
+
+HTF Check
+
+Checkbox, observation, tags
+
+LTF Alignment
+
+Yes/No, observation, tags
+
+IF–THEN Scenarios (improved cards)
+
+Collapsible scenario cards
+
+Title, IF, THEN
+
+Delete + collapse buttons on right
+
+Styled with Figma card layout
+
+NY Opening Impulse Expectation
+
+Textarea
+
+Emotion Coming Into Session
+
+Dropdown (calm, focused, hesitant, anxious, impatient, overconfident)
+
+✔ Module 2 — Partial Visual Upgrade
+
+Watching entries, emotional surges, adaptation windows rebuilt in Figma-style panels.
+
+Buttons unified and right-aligned.
+
+Cards display header meta (e.g., time).
+
+Layout matches the Figma auto-generated style.
+
+✔ State Management
+
+A new unified state engine introduced.
+
+Reset Day fully wipes Module 1 + Module 2 correctly.
+
+LocalStorage schema updated to V1.1 standard.
+
+✔ General Improvements
+
+Accordion header logic rebuilt with a clean toggle system.
+
+All card elements consistent with the new styling.
+
+All placeholder modules wired and ready for next builds.
+
+⚠ Known Issues (Build 002 Bugs)
+
+These now become tasks for Build 003 (refactor):
+
+Tag formatting still not working
+
+Comma + space formatting inconsistent
+
+Needs normalization across all modules
+
+Time Input Bug (much worse now)
+
+All time inputs (watching, surges, adaptations, including first scenario title box)
+
+Take one character at a time
+
+Due to render-on-input loop + DOM rewrite
+
+Needs to be removed or rewritten properly
+
+Scenario title input broken
+
+Only accepts 1 character
+
+Collapsing logic re-renders and resets focus
+
+Adaptation Window
+
+Wrongly includes end time, which did NOT exist before
+
+Should be corrected to original format
+
+General Card UX
+
+Slight spacing & alignment mismatches between sections
+
+Needs refinement based on Figma output
+
+🎯 Next Action (Build 003 — Architecture Refactor Plan)
+
+Before continuing Module-3 development, we will:
+
+Split the monolithic index.html and script.js into modular ES-modules
+
+Create a predictable file structure (js/module1.js, js/module2.js, etc.)
+
+Fix all known issues in the new clean architecture
+
+Re-import current Build-002 UI into the refactored structure
+
+Continue future builds safely without risk of cross-breakage
