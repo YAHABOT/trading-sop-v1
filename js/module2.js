@@ -28,33 +28,47 @@ export function initModule2(state, onChange) {
     renderAdaptations(adaptContainer, state, onChange);
   }
 
-  // Session Energy & Market Behavior
+  // Session Energy Panel
   bindInput("m2-session-notes", state.module2.sessionEnergy, "notes", onChange, state);
   bindInput("m2-trader-energy", state.module2.sessionEnergy, "trader", onChange, state);
   bindInput("m2-market-energy", state.module2.sessionEnergy, "market", onChange, state);
   bindSelect("m2-market-type", state.module2.sessionEnergy, "type", onChange, state);
 }
 
-// Helpers
+/* ============================================================
+   SECTION ACCORDIONS (MATCH IF–THEN SCENARIO BEHAVIOR EXACTLY)
+   ============================================================ */
+
 function setupSectionAccordions(root) {
   const sections = root.querySelectorAll(".m2-section");
+
   sections.forEach(sec => {
     const header = sec.querySelector(".m2-section-header");
     const body = sec.querySelector(".m2-section-body");
+
     if (!header || !body) return;
 
     header.onclick = () => {
       const isOpen = header.classList.contains("open");
+
       if (isOpen) {
         header.classList.remove("open");
         body.style.maxHeight = null;
       } else {
         header.classList.add("open");
-        body.style.maxHeight = body.scrollHeight + "px";
+
+        // Force smooth expansion even when empty
+        requestAnimationFrame(() => {
+          body.style.maxHeight = body.scrollHeight + "px";
+        });
       }
     };
   });
 }
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
 
 function bindInput(id, obj, field, onChange, state) {
   const el = document.getElementById(id);
@@ -75,4 +89,3 @@ function bindSelect(id, obj, field, onChange, state) {
     onChange(state);
   };
 }
-
