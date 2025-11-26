@@ -1,35 +1,46 @@
-// main.js — Main entry point for Trading SOP Journal V1.1
+//
+// MAIN INITIALIZER — GLOBAL NAMESPACE VERSION
+// This replaces all ES module imports and
+// makes the app fully compatible with GitHub Pages.
+//
 
-import { loadState, saveState, resetState } from "./storage.js";
-import { initAccordion } from "./ui-accordion.js";
-import { initModule1 } from "./module1.js";
-import { initModule2 } from "./module2.js";
+window.App = {
+    init() {
+        console.log("🔥 Trading SOP Journal — Global Init Running");
 
-let state = loadState();
+        // Accordion UI
+        if (window.UIAccordion && typeof UIAccordion.init === "function") {
+            UIAccordion.init();
+        }
 
-document.addEventListener("DOMContentLoaded", () => {
-  initAccordion(); // enable all accordions on page
+        // Storage system
+        if (window.StorageManager && typeof StorageManager.loadAll === "function") {
+            StorageManager.loadAll();
+        }
 
-  // Initialize module UIs
-  initModule1(state, onStateChange);
-  initModule2(state, onStateChange);
+        // Modules (M1–M4)
+        if (window.Module1 && typeof Module1.init === "function") Module1.init();
+        if (window.Module2 && typeof Module2.init === "function") Module2.init();
+        if (window.Module3 && typeof Module3.init === "function") Module3.init();
+        if (window.Module4 && typeof Module4.init === "function") Module4.init();
 
-  // Reset Day button
-  const resetBtn = document.getElementById("resetDayBtn");
-  if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
-      if (confirm("Reset Day (Module 1 + Module 2)?")) {
-        state = resetState();
+        // Components
+        if (window.ScenarioEngine && typeof ScenarioEngine.init === "function")
+            ScenarioEngine.init();
 
-        initModule1(state, onStateChange);
-        initModule2(state, onStateChange);
-      }
-    });
-  }
+        if (window.SurgeWatcher && typeof SurgeWatcher.init === "function")
+            SurgeWatcher.init();
+
+        if (window.AdaptationEngine && typeof AdaptationEngine.init === "function")
+            AdaptationEngine.init();
+
+        if (window.WatchEntries && typeof WatchEntries.init === "function")
+            WatchEntries.init();
+
+        console.log("🔥 ALL SYSTEMS LOADED SUCCESSFULLY");
+    }
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+    window.App.init();
 });
-
-function onStateChange(newState) {
-  state = newState;
-  saveState(newState);
-}
-
