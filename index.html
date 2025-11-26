@@ -2,213 +2,268 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trading SOP Journal — Build 008</title>
+  <title>Trading SOP Journal — V1.1 UI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
-  
 </head>
 <body>
-
-  <div class="container">
-    <div class="top-bar">
+  <div class="app">
+    <header class="top-bar">
       <div>
-        <h1 style="font-size: 1.4rem; margin-bottom: 4px;">Trading SOP Journal — Build 008</h1>
-        <p class="small-text">
-          M1 Scenarios • M2 Watching + Surges • Adaptation Windows • Session Energy &amp; Market Type ✓ • Persistence + Reset Day wired
+        <h1>Trading SOP Journal — Build 008 / V1.1</h1>
+        <p class="top-subtitle">
+          M1 Scenarios • M2 Watching + Surges • Adaptation Windows • Session Energy &amp; Market Type ✓ • Reset Day wired
         </p>
       </div>
-      <div class="top-bar-right">
-        <span id="statusText" class="small-text"></span>
-        <button id="resetDayBtn" class="reset-btn">Reset Day (M1 + M2)</button>
+      <div class="top-actions">
+        <span id="statusText" class="status-text"></span>
+        <button id="resetDayBtn" class="btn-pill btn-danger">Reset Day (M1 + M2)</button>
       </div>
-    </div>
+    </header>
 
-    <!-- MODULE 1 -->
-    <div class="accordion-item" id="module1">
-      <div class="accordion-header">
-        <span>Module 1 — Pre-Market</span>
-        <span>▼</span>
-      </div>
-      <div class="accordion-content">
-        <!-- Levels Marked -->
-        <label>Levels Marked</label>
-        <div class="checkbox-row">
-          <input type="checkbox" id="levels_marked" />
-          <label for="levels_marked" style="margin: 0;">All required levels marked</label>
-        </div>
-        <label>Observation</label>
-        <textarea id="levels_marked_obs" placeholder="Notes about marked levels, key zones, liquidity pools…"></textarea>
-        <label>Tags (comma separated)</label>
-        <input id="levels_marked_tags" type="text" placeholder="e.g. HTF level, Asia high, PD array…" />
+    <main class="modules">
 
-        <!-- News Checked -->
-        <label>News Checked</label>
-        <div class="checkbox-row">
-          <input type="checkbox" id="news_checked" />
-          <label for="news_checked" style="margin: 0;">News checked</label>
-        </div>
-        <label>Observation</label>
-        <textarea id="news_checked_obs" placeholder="Key events, risk windows, what matters today…"></textarea>
-        <label>Tags (comma separated)</label>
-        <input id="news_checked_tags" type="text" placeholder="e.g. high-impact, medium, FOMC, CPI…" />
+      <!-- MODULE 1 -->
+      <section class="accordion-item open" id="module1">
+        <button class="accordion-header" type="button">
+          <span>Module 1 — Pre-Market</span>
+          <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-content">
 
-        <!-- HTF Check -->
-        <label>HTF Check</label>
-        <div class="checkbox-row">
-          <input type="checkbox" id="htf_checked" />
-          <label for="htf_checked" style="margin: 0;">HTF bias checked</label>
-        </div>
-        <label>Observation</label>
-        <textarea id="htf_obs" placeholder="HTF structure, bias, major PD arrays…"></textarea>
-        <label>Tags (comma separated)</label>
-        <input id="htf_tags" type="text" placeholder="e.g. bullish, bearish, premium, discount…" />
+          <!-- Levels Marked -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Levels Marked</h2>
+            </div>
+            <div class="panel-body">
+              <label class="field-label">
+                <input type="checkbox" id="levelsMarkedCheckbox" />
+                <span>All required levels marked</span>
+              </label>
 
-        <!-- LTF Alignment -->
-        <label>LTF Alignment</label>
-        <select id="ltf_alignment">
-          <option value="">– select –</option>
-          <option value="yes">Yes (Aligned)</option>
-          <option value="no">No (Not aligned)</option>
-        </select>
-        <label>Observation</label>
-        <textarea id="ltf_obs" placeholder="How 1m / 5m are lining up with HTF idea…"></textarea>
-        <label>Tags (comma separated)</label>
-        <input id="ltf_tags" type="text" placeholder="e.g. sweep, displacement, consolidation…" />
+              <label class="field-label">Observation</label>
+              <textarea id="levelsMarkedObs" placeholder="Notes about HTF/LTF levels, liquidity pools, session highs/lows…"></textarea>
 
-        <!-- IF–THEN Scenarios -->
-        <label>IF–THEN Scenarios</label>
-        <div class="scenario-header">
-          <span style="font-size:0.8rem; font-weight:600;">Scenarios List</span>
-          <button type="button" id="addScenarioBtn" class="scenario-add-btn">+ Add Scenario</button>
-        </div>
-        <p class="helper-text">
-          Each scenario gets an ID (S1, S2, ...) and contains: Title, IF, THEN.
-          Scenarios are saved locally and cleared with "Reset Day".
-        </p>
-        <div id="scenarioList"></div>
-
-        <!-- NY Opening Impulse Expectation -->
-        <label>NY Opening Impulse Expectation</label>
-        <textarea id="ny_impulse" placeholder="Expected NY impulse: direction, aggression, where it should originate…"></textarea>
-
-        <!-- Emotion Coming Into Session -->
-        <label>Emotion Coming Into Session</label>
-        <select id="session_emotion">
-          <option value="">– select –</option>
-          <option value="calm">Calm</option>
-          <option value="focused">Focused</option>
-          <option value="hesitant">Hesitant</option>
-          <option value="anxious">Anxious</option>
-          <option value="impatient">Impatient</option>
-          <option value="overconfident">Overconfident</option>
-        </select>
-
-      </div>
-    </div>
-
-
-    <!-- MODULE 2 -->
-    <div class="accordion-item" id="module2">
-      <div class="accordion-header">
-        <span>Module 2 — During Session (Global)</span>
-        <span>▼</span>
-      </div>
-      <div class="accordion-content">
-
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Watching Price (Flat State)</h3>
-        <p class="small-text" style="margin-bottom: 6px;">
-          Log moments where you're flat but actively watching price, including your emotion and how the tape/structure looks.
-        </p>
-
-        <div class="section-card">
-          <div class="section-header-row">
-            <span class="section-title">Watching entries</span>
-            <button type="button" id="addWatchBtn" class="watch-add-btn">+ Add Watching Entry</button>
+              <label class="field-label">Tags</label>
+              <input id="levelsMarkedTags" type="text" placeholder="e.g. HTF level, Asia high, weekly open" />
+            </div>
           </div>
 
-          <div id="watchList"></div>
-        </div>
+          <!-- News Checked -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>News Checked</h2>
+            </div>
+            <div class="panel-body">
+              <label class="field-label">
+                <input type="checkbox" id="newsCheckedCheckbox" />
+                <span>News checked</span>
+              </label>
 
-        <hr />
+              <label class="field-label">Observation</label>
+              <textarea id="newsCheckedObs" placeholder="Key events, risk windows, what can break the bias…"></textarea>
 
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Emotional Surges</h3>
-        <p class="small-text" style="margin-bottom: 6px;">
-          Log spikes in emotion during the session.
-        </p>
-
-        <div class="section-card">
-          <div class="section-header-row">
-            <span class="section-title">Surge entries</span>
-            <button type="button" id="addSurgeBtn" class="surge-add-btn">+ Add Emotional Surge</button>
+              <label class="field-label">Tags</label>
+              <input id="newsCheckedTags" type="text" placeholder="e.g. high-impact, CPI, FOMC, speaks" />
+            </div>
           </div>
 
-          <div id="surgeList"></div>
-        </div>
+          <!-- HTF Check -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>HTF Check</h2>
+            </div>
+            <div class="panel-body">
+              <label class="field-label">
+                <input type="checkbox" id="htfCheckedCheckbox" />
+                <span>HTF bias checked</span>
+              </label>
 
-        <hr />
+              <label class="field-label">Observation</label>
+              <textarea id="htfObs" placeholder="Bias, structure, PD arrays, HTF level interactions…"></textarea>
 
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Adaptation Windows</h3>
-        <p class="small-text" style="margin-bottom: 6px;">
-          Capture time windows where the market changed and you adapted.
-        </p>
-
-        <div class="section-card">
-          <div class="section-header-row">
-            <span class="section-title">Adaptation entries</span>
-            <button type="button" id="addAdaptBtn" class="adapt-add-btn">+ Add Adaptation</button>
+              <label class="field-label">Tags</label>
+              <input id="htfTags" type="text" placeholder="e.g. bullish, bearish, premium, discount" />
+            </div>
           </div>
 
-          <div id="adaptList"></div>
-        </div>
+          <!-- LTF Alignment -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>LTF Alignment</h2>
+            </div>
+            <div class="panel-body">
+              <label class="field-label">Alignment</label>
+              <select id="ltfAlignment">
+                <option value="">– select –</option>
+                <option value="yes">Yes (Aligned)</option>
+                <option value="no">No (Not aligned)</option>
+              </select>
 
-        <hr />
+              <label class="field-label">Observation</label>
+              <textarea id="ltfObs" placeholder="How 1m / 5m structure is lining up with the plan…"></textarea>
 
-        <h3 style="font-size:0.85rem; margin: 0 0 8px 0;">Session Energy & Market Behavior</h3>
-        <p class="small-text" style="margin-bottom: 6px;">
-          Snapshot of how you and the market felt during the core session.
-        </p>
-
-        <div class="energy-grid">
-          <div>
-            <label>Trader Energy (0–10)</label>
-            <input type="number" id="trader_energy" min="0" max="10" step="1" placeholder="0–10" />
+              <label class="field-label">Tags</label>
+              <input id="ltfTags" type="text" placeholder="e.g. sweep, displacement, grind, chop" />
+            </div>
           </div>
-          <div>
-            <label>Market Energy (0–10)</label>
-            <input type="number" id="market_energy" min="0" max="10" step="1" placeholder="0–10" />
+
+          <!-- IF–THEN Scenarios -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>IF–THEN Scenarios</h2>
+              <div class="panel-header-actions">
+                <button type="button" id="addScenarioBtn" class="btn-pill btn-primary">+ Add Scenario</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <p classname="helper-text">
+                Each scenario has Title, IF, THEN. Scenarios are saved locally and cleared with Reset Day.
+              </p>
+              <div id="scenarioList"></div>
+            </div>
+          </div>
+
+          <!-- NY Opening Impulse -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>NY Opening Impulse Expectation</h2>
+            </div>
+            <div class="panel-body">
+              <textarea id="nyImpulse" placeholder="Expected NY impulse: direction, aggression, where it should originate, where it should terminate…"></textarea>
+            </div>
+          </div>
+
+          <!-- Emotion Coming Into Session -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Emotion Coming Into Session</h2>
+            </div>
+            <div class="panel-body">
+              <label class="field-label">State</label>
+              <select id="sessionEmotion">
+                <option value="">– select –</option>
+                <option value="calm">Calm</option>
+                <option value="focused">Focused</option>
+                <option value="hesitant">Hesitant</option>
+                <option value="anxious">Anxious</option>
+                <option value="impatient">Impatient</option>
+                <option value="overconfident">Overconfident</option>
+              </select>
+            </div>
           </div>
         </div>
+      </section>
 
-        <label>Market Type</label>
-        <select id="market_type">
-          <option value="">– select –</option>
-          <option value="trend">Trend</option>
-          <option value="range">Range</option>
-          <option value="chop">Chop / messy</option>
-          <option value="expansion">Expansion</option>
-          <option value="contraction">Contraction</option>
-        </select>
+      <!-- MODULE 2 -->
+      <section class="accordion-item" id="module2">
+        <button class="accordion-header" type="button">
+          <span>Module 2 — During Session (Global)</span>
+          <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-content">
 
-        <label>Notes on Tempo / Behavior</label>
-        <textarea id="session_notes" placeholder="Tape speed, aggression, rotations, who was in control…"></textarea>
+          <!-- Watching Price Moments -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Watching Price Moments</h2>
+              <div class="panel-header-actions">
+                <button type="button" id="addWatchBtn" class="btn-pill btn-primary">+ Add Watching Entry</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="watchList"></div>
+            </div>
+          </div>
 
-      </div>
-    </div>
+          <!-- Emotional Surges -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Emotional Surges</h2>
+              <div class="panel-header-actions">
+                <button type="button" id="addSurgeBtn" class="btn-pill btn-warning">+ Add Emotional Surge</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="surgeList"></div>
+            </div>
+          </div>
 
-    <!-- Future modules placeholder -->
-    <div class="accordion-item" id="module3">
-      <div class="accordion-header">
-        <span>Module 3 — Trade Execution (placeholder)</span>
-        <span>▼</span>
-      </div>
-      <div class="accordion-content">
-        <p class="small-text">
-          Module 3 will handle actual trades, entries, exits, re-entries, and add-ons.
-          For now, focus on M1 scenarios + M2 watching / emotional work.
-        </p>
-      </div>
-    </div>
+          <!-- Adaptation Windows -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Adaptation Windows</h2>
+              <div class="panel-header-actions">
+                <button type="button" id="addAdaptBtn" class="btn-pill btn-purple">+ Add Adaptation</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="adaptList"></div>
+            </div>
+          </div>
 
+          <!-- Session Energy & Market Behavior -->
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Session Energy &amp; Market Behavior</h2>
+            </div>
+            <div class="panel-body">
+              <div class="grid-2">
+                <div>
+                  <label class="field-label">Trader Energy (0–10)</label>
+                  <input id="traderEnergy" type="number" min="0" max="10" step="1" />
+                </div>
+                <div>
+                  <label class="field-label">Market Energy (0–10)</label>
+                  <input id="marketEnergy" type="number" min="0" max="10" step="1" />
+                </div>
+              </div>
+
+              <label class="field-label">Market Type</label>
+              <select id="marketType">
+                <option value="">– select –</option>
+                <option value="trend">Trend</option>
+                <option value="range">Range</option>
+                <option value="chop">Chop / Messy</option>
+                <option value="expansion">Expansion</option>
+                <option value="contraction">Contraction</option>
+              </select>
+
+              <label class="field-label">Notes on Tempo / Behavior</label>
+              <textarea id="sessionNotes" placeholder="Tape speed, who was in control, fake pumps, grind up/down, etc."></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 3 (placeholder for now) -->
+      <section class="accordion-item" id="module3">
+        <button class="accordion-header" type="button">
+          <span>Module 3 — Trade Idea & Execution (placeholder)</span>
+          <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-content">
+          <p class="placeholder-text">
+            Module 3 will handle Trade Ideas, At-Signal checks, Executed / Missed trades, re-entries and add-ons.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 4 (placeholder) -->
+      <section class="accordion-item" id="module4">
+        <button class="accordion-header" type="button">
+          <span>Module 4 — Post-Market Review (placeholder)</span>
+          <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-content">
+          <p class="placeholder-text">
+            Module 4 will handle daily summary, emotional evaluation, and tomorrow’s adjustments.
+          </p>
+        </div>
+      </section>
+
+    </main>
   </div>
 
   <script src="script.js"></script>
