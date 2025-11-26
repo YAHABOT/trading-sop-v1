@@ -1218,3 +1218,67 @@ Fix all known issues in the new clean architecture
 Re-import current Build-002 UI into the refactored structure
 
 Continue future builds safely without risk of cross-breakage
+
+## [2025-11-26 — Build 003 Refactor Plan Approved + Pre-Refactor Audit]
+
+### ⚡ Executive Summary
+We completed a full architectural review of the Build 002 front-end and confirmed
+that the current monolithic structure (single giant index.html + single giant
+script.js) is no longer sustainable for V1.1+ development.
+
+A formal refactor plan was designed and approved to transform the project into a
+modular ES-module architecture with clean separation of concerns.
+
+This ensures:
+- Higher reliability
+- Faster iteration
+- Smaller per-build file drops
+- Zero UI crashes during code delivery
+- A future-proof foundation for Module 3 and 4 complexity
+
+### 🔧 Refactor Plan (Build 003)
+We will migrate to a clean file structure:
+
+css/
+  base.css
+  components.css
+  layout.css
+  modules.css
+
+js/
+  main.js
+  storage.js
+  ui-accordion.js
+  module1.js
+  module2.js
+  module3.js
+  module4.js
+  components/
+    scenarios.js
+    watchEntries.js
+    surges.js
+    adaptations.js
+
+### 🎯 Goals of Build 003 Refactor
+1. Split logic into ES modules (one module per SOP module).
+2. Isolate reusable components (scenarios, watching entries, surges, adaptations).
+3. Move persistence into storage.js.
+4. Move accordion logic into ui-accordion.js.
+5. Keep index.html purely structural with minimal markup.
+6. Re-import the existing Build 002 UI into the new structure.
+7. Ensure future builds modify only one or two files at a time.
+
+### ⚠️ Known Issues to Be Solved in the Refactor
+- Tag fields not formatting correctly (comma + space).
+- Time fields accepting only one character at a time.
+- Scenario title input bug (1-character input).
+- Adaptation Window incorrectly containing “end time”.
+- Minor card spacing & alignment mismatches.
+- White border artifacts in Module 2 panels.
+
+These will be solved cleanly after splitting the code into modules.
+
+### 📌 Status
+Build 003: **REFRACTOR PLAN APPROVED**
+Execution begins next build.
+
