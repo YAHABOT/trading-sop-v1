@@ -1,1 +1,47 @@
+/* ===========================
+   LAYOUT
+   =========================== */
+
+body {
+  padding: 20px 12px 32px;
+}
+
+/* If you have a main wrapper/container, this will help center it. */
+.main-wrapper,
+.app-shell,
+.app-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Space between modules */
+
+.accordion-item {
+  margin-bottom: 20px;
+}
+
+/* Inner spacing for accordion content */
+
+.accordion-content {
+  padding: 16px 16px 18px;
+}
+
+/* Vertical spacing inside module sections */
+
+.m1-section + .m1-section,
+.m2-section + .m2-section {
+  margin-top: 10px;
+}
+
+/* Session energy numeric inputs side-by-side if wrapped in a flex row later */
+
+.m2-energy-row {
+  display: flex;
+  gap: 10px;
+}
+
+.m2-energy-row .input-field {
+  max-width: 120px;
+}
+
 
