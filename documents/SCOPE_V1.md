@@ -1,136 +1,168 @@
-# SCOPE V1.1 — Full Trading Journal System Specification
+# SCOPE V1.1 — Trading SOP Journal (Rewritten & Final)
+:contentReference[oaicite:0]{index=0}
 
-This document defines the functional scope of the trading journal as of Version 1.1,
-including module structure, data flow, emotional logic, and execution behavior rules.
+This is the complete functional scope of the Trading SOP Journal V1.1 system.
+It replaces all prior versions and defines the final architecture across four
+modules, emotional engines, behavioral logic, and cross-module data flow.
 
-The system consists of FOUR HORIZONTAL MODULES:
-
----------------------------------------------------------------------
+=====================================================================
 MODULE 1 — PRE-MARKET (Preparation Layer)
----------------------------------------------------------------------
+=====================================================================
+
 1. Levels Marked  
    - Checkbox  
-   - Observation (text)  
-   - Tag support (preset + custom)
+   - Observation (textarea)  
+   - Tag engine (preset + custom)
 
 2. News Checked  
    - Checkbox  
    - Observation  
-   - Tag support
+   - Tag engine
 
 3. HTF Check  
    - Checkbox  
    - Observation  
-   - Tag support
+   - Tag engine
 
 4. LTF Alignment  
    - Yes/No  
    - Observation  
-   - Tag support
+   - Tag engine
 
 5. IF–THEN Scenarios  
    - Multi-scenario engine  
-   - Each scenario contains: ID, IF block, THEN block, title
+   - Each scenario has:
+     - ID (S1, S2…)  
+     - Title  
+     - IF block  
+     - THEN block  
 
 6. NY Opening Impulse Expectation  
 7. Emotions Coming Into Session
 
-This module feeds directly into Module 3 via scenario + emotion inheritance.
+Module 1 feeds Module 3 by providing:
+- Scenario assignments  
+- Emotional baseline  
+- Pre-market directional expectations  
 
----------------------------------------------------------------------
-MODULE 2 — DURING SESSION (State Layer)
----------------------------------------------------------------------
+=====================================================================
+MODULE 2 — DURING SESSION (Global State Layer)
+=====================================================================
+
 1. Watching Price  
+   - Time  
+   - Emotion  
+   - Interpretation tags (preset + custom)  
+   - Notes  
+
 2. Emotional Surges  
+   - Time  
+   - Emotion spike type  
+   - Trigger  
+   - Response notes  
+
 3. Market Behavior Notes  
+   - Liquidity observations  
+   - Displacement strength  
+   - Volatility regime  
+   - Notes + tags  
+
 4. Energy / Focus Checks  
+   - Trader energy (0–10)  
+   - Market energy (0–10)  
+   - Market type  
+   - Notes  
+
 5. Adaptation Windows  
+   - Start time  
+   - “What changed?” tags  
+   - Market shift notes  
+   - Adaptation response  
+   - (End time removed per V1.1 correction)
+
 6. Market State Snapshots  
+   - Tempo / behavior notes  
+   - Structured dropdowns  
 
-All emotional and behavioral data flows into Module 4’s Emotional Chain Engine.
+Module 2 feeds Module 4 via the Emotional Chain Engine.
 
----------------------------------------------------------------------
-MODULE 3 — TRADE IDEA + TRADE LOGIC (Execution Layer)
----------------------------------------------------------------------
+=====================================================================
+MODULE 3 — TRADE IDEA + EXECUTION ENGINE
+=====================================================================
 
 ### A) Start New Trade Idea → Pre-Trade Baseline
 - Emotion  
-- Interpretation Tags  
-- Confluence Tags  
+- Interpretation tags  
+- Confluence tags  
 - Notes  
 - Assigned IF–THEN Scenario  
-- Status: Active / Abandoned / Converted  
+- Idea status: Active / Abandoned  
 
 ### B) At The Signal
 - Emotion  
-- Interpretation Tags  
-- Confluence Tags  
+- Interpretation tags  
+- Confluence tags  
 - Entry Model  
-- IF–THEN Suggested (auto)  
-- Decision: Execute or Miss
+- IF–THEN auto-suggestion  
+- Decision: Execute or Miss  
 
----------------------------
-EXECUTED TRADE (Ordered)
----------------------------
+=========================
+EXECUTED TRADE — V1.1 ORDER
+=========================
+
 1. Entry Details  
-   - Entry price  
-   - Stop loss  
+   - Entry  
+   - Stop Loss  
    - RR expectation  
 
-2. Execution Behavior Tags (multi-select + custom)
+2. Execution Behavior Tags  
 
-3. IF–THEN Consistency
+3. IF–THEN Consistency  
 
-4. Emotion During Trade
+4. Emotion During Trade  
 
 5. Exit Logic  
    - Planned exit?  
-   - Followed plan?  
-   - Deviation reason  
-   - Notes
+   - Followed?  
+   - Reason if deviated  
 
-6. Re-entry Logic (ONLY if exit deviated)  
-   - Emotion  
-   - Reason  
-   - Confluence  
-   - Entry  
-   - SL  
-   - RR  
-   - Target / Same as Initial  
-   - Missed R  
-   - Notes
+6. Re-Entry Logic  
+   - ONLY if exit deviated  
+   - Includes emotion, confluence, RR, target, missed R  
 
-7. Add-on Logic (multiple allowed)  
+7. Add-On Logic (multi-add-on)  
    - Same fields as re-entry  
-   - Missed R included
+   - Missed R included  
 
----------------------------
+=========================
 MISSED TRADE
----------------------------
+=========================
+
 - Emotion  
-- Interpretation Tags  
+- Interpretation  
 - Reasons  
-- Bad behavior loops  
-- Suggested IF–THEN Scenario  
+- Behavior loops  
+- IF–THEN auto-suggest  
 - Missed R  
 - Notes  
 
----------------------------
+=========================
 ABANDONED TRADE IDEA
----------------------------
-- Auto-status  
+=========================
+
 - Emotion  
 - Interpretation  
 - Confluence  
 - Notes  
 
----------------------------------------------------------------------
+=====================================================================
 MODULE 4 — POST-MARKET (Review Layer)
----------------------------------------------------------------------
+=====================================================================
+
 1. Total Realized R  
-2. Total Missed R (includes missed trades, re-entry, and add-ons)  
+2. Total Missed R  
 3. Scenario Resolution  
-4. Rule Adherence Review  
+4. Rule Adherence  
 5. Trade Logic Validation  
 6. Emotional Chain Reconstruction  
 7. What Went Well  
@@ -139,12 +171,17 @@ MODULE 4 — POST-MARKET (Review Layer)
 10. Tomorrow’s Adjustments  
 11. Daily Grade  
 
----------------------------------------------------------------------
-DATA FLOW (Cross-Module)
----------------------------------------------------------------------
-- Module 1 IF–THEN → Module 3 Pre-Trade Baseline  
-- Module 2 emotions + market state → Module 4 Emotional Chain  
-- Pre-Trade → At The Signal → Execute/Miss branching  
-- Executed/Missed → Module 4 performance metrics  
-- Abandoned Ideas → Module 4 Psychological Analysis  
-- Missed R fields → Module 4 Missed Opportunity Summary  
+=====================================================================
+DATA FLOW
+=====================================================================
+
+- Module 1 → Module 3  
+  (Scenario assignments + emotional baseline)  
+
+- Module 2 → Module 4  
+  (Emotional chain + market state)  
+
+- Module 3 → Module 4  
+  (Executed vs missed vs abandoned logic)  
+
+This completes the long-term, stable V1.1 system scope.
