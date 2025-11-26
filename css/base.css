@@ -1,1 +1,225 @@
+/* ===========================
+   BASE STYLES / THEME TOKENS
+   =========================== */
+
+:root {
+  /* Core colors */
+  --bg-main: #020617;         /* dark navy background */
+  --bg-panel: #020617;        /* base */
+  --bg-card: #020617;
+  --bg-card-elevated: #0b1220; /* lighter cards */
+  --bg-input: #020617;
+  --bg-input-alt: #020617;
+
+  --border-subtle: #1e293b;
+  --border-strong: #334155;
+
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-soft: #6b7280;
+  --text-accent: #38bdf8;
+
+  --accent-blue: #3b82f6;
+  --accent-blue-soft: rgba(59, 130, 246, 0.15);
+  --accent-orange: #f97316;
+  --accent-purple: #a855f7;
+  --accent-red: #ef4444;
+  --accent-green: #22c55e;
+
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
+
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Inter", "Segoe UI", sans-serif;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+}
+
+/* ===========================
+   RESET
+   =========================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-main);
+  background-color: var(--bg-main);
+}
+
+/* ===========================
+   TYPOGRAPHY
+   =========================== */
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+p {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--text-muted);
+}
+
+/* ===========================
+   FORMS
+   =========================== */
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.input-field,
+select,
+textarea {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-input);
+  color: var(--text-main);
+  padding: 8px 10px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.input-field::placeholder,
+textarea::placeholder {
+  color: var(--text-soft);
+}
+
+.input-field:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+  background-color: #020617;
+}
+
+textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+/* Labels */
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+}
+
+/* ===========================
+   BUTTONS
+   =========================== */
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+.btn-small,
+.btn-xsmall {
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.btn-small {
+  padding: 6px 12px;
+}
+
+/* Variants (use with .btn-small / .btn-xsmall) */
+
+.btn-small.primary,
+.btn-xsmall.primary {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  border-color: #1d4ed8;
+  color: white;
+}
+
+.btn-small.secondary,
+.btn-xsmall.secondary {
+  background-color: rgba(148, 163, 184, 0.16);
+  border-color: #64748b;
+  color: var(--text-main);
+}
+
+.btn-small.danger,
+.btn-xsmall.danger {
+  background-color: rgba(239, 68, 68, 0.18);
+  border-color: var(--accent-red);
+  color: #fecaca;
+}
+
+.btn-small.orange,
+.btn-xsmall.orange {
+  background-color: rgba(249, 115, 22, 0.18);
+  border-color: var(--accent-orange);
+  color: #fed7aa;
+}
+
+.btn-small.purple,
+.btn-xsmall.purple {
+  background-color: rgba(168, 85, 247, 0.18);
+  border-color: var(--accent-purple);
+  color: #e9d5ff;
+}
+
+/* Pill style from older builds (kept for compatibility) */
+
+.btn-pill {
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  border: 1px solid var(--accent-blue);
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #e5e7eb;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #e5e7eb;
+}
+
+/* Disabled */
+
+button:disabled,
+button[disabled] {
+  opacity: 0.6;
+  cursor: default;
+}
 
