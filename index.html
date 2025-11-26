@@ -24,137 +24,170 @@
     <main class="modules">
 
       <!-- MODULE 1 -->
-      <section class="accordion-item open" id="module1">
-        <button class="accordion-header" type="button">
-          <span>Module 1 — Pre-Market</span>
-          <span class="chevron">▾</span>
-        </button>
-        <div class="accordion-content">
+     <section class="accordion-item open" id="module1">
+  <button class="accordion-header" type="button" data-accordion>
+    <span>Module 1 — Pre-Market</span>
+    <span class="chevron">▾</span>
+  </button>
 
-          <!-- Levels Marked -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Levels Marked</h2>
-            </div>
-            <div class="panel-body">
-              <label class="field-label">
-                <input type="checkbox" id="levelsMarkedCheckbox" />
-                <span>All required levels marked</span>
-              </label>
+  <div class="accordion-content">
 
-              <label class="field-label">Observation</label>
-              <textarea id="levelsMarkedObs" placeholder="Notes about HTF/LTF levels, liquidity pools, session highs/lows…"></textarea>
+    <!-- SECTION: Levels Marked -->
+    <div class="m1-section">
+      <div class="m1-section-header" data-accordion>
+        <span>Levels Marked</span>
+        <span class="chevron">▾</span>
+      </div>
 
-              <label class="field-label">Tags</label>
-              <input id="levelsMarkedTags" type="text" placeholder="e.g. HTF level, Asia high, weekly open" />
-            </div>
-          </div>
+      <div class="m1-section-body">
 
-          <!-- News Checked -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>News Checked</h2>
-            </div>
-            <div class="panel-body">
-              <label class="field-label">
-                <input type="checkbox" id="newsCheckedCheckbox" />
-                <span>News checked</span>
-              </label>
+        <label class="field-label">
+          <input type="checkbox" id="m1-levels-checked" />
+          Levels fully marked
+        </label>
 
-              <label class="field-label">Observation</label>
-              <textarea id="newsCheckedObs" placeholder="Key events, risk windows, what can break the bias…"></textarea>
+        <label class="field-label">Observation</label>
+        <textarea id="m1-levels-observation" class="input-textarea"
+          placeholder="Notes about HTF/LTF levels…"></textarea>
 
-              <label class="field-label">Tags</label>
-              <input id="newsCheckedTags" type="text" placeholder="e.g. high-impact, CPI, FOMC, speaks" />
-            </div>
-          </div>
+        <label class="field-label">Tags</label>
+        <input id="m1-levels-tags" class="input-field"
+          placeholder="HTF level, Asia high, weekly open…" />
 
-          <!-- HTF Check -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>HTF Check</h2>
-            </div>
-            <div class="panel-body">
-              <label class="field-label">
-                <input type="checkbox" id="htfCheckedCheckbox" />
-                <span>HTF bias checked</span>
-              </label>
+      </div>
+    </div>
 
-              <label class="field-label">Observation</label>
-              <textarea id="htfObs" placeholder="Bias, structure, PD arrays, HTF level interactions…"></textarea>
 
-              <label class="field-label">Tags</label>
-              <input id="htfTags" type="text" placeholder="e.g. bullish, bearish, premium, discount" />
-            </div>
-          </div>
+    <!-- SECTION: News Checked -->
+    <div class="m1-section">
+      <div class="m1-section-header" data-accordion>
+        <span>News Checked</span>
+        <span class="chevron">▾</span>
+      </div>
 
-          <!-- LTF Alignment -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>LTF Alignment</h2>
-            </div>
-            <div class="panel-body">
-              <label class="field-label">Alignment</label>
-              <select id="ltfAlignment">
-                <option value="">– select –</option>
-                <option value="yes">Yes (Aligned)</option>
-                <option value="no">No (Not aligned)</option>
-              </select>
+      <div class="m1-section-body">
 
-              <label class="field-label">Observation</label>
-              <textarea id="ltfObs" placeholder="How 1m / 5m structure is lining up with the plan…"></textarea>
+        <label class="field-label">
+          <input type="checkbox" id="m1-news-checked" />
+          News checked
+        </label>
 
-              <label class="field-label">Tags</label>
-              <input id="ltfTags" type="text" placeholder="e.g. sweep, displacement, grind, chop" />
-            </div>
-          </div>
+        <label class="field-label">Observation</label>
+        <textarea id="m1-news-observation" class="input-textarea"
+          placeholder="CPI, FOMC, high impact windows…"></textarea>
 
-          <!-- IF–THEN Scenarios -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>IF–THEN Scenarios</h2>
-              <div class="panel-header-actions">
-                <button type="button" id="addScenarioBtn" class="btn-pill btn-primary">+ Add Scenario</button>
-              </div>
-            </div>
-            <div class="panel-body">
-              <p classname="helper-text">
-                Each scenario has Title, IF, THEN. Scenarios are saved locally and cleared with Reset Day.
-              </p>
-              <div id="scenarioList"></div>
-            </div>
-          </div>
+        <label class="field-label">Tags</label>
+        <input id="m1-news-tags" class="input-field"
+          placeholder="high-impact, medium-impact, Powell…" />
 
-          <!-- NY Opening Impulse -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>NY Opening Impulse Expectation</h2>
-            </div>
-            <div class="panel-body">
-              <textarea id="nyImpulse" placeholder="Expected NY impulse: direction, aggression, where it should originate, where it should terminate…"></textarea>
-            </div>
-          </div>
+      </div>
+    </div>
 
-          <!-- Emotion Coming Into Session -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Emotion Coming Into Session</h2>
-            </div>
-            <div class="panel-body">
-              <label class="field-label">State</label>
-              <select id="sessionEmotion">
-                <option value="">– select –</option>
-                <option value="calm">Calm</option>
-                <option value="focused">Focused</option>
-                <option value="hesitant">Hesitant</option>
-                <option value="anxious">Anxious</option>
-                <option value="impatient">Impatient</option>
-                <option value="overconfident">Overconfident</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
+
+    <!-- SECTION: HTF Check -->
+    <div class="m1-section">
+      <div class="m1-section-header" data-accordion>
+        <span>HTF Check</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="m1-section-body">
+
+        <label class="field-label">
+          <input type="checkbox" id="m1-htf-checked" />
+          HTF bias checked
+        </label>
+
+        <label class="field-label">Observation</label>
+        <textarea id="m1-htf-observation" class="input-textarea"
+          placeholder="HTF structure, PD arrays, premium/discount…"></textarea>
+
+        <label class="field-label">Tags</label>
+        <input id="m1-htf-tags" class="input-field"
+          placeholder="bullish, bearish, displacement…" />
+
+      </div>
+    </div>
+
+
+    <!-- SECTION: LTF Alignment -->
+    <div class="m1-section">
+      <div class="m1-section-header" data-accordion>
+        <span>LTF Alignment</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="m1-section-body">
+
+        <label class="field-label">Alignment?</label>
+        <select id="m1-ltf-select" class="input-field">
+          <option value="">– select –</option>
+          <option value="yes">Yes (Aligned)</option>
+          <option value="no">No (Not aligned)</option>
+        </select>
+
+        <label class="field-label">Observation</label>
+        <textarea id="m1-ltf-observation" class="input-textarea"
+          placeholder="What 1m/5m is showing…"></textarea>
+
+        <label class="field-label">Tags</label>
+        <input id="m1-ltf-tags" class="input-field"
+          placeholder="sweep, FVG, grind, reversal…" />
+
+      </div>
+    </div>
+
+
+    <!-- SECTION: IF–THEN Scenarios -->
+    <div class="m1-section">
+      <div class="m1-section-header" data-accordion>
+        <span>IF–THEN Scenarios</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="m1-section-body">
+        <div id="m1-scenarios-container"></div>
+      </div>
+    </div>
+
+
+    <!-- SECTION: NY Opening Impulse -->
+    <div class="m1-section">
+      <div class="m1-section-header" data-accordion>
+        <span>NY Opening Impulse Expectation</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="m1-section-body">
+        <textarea id="m1-ny-impulse" class="input-textarea"
+          placeholder="Expected NY impulse: direction, aggression, origin, termination…"></textarea>
+      </div>
+    </div>
+
+
+    <!-- SECTION: Emotion Coming Into Session -->
+    <div class="m1-section">
+      <div class="m1-section-header" data-accordion>
+        <span>Emotion Coming Into Session</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="m1-section-body">
+        <select id="m1-emotion-coming-in" class="input-field">
+          <option value="">– select –</option>
+          <option value="calm">Calm</option>
+          <option value="focused">Focused</option>
+          <option value="hesitant">Hesitant</option>
+          <option value="anxious">Anxious</option>
+          <option value="impatient">Impatient</option>
+          <option value="overconfident">Overconfident</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 
       <!-- MODULE 2 -->
       <section class="accordion-item" id="module2">
