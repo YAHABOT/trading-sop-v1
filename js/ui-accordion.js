@@ -1,24 +1,20 @@
-// ui-accordion.js — handles all accordion open/close logic
+//
+// ACCORDION UI HANDLER (GLOBAL VERSION)
+//
 
-export function initAccordion() {
-  const triggers = document.querySelectorAll("[data-accordion]");
+window.UIAccordion = (function () {
+    function init() {
+        console.log("UIAccordion loaded");
 
-  triggers.forEach(trigger => {
-    trigger.addEventListener("click", () => {
-      const panel = trigger.nextElementSibling;
+        const headers = document.querySelectorAll("[data-accordion]");
 
-      const isOpen = trigger.classList.contains("open");
+        headers.forEach(header => {
+            header.addEventListener("click", () => {
+                const section = header.parentElement;
+                section.classList.toggle("open");
+            });
+        });
+    }
 
-      if (isOpen) {
-        // closing
-        trigger.classList.remove("open");
-        panel.style.maxHeight = null;
-      } else {
-        // opening
-        trigger.classList.add("open");
-        panel.style.maxHeight = panel.scrollHeight + "px";
-      }
-    });
-  });
-}
-
+    return { init };
+})();
