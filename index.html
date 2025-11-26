@@ -190,85 +190,90 @@
 
 
       <!-- MODULE 2 -->
-      <section class="accordion-item" id="module2">
-        <button class="accordion-header" type="button">
-          <span>Module 2 — During Session (Global)</span>
-          <span class="chevron">▾</span>
-        </button>
-        <div class="accordion-content">
+    <section class="accordion-item" id="module2">
+  <button class="accordion-header" type="button" data-accordion>
+    <span>Module 2 — During Session</span>
+    <span class="chevron">▾</span>
+  </button>
 
-          <!-- Watching Price Moments -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Watching Price Moments</h2>
-              <div class="panel-header-actions">
-                <button type="button" id="addWatchBtn" class="btn-pill btn-primary">+ Add Watching Entry</button>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div id="watchList"></div>
-            </div>
-          </div>
+  <div class="accordion-content">
 
-          <!-- Emotional Surges -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Emotional Surges</h2>
-              <div class="panel-header-actions">
-                <button type="button" id="addSurgeBtn" class="btn-pill btn-warning">+ Add Emotional Surge</button>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div id="surgeList"></div>
-            </div>
-          </div>
+    <!-- SECTION: Watching Price Entries -->
+    <div class="m2-section">
+      <div class="m2-section-header" data-accordion>
+        <span>Watching Price</span>
+        <span class="chevron">▾</span>
+      </div>
 
-          <!-- Adaptation Windows -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Adaptation Windows</h2>
-              <div class="panel-header-actions">
-                <button type="button" id="addAdaptBtn" class="btn-pill btn-purple">+ Add Adaptation</button>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div id="adaptList"></div>
-            </div>
-          </div>
+      <div class="m2-section-body">
+        <div id="m2-watching-container"></div>
+      </div>
+    </div>
 
-          <!-- Session Energy & Market Behavior -->
-          <div class="panel">
-            <div class="panel-header">
-              <h2>Session Energy &amp; Market Behavior</h2>
-            </div>
-            <div class="panel-body">
-              <div class="grid-2">
-                <div>
-                  <label class="field-label">Trader Energy (0–10)</label>
-                  <input id="traderEnergy" type="number" min="0" max="10" step="1" />
-                </div>
-                <div>
-                  <label class="field-label">Market Energy (0–10)</label>
-                  <input id="marketEnergy" type="number" min="0" max="10" step="1" />
-                </div>
-              </div>
 
-              <label class="field-label">Market Type</label>
-              <select id="marketType">
-                <option value="">– select –</option>
-                <option value="trend">Trend</option>
-                <option value="range">Range</option>
-                <option value="chop">Chop / Messy</option>
-                <option value="expansion">Expansion</option>
-                <option value="contraction">Contraction</option>
-              </select>
+    <!-- SECTION: Emotional Surges -->
+    <div class="m2-section">
+      <div class="m2-section-header" data-accordion>
+        <span>Emotional Surges</span>
+        <span class="chevron">▾</span>
+      </div>
 
-              <label class="field-label">Notes on Tempo / Behavior</label>
-              <textarea id="sessionNotes" placeholder="Tape speed, who was in control, fake pumps, grind up/down, etc."></textarea>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div class="m2-section-body">
+        <div id="m2-surges-container"></div>
+      </div>
+    </div>
+
+
+    <!-- SECTION: Adaptation Windows -->
+    <div class="m2-section">
+      <div class="m2-section-header" data-accordion>
+        <span>Adaptation Windows</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="m2-section-body">
+        <div id="m2-adapt-container"></div>
+      </div>
+    </div>
+
+
+    <!-- SECTION: Session Energy & Market Behavior -->
+    <div class="m2-section">
+      <div class="m2-section-header" data-accordion>
+        <span>Session Energy & Market Behavior</span>
+        <span class="chevron">▾</span>
+      </div>
+
+      <div class="m2-section-body">
+
+        <label class="field-label">Trader Energy (0–10)</label>
+        <input id="m2-trader-energy" class="input-field"
+               type="number" min="0" max="10" placeholder="e.g. 7" />
+
+        <label class="field-label">Market Energy (0–10)</label>
+        <input id="m2-market-energy" class="input-field"
+               type="number" min="0" max="10" placeholder="e.g. 5" />
+
+        <label class="field-label">Market Type</label>
+        <select id="m2-market-type" class="input-field">
+          <option value="">– select –</option>
+          <option value="trending">Trending</option>
+          <option value="consolidating">Consolidating</option>
+          <option value="volatile">Volatile</option>
+          <option value="slow">Slow</option>
+          <option value="choppy">Choppy</option>
+        </select>
+
+        <label class="field-label">Behavior Notes</label>
+        <textarea id="m2-session-notes" class="input-textarea"
+          placeholder="Market behavior observations…"></textarea>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
 
       <!-- MODULE 3 (placeholder for now) -->
       <section class="accordion-item" id="module3">
