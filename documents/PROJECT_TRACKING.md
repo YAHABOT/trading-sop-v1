@@ -1753,3 +1753,81 @@ Clean dark theme layout
 
 BUILD 003 PASSED — System ready for BUILD 004 (Sub-Accordions + NY Impulse + Emotional Baseline).
 
+✅ BUILD 004 — NY Opening Impulse + Emotional Baseline (COMPLETE)
+
+Status: Finished
+Date: [use today’s date]
+Engineer: ChatGPT (Vite Architect)
+
+Scope (per V1 Build Plan)
+
+Add NY Opening Impulse Expectation field to Module 1
+
+Add Emotions Coming Into Session field to Module 1
+
+Full autosave + restore for both fields
+
+No layout changes
+
+No scenario engine modifications (except bug fix)
+
+Delivered
+
+Implemented module1.js storage engine (full Module 1 autosave for ALL fields)
+
+Added NY Impulse textarea (autosave)
+
+Added Emotional Baseline dropdown (autosave)
+
+Linked both to Module 1 storage
+
+Implemented full restoration on page load
+
+Added Reset Day wipe for Module 1
+
+Scenario Engine Fixes (Build 003 corrections)
+
+Implemented missing deleteScenario()
+
+Implemented loadScenarios() on init
+
+Rebuilt scenario card event binding to work for dynamically-added cards
+
+Fixed Add Scenario button
+
+Fixed live update of title / IF / THEN fields
+
+Fixed ID-based selectors
+
+Ensured autosave works after every change
+
+Files Added
+
+src/storage/module1.js
+
+Files Modified
+
+src/app.js
+
+src/storage/scenarios.js
+
+src/components/scenarios/scenarioCard.js
+
+QA Result:
+
+All Module 1 fields autosave + restore
+
+NY Impulse + Emotional Baseline working
+
+Scenarios fully functional
+
+No regressions
+
+No UI changes
+
+Vite boots clean with 0 errors
+
+✔ Build 004 approved.
+
+Proceed to Build 005 — Watching Price Engine once user confirms.
+
