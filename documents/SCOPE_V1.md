@@ -517,3 +517,29 @@ cross-module communication rules
 
 It guarantees the SOP Journal grows cleanly from Build 001 to Build 024, with zero accumulated garbage.
 
+========================================================
+
+GLOBAL UI RULES (Updated)
+
+========================================================
+
+All Modules = accordion layout
+
+Module 1 static subsections = collapsible panels
+
+Module 2 dynamic sections = NOT collapsible
+
+Module 3 sequential flow = NOT collapsible
+
+Module 4 static sections = collapsible panels
+
+Inputs are full-width dark themed
+
+No horizontal scrolling anywhere
+
+Cards stack vertically
+
+All autosave triggers must fire instantly
+
+No module can modify another module’s DOM or state directly
+
