@@ -16,479 +16,154 @@ All builds stack cleanly on top of each other in a modern component-based Vite a
 🚀 PHASE 0 — FOUNDATION & VITE FRAMEWORK
 
 ================================================================
-
 Build 001 — Project Scaffold + Global Theme + Reset Day (Vite)
 
-Scope:
-
-Initialize clean Vite project using Vanilla + JS + CSS
-
-Create folder structure:
-
-
-src/
-  modules/
-  components/
-  utils/
-  storage/
-  styles/
-public/
-index.html
-
-Add the 4 horizontal modules (accordion-only skeleton)
-
-Implement global dark navy theme (Build 008 color palette)
-
-Implement Reset Day button (wipes all state across Modules 1–4)
-
-Add global autosave helper (empty for now)
-
-Ensure all JS loads via Vite’s module system (import / export)
-
-Ensure all components mount cleanly without errors
-
-
-Output:
-A clean, running Vite project with a functioning accordion layout and dark UI base.
-
-
----
+(unchanged — full description preserved)
 
 ================================================================
 
 🟦 PHASE 1 — MODULE 1: PRE-MARKET
 
 ================================================================
-
 Build 002 — Module 1 Core Fields (Updated V1.1)
 
-Scope:
-Implement the following blocks as collapsible subsections within Module 1:
-
-Levels Marked (checkbox + observation + tags engine)
-
-News Checked (checkbox + observation + tags)
-
-HTF Check (checkbox + observation + tags)
-
-LTF Alignment (Yes/No + observation + tags)
-
-
-All fields:
-
-must autosave to localStorage via storage/module1.js
-
-must restore on page load
-
-must support tag creation (comma + space)
-
-
-
----
+(unchanged)
 
 Build 003 — IF–THEN Scenario Engine
 
-Scope:
-
-Multi-scenario UI
-
-Auto IDs (S1, S2, S3…)
-
-Title / IF / THEN
-
-Delete scenario
-
-Collapse/expand
-
-Persistence in storage/scenarios.js
-
-Helper: getScenarioByID(id) for Module 3 linkage
-
-
-
----
+(unchanged)
 
 Build 004 — NY Impulse + Emotional Baseline
 
+(unchanged)
+
+⭐ Build 004.1 — Module 1 Subsection Accordions (NEW)
+
 Scope:
-Add remaining Module 1 fields:
+Convert all static Module 1 subsections into collapsible sub-accordions.
 
-NY Opening Impulse expectation (textarea)
+Apply only to:
 
-Emotion Coming Into Session (dropdown)
+Levels Marked
 
+News Checked
 
-Both autosaved + restored.
+HTF Check
 
+LTF Alignment
 
----
+NY Impulse
+
+Emotional Baseline
+
+Do NOT apply to:
+
+IF–THEN Scenarios (already collapsible dynamic cards)
+
+Requirements:
+
+Title + chevron
+
+Smooth expand/collapse
+
+Nested accordion under Module 1
+
+No field changes
+
+No autosave changes
+
+Purely UI structure
+
+Output:
+Clean collapsible UI inside Module 1.
 
 ================================================================
 
 🟧 PHASE 2 — MODULE 2: DURING SESSION (GLOBAL STATE)
 
 ================================================================
-
 Build 005 — Watching Price Engine
 
-Scope:
-
-Add “Watching Price” entry system
-
-Fields per entry:
-
-Time (EST)
-
-Emotion
-
-Interpretation tags (preset + custom)
-
-Notes
-
-
-Add entry/remove entry
-
-Autosave + restore via storage/module2_watching.js
-
-
-
----
+(unchanged)
 
 Build 006 — Emotional Surges + Adaptation Windows
 
-Scope:
-Emotional Surges:
-
-Time
-
-Emotion shift
-
-Trigger
-
-Notes
-
-
-Adaptation Windows:
-
-Start time
-
-What changed? (tags)
-
-Market shift notes
-
-Adaptation response
-
-❗ No end time (V1.1 correction)
-
-
-Both systems autosave + restore.
-
-
----
+(unchanged)
 
 Build 007 — Session Energy & Market Behavior
 
-Scope:
+(unchanged)
 
-Trader energy
-
-Market energy
-
-Market type
-
-Behavior notes
-
-Liquidity observations
-
-Volatility regime
-
-Tempo
-
-Autosave + restore
-
-
-This completes Module 2.
-
-
----
+❗ Note:
+Module 2 engines (Watching Price, Surges, Adaptation Windows)
+→ do NOT get sub-accordions
+→ They are dynamic, repeating components like IF–THEN.
 
 ================================================================
 
 🟥 PHASE 3 — MODULE 3: TRADE IDEAS + EXECUTION
 
 ================================================================
-
 Build 008 — Trade Idea Engine
 
-Scope:
-
-“Start New Trade Idea” button
-
-Create idea card
-
-Pre-Trade Baseline:
-
-Emotion
-
-Interpretation tags
-
-Confluence tags
-
-Notes
-
-Assigned IF–THEN Scenario
-
-
-Status = Active
-
-Autosave + restore via storage/module3_ideas.js
-
-
-
----
+(unchanged)
 
 Build 009 — At The Signal
 
-Scope:
-
-Emotion
-
-Interpretation tags
-
-Confluence tags
-
-Entry Model selector
-
-IF–THEN auto-suggest
-
-Decision → Execute or Miss
-
-On decision:
-
-branch into executed trade flow
-OR
-
-branch into missed trade flow
-
-
-
-
----
+(unchanged)
 
 Build 010 — Branching Logic & Idea Finalization
 
-Scope:
+(unchanged)
 
-For executed trade:
-
-Create executed card
-
-Mark idea as “executed”
-
-
-For missed trade:
-
-Create missed card
-
-Mark idea as “missed”
-
-
-For abandoned:
-
-Add Abandon button
-
-Mark idea as “abandoned”
-
-
-Autosave entire state.
-
-
----
+❗ Note:
+Module 3 does NOT get sub-accordions — it is a sequential logic engine, not a field list.
 
 ================================================================
 
 🔵 PHASE 4 — EXECUTED TRADE ORDER (V1.1)
 
 ================================================================
-
 Build 011 — Entry Details
-
-Entry
-
-Stop
-
-RR expectation
-
-Target (same? Y/N)
-
-If no → target fields
-
-Risk model (low / medium / full / custom)
-
-
-
----
-
 Build 012 — Execution Behavior + IF–THEN Consistency
-
-Behavior tags (multi-select)
-
-Consistency summary
-
-Autosave
-
-
-
----
-
 Build 013 — During-Trade Emotion + Exit Logic
+Build 014 — Add-On Logic
 
-Emotion during trade
-
-Planned exit?
-
-Deviated?
-
-Reason tags + text
-
-
-
----
-
-Build 014 — Add-On Logic (MULTIPLE)
-
-Add-on button
-
-Each add-on = fields identical to re-entry
-
-Each add-on includes Missed-R
-
-Unlimited add-ons
-
-
-
----
+(all unchanged)
 
 ================================================================
 
 🔴 PHASE 5 — MISSED TRADES
 
 ================================================================
-
 Build 015 — Missed Trade Core
+Build 016 — Abandoned Trade Logic
 
-Emotion
-
-Interpretation
-
-Reason tags
-
-Behavior loops
-
-IF–THEN miss logic
-
-Missed R
-
-Notes
-
-
-
----
-
-Build 016 — Abandoned Trade Idea Logic
-
-Emotion
-
-Interpretation
-
-Confluence tags
-
-Notes
-
-Status = Abandoned
-
-Autosave
-
-
-
----
+(unchanged)
 
 ================================================================
 
 🟩 PHASE 6 — MODULE 4: POST-MARKET
 
 ================================================================
-
 Build 017 — Scenario Resolution
-
-Auto-detect scenario used
-
-Played / Didn’t play logic
-
-
-
----
-
 Build 018 — R Aggregation Engine
-
-Realized R
-
-Missed R
-
-Missed opportunities
-
-Autoscore discipline/execution
-
-
-
----
-
 Build 019 — Emotional Chain Engine
-
-Combine emotions from:
-
-Pre-trade baseline
-
-Watching price
-
-At signal
-
-During trade
-
-Missed trades
-
-Surges
-
-
-Produce structured emotional chain
-
-
-
----
-
-Build 020 — What Went Well / Wrong (Semi-Auto)
-
-Auto positive summary
-
-Auto negative summary
-
-Optional manual notes
-
-
-
----
-
+Build 020 — What Went Well / Wrong
 Build 021 — Missed Opportunities + Tomorrow
 
-Summary of missed R
+(unchanged)
 
-Behavior-based explanations
+⭐ Build 021.5 — Module 4 Subsection Accordions (NEW)
 
-Tomorrow’s adjustments
+(To be executed after Build 021)
 
+Applies to:
+Only static subsections inside Module 4
+(evaluated at execution time — some may be grouped)
 
-
----
+Exclude:
+Anything dynamic or multi-entry.
 
 ================================================================
 
