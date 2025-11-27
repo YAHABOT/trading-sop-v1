@@ -1648,3 +1648,108 @@ Accordion opens/closes normally
 
 BUILD 002 PASSED — System ready for BUILD 003 (Scenario Engine).
 
+🧾 CHANGELOG — BUILD 003 (2025-11-27)
+
+Status: PASSED
+Category: Scenario Engine (Module 1)
+
+🔧 Scope (per V1.1 Build Plan)
+
+Build 003 implements the full IF–THEN Scenario Engine, including:
+
+Scenario ID system (S1, S2, S3…)
+
+Add Scenario button
+
+Scenario card rendering
+
+Title, IF, THEN fields
+
+Collapse + expand behavior
+
+Delete scenario functionality
+
+Real-time UI updates
+
+Dark mode styling (Notion-style card)
+
+Dynamic management of scenario list
+
+In-memory state tracking (autosave comes later in Build 005)
+
+▶️ Features Added
+
+Dynamic scenario generation with auto IDs
+
+Scenario card UI structure (header + body)
+
+Collapse/expand with chevron rotation
+
+Delete scenario (removes from UI + memory)
+
+Title editing (live updates header + memory)
+
+IF block editing (live updates memory)
+
+THEN block editing (live updates memory)
+
+Clean scenario container inside Module 1
+
+Updated app.js wiring for scenario engine
+
+New scenarioCard component module
+
+New scenarios storage module
+
+🎨 UI / UX Enhancements
+
+Notion-style scenario cards with soft shadows
+
+Chevron indicator for collapse state
+
+Clear Title, IF, THEN layout
+
+Better dark theme contrast
+
+Smaller delete button
+
+Cleaner spacing and padding
+
+Easier readability of scenario details
+
+🛠 Code Structure
+
+New folder: components/scenarios/
+
+New component: scenarioCard.js
+
+New storage file: storage/scenarios.js
+
+Updated app.js to include scenario engine mount point
+
+Full adherence to V1.1 modular architecture
+
+🧪 QA Summary
+
+Add Scenario works
+
+Delete works
+
+Collapse/expand works
+
+Title updates live
+
+IF/THEN update live
+
+Header reflects updated titles
+
+Multiple scenarios behave independently
+
+No console errors
+
+Clean dark theme layout
+
+🧠 Final QA Verdict
+
+BUILD 003 PASSED — System ready for BUILD 004 (Sub-Accordions + NY Impulse + Emotional Baseline).
+
