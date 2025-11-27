@@ -1282,3 +1282,177 @@ These will be solved cleanly after splitting the code into modules.
 Build 003: **REFRACTOR PLAN APPROVED**
 Execution begins next build.
 
+🟧 [2025-11-27 — Full System Rebuild Initiated (Vite Transition)]
+
+✅ Major Architectural Decision Finalized
+
+After system instability, UI collapse, and script-load conflicts caused by the single-file legacy build, the project has officially transitioned to a full Vite-based rebuild.
+
+This marks the beginning of a new generation of the Trading SOP Journal — one built for:
+
+scalable modules
+
+clean UI
+
+predictable JS behavior
+
+future expansions (PDF engine, analytics, AI review modes)
+
+multi-module trade-flow logic
+
+fast iteration without breakage
+
+
+This decision replaces the old single-file architecture entirely.
+
+
+---
+
+🔥 What Triggered the Reset
+
+1. GitHub Pages failing to load scripts in correct order
+
+
+2. CSS import cascade breaking consistently
+
+
+3. Accordion logic dying after minification
+
+
+4. JS modules overwriting each other
+
+
+5. White-on-white input theme issues
+
+
+6. The system becoming literally unfixable without a full reset
+
+
+
+The old foundation was too fragile to continue development.
+
+
+---
+
+🧱 What the Vite Reset Enables
+
+Clean module isolation
+
+Imports behaving predictably
+
+Auto-reload while coding
+
+No broken script tags
+
+Clean separation of:
+
+Modules (M1–M4)
+
+Components (scenarios, surges, adaptations…)
+
+Storage layers
+
+Utils
+
+Styles
+
+
+Ability to grow into a full trading OS
+
+
+
+---
+
+📦 New Technical Architecture
+
+The new directory structure is:
+
+src/
+  modules/
+    module1/
+    module2/
+    module3/
+    module4/
+  components/
+  utils/
+  storage/
+  styles/
+  app.js
+public/
+index.html
+vite.config.js
+
+This structure becomes permanent for V1.1 and all future versions.
+
+
+---
+
+🚀 Immediate Next Steps
+
+1. Generate fresh Vite starter project (Build 001)
+
+
+2. Scaffold 4-module accordion layout
+
+
+3. Port Module 1 UI into the new environment
+
+
+4. Port Module 2 engines
+
+
+5. Rebuild Module 3 from scratch (baseline → signal → executed/missed)
+
+
+6. Bring in all storage layers
+
+
+7. Begin autosave hydration
+
+
+
+The rebuild restarts the development timeline, but the functional SOP scope remains identical.
+
+
+---
+
+🧾 Updated To-Do Pipeline
+
+⭐ PRIORITY 0 — RIGHT NOW
+
+Freeze architecture
+
+Generate Vite project (Build 001)
+
+Lock in new file structure
+
+Start fresh UI integration
+
+
+🛠 NEXT
+
+Build 002 → Module 1 Core
+
+Build 003 → IF–THEN Engine
+
+Build 005+ → All Module 2 systems
+
+Build 008+ → Module 3 masterflows
+
+Build 017+ → Post-Market engines
+
+
+📌 BACKLOG
+
+(unchanged from previous tracking)
+
+
+---
+
+🏁 Summary
+
+The project has officially left the old codebase.
+From here on, only the Vite implementation path is valid.
+All builds, features, and logic must follow the Vite architecture defined in SCOPE + BUILD PLAN.
+
+
