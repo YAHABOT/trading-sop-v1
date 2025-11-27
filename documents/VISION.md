@@ -155,4 +155,119 @@ structures, conditional re-entry logic, and universal missed-R accounting.
 The vision is to create a tool that behaves exactly like a world-class 
 trader’s mind: structured, self-aware, scenario-driven, and brutally 
 accountable.
+🟪 APPENDIX — V1.1 Technical Vision (Vite Architecture Reset)
 
+To support the long-term direction of the Trading SOP Journal, the system must have an execution layer that is as clean, disciplined, and structured as the trading logic itself.
+The move to a Vite-based architecture reflects this principle.
+
+Why Vite
+
+The previous codebase grew organically — one giant HTML file, stacked scripts, mixed responsibilities, and hard-to-track UI logic.
+It worked in the beginning, but it was never built to scale into a multi-module trading cognition engine.
+
+A trader needs clarity.
+A system representing a trader’s mind needs structure.
+The rebuild gives both.
+
+Vite provides:
+
+fast hot-reload
+
+clean ES module structure
+
+predictable file imports
+
+future-proof JS architecture
+
+isolated components
+
+clean styling layers
+
+no dependency on hacky script-tag loading
+
+
+This makes it possible to scale the journal across:
+
+multi-step trade idea flows
+
+emotional chain reconstruction
+
+multi-add-on execution models
+
+scenario auto-resolution
+
+post-market automation
+
+module-to-module communication
+
+
+All without UI collapse or technical debt.
+
+The Architectural Mindset
+
+Just as the journal teaches discipline in execution,
+the codebase itself must enforce discipline:
+
+Each module is isolated.
+
+Each flow is deterministic.
+
+Each component is responsible for one behavior.
+
+Each field autosaves instantly.
+
+Each module loads itself and nothing else.
+
+No single file becomes a dumping ground.
+
+No component leaks into another module’s logic.
+
+
+The new architecture mirrors the cognitive flow of a trader:
+
+Preparation
+
+Observation
+
+Decision
+
+Execution
+
+Review
+
+
+Each phase becomes its own logical unit in the codebase,
+with its own responsibilities and boundaries.
+
+Strategic Purpose
+
+This rebuild isn’t just about clean code.
+It’s about preparing the system for a long-term evolution:
+
+PDF generation
+
+pattern detection
+
+emotional reconstruction
+
+scoring engines
+
+habit analytics
+
+replay mode
+
+cross-day linking
+
+future mobile app
+
+
+The Vite reset transforms the journal from a “single-page tool”
+into an expandable system — the foundation for a full trading OS.
+
+The Principle Behind V1.1
+
+A trader’s mind must be structured.
+A trader’s journal must be structured.
+A trader’s software must be structured.
+
+This architectural rebuild makes sure all three are aligned.
