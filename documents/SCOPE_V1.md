@@ -185,3 +185,335 @@ DATA FLOW
   (Executed vs missed vs abandoned logic)  
 
 This completes the long-term, stable V1.1 system scope.
+🟦 APPENDIX — IMPLEMENTATION ARCHITECTURE (Vite System Map)
+
+This appendix defines the technical structure required to implement the Trading SOP Journal V1.1 inside a modern Vite environment. It supplements the functional scope by specifying where each feature lives, how modules communicate, and how data flows across the system.
+
+This architecture is the only valid technical interpretation of SCOPE V1.1.
+
+
+---
+
+🧩 1. DIRECTORY STRUCTURE (FINAL)
+
+src/
+  modules/
+    module1/
+    module2/
+    module3/
+    module4/
+  components/
+    scenarios/
+    watching/
+    surges/
+    adaptations/
+    trades/
+  storage/
+    module1.js
+    module2.js
+    module3.js
+    module4.js
+    scenarios.js
+  utils/
+    tags.js
+    timestamps.js
+    autosave.js
+  styles/
+    base.css
+    layout.css
+    components.css
+    modules.css
+  app.js
+index.html
+
+Guiding Principles
+
+Modules = high-level parent containers (M1–M4)
+
+Components = reusable behavior blocks (scenarios, tags, entries, surges, etc.)
+
+Storage = autosave + hydration per module
+
+Utils = shared helper logic (tags, formatting, ID generation, timestamps)
+
+Styles = separated into global + component + module layers
+
+
+This prevents “god files,” UI bloat, and broken dependency chains.
+
+
+---
+
+🧠 2. DATA FLOW MODEL (CANONICAL)
+
+Module 1 → Module 3
+
+Scenario assignment
+
+Baseline emotion
+
+Pre-market logic
+
+NY impulse expectation
+
+
+Module 2 → Module 4
+
+Emotional chain events
+
+Market behavior snapshots
+
+Adaptation triggers
+
+Session energy
+
+
+Module 3 → Module 4
+
+Executed trades
+
+Missed trades
+
+Abandoned ideas
+
+R values
+
+Behavior loops
+
+
+Global → All Modules
+
+Tag engine
+
+Timestamp formatting
+
+Autosave system
+
+
+Each module reads ONLY its own storage file.
+Cross-module access goes through read-only selectors.
+
+
+---
+
+🧱 3. MODULE DEFINITION PATTERN
+
+Every module implements the following pattern:
+
+export const ModuleX = {
+  init(),
+  bindUI(),
+  loadState(),
+  saveState(),
+  render(),
+};
+
+Responsibilities
+
+init() → orchestrates setup
+
+bindUI() → attaches event listeners
+
+loadState() → hydrate from storage
+
+saveState() → write to storage on every change
+
+render() → injects HTML based on saved state
+
+
+No module reaches directly into another module’s DOM or state.
+
+
+---
+
+🔧 4. COMPONENT PATTERN
+
+Components live inside /components/ and follow:
+
+export function createComponentName(options) {}
+export function renderComponentName(state) {}
+export function componentNameListeners(rootElement) {}
+
+This ensures reusability across Modules 1–4.
+
+Examples:
+
+Scenario cards
+
+Watching price entries
+
+Emotional surges
+
+Adaptation windows
+
+Trade idea cards
+
+Executed trade blocks
+
+Missed trade blocks
+
+
+
+---
+
+💾 5. STORAGE PATTERN
+
+Each module has its own storage file:
+
+export const Module1Storage = {
+  load(),
+  save(state),
+  clear(),
+};
+
+RAW KEYS (canonical):
+
+SOP_V1_M1
+SOP_V1_M2
+SOP_V1_M3
+SOP_V1_M4
+SOP_V1_SCENARIOS
+
+This avoids collisions and keeps data flow predictable.
+
+Autosave triggers:
+
+every input event
+
+every add/remove item
+
+every scenario edit
+
+every trade update
+
+
+
+---
+
+🎨 6. UI RULES (NON-NEGOTIABLE)
+
+1. All modules = accordion layout
+
+
+2. Each subsection = its own collapsible panel
+
+
+3. Dark navy theme (Build 008)
+
+
+4. Cards always lighter than background
+
+
+5. Inputs = full-width, padded, dark-grey, light text
+
+
+6. Tags = pill style, inline-flex, closable
+
+
+7. Scenario/Trade cards = vertical stacked, not horizontal
+
+
+8. Module 1 + 2 MUST NOT be scrollable sideways
+
+
+9. Module 3 MUST support multiple nested cards
+
+baseline
+
+at-signal
+
+executed/missed
+
+
+
+10. Nothing appears out of order
+(e.g., entry before signal = impossible)
+
+
+
+
+---
+
+📡 7. EVENT ARCHITECTURE
+
+All interactions fall into one of these categories:
+
+Input Events
+
+input
+
+change
+Autosave triggered.
+
+
+Structural Events
+
+add
+
+delete
+
+duplicate
+
+collapse
+Autosave triggered → rerender.
+
+
+Flow Events
+
+startIdea
+
+signalReached
+
+executed
+
+missed
+
+abandoned
+
+
+These route to Module 3 logic only.
+
+
+---
+
+🧬 8. FUTURE-PROOFING RULES
+
+The architecture must support:
+
+multi-tab future (History, Analytics, Playbook)
+
+localStorage → future backend migration
+
+component-based PDF rendering
+
+emotional-chain scoring engine
+
+multi-day retention
+
+potential mobile app wrapper
+
+
+All without rewriting core modules.
+
+
+---
+
+🟣 SUMMARY
+
+This Implementation Architecture defines:
+
+the file structure
+
+module/component/storage patterns
+
+UI principles
+
+event flow
+
+data hierarchy
+
+cross-module communication rules
+
+
+It guarantees the SOP Journal grows cleanly from Build 001 to Build 024, with zero accumulated garbage.
+
