@@ -1534,4 +1534,117 @@ None — Build 001 produced clean UI with no console errors.
 
 BUILD 001 PASSED — Ready for Build 002 (Module 1 Core).
 
+🧾 CHANGELOG — BUILD 002 (2025-11-27)
+
+Status: PASSED
+Category: Module 1 Core Fields + Visual Polish
+
+🔧 Scope (per V1.1 Build Plan)
+
+Build 002 implements the entire Pre-Market Module’s core fields, including:
+
+Levels Marked
+
+News Check
+
+HTF Check
+
+LTF Alignment
+
+Observations text fields
+
+Tag inputs (text-only for now, no tag engine yet)
+
+Proper dark-theme spacing + alignment
+
+Checkbox + label UI
+
+Input layout consistency
+
+Initial UX improvements for readability
+
+Layout ready for autosave + tag engine in later builds
+
+▶️ Features Added
+
+Inserted full Module 1 field structure into app.js
+
+Added checkbox-row wrapper for alignment
+
+Added inputs + textarea for all 4 blocks
+
+Added tag inputs for all 4 blocks
+
+Implemented correct titles & structure (Levels, News, HTF, LTF)
+
+Added dropdown for LTF alignment
+
+Added consistent spacing between section titles and content
+
+Added 25% default textarea height (resizable)
+
+Aligned with dark navy theme across all fields
+
+🎨 UI / UX Improvements
+
+Checkbox + label aligned left on a single row
+
+Reduced excessive white space inside module-body
+
+Smaller textarea default height for tighter layout
+
+Corrected section title spacing
+
+“News Checked” corrected to News Check
+
+All text readable and consistent with Build 008 theme
+
+Inputs now uniform across the module
+
+🧹 Code Cleanup
+
+Updated modules.css with compact layout rules
+
+Fixed label wrapping using inline-flex + white-space: nowrap
+
+Ensured textarea is resizable but compact
+
+Structure now consistent with V1.1 CSS architecture layer
+
+Clean component separation (base.css, layout.css, modules.css, components.css)
+
+⚠️ Bugs Fixed During Build 002
+
+Checkbox drifting right
+
+Labels wrapping into 2–3 lines
+
+Incorrect spacing between section titles and fields
+
+Incorrect wording (“News Checked”)
+
+Textareas too tall
+
+Module-body spacing issues
+(All fixed in Step 2.)
+
+🧪 QA Summary
+
+All labels displayed on one line
+
+All checkboxes aligned correctly
+
+All spacing consistent
+
+Textareas correct height + resizable
+
+Dark theme fully applies
+
+No console errors
+
+Accordion opens/closes normally
+
+🧠 Final QA Verdict
+
+BUILD 002 PASSED — System ready for BUILD 003 (Scenario Engine).
 
