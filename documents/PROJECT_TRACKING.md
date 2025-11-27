@@ -1455,4 +1455,83 @@ The project has officially left the old codebase.
 From here on, only the Vite implementation path is valid.
 All builds, features, and logic must follow the Vite architecture defined in SCOPE + BUILD PLAN.
 
+🧾 CHANGELOG — BUILD 001 (2025-11-27)
+
+Status: PASSED
+Category: Vite Scaffold + Global Theme + Accordion Framework
+
+🔧 Scope (per V1.1 Build Plan)
+
+Initialize clean Vite project (Vanilla + JS + CSS)
+
+Create canonical folder structure:
+
+src/
+  modules/
+  components/
+  utils/
+  storage/
+  styles/
+public/
+index.html
+
+
+Remove all Vite demo files
+
+Add style files: base.css, layout.css, components.css, modules.css
+
+Implement dark navy global theme (Build 008 palette)
+
+Create accordion skeleton for all 4 modules
+
+Add Reset Day (placeholder)
+
+Add autosave helper (placeholder)
+
+Ensure ES-module imports work cleanly
+
+Ensure UI mounts with no errors
+
+✅ What Was Implemented
+
+Full Vite project scaffolded successfully
+
+All required folders created and verified
+
+All demo files removed (counter.js, vite SVG, default styling)
+
+All four CSS layers implemented
+
+Accordion UI created exactly as specified
+
+Reset Day button functional (placeholder alert)
+
+Global dark theme applied across all modules
+
+Correct spacing, card structure, and layout polish
+
+Clean index.html root shell for future modules
+
+All JS modules load without conflicts
+
+🎨 UI/UX Notes
+
+Accordion headers clickable
+
+Smooth open/close transitions
+
+Button styling consistent
+
+No white-on-white issues
+
+Base visuals match Build 008 color scheme
+
+⚠️ Bugs Found
+
+None — Build 001 produced clean UI with no console errors.
+
+🧠 Final QA Result
+
+BUILD 001 PASSED — Ready for Build 002 (Module 1 Core).
+
 
