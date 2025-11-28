@@ -1831,3 +1831,235 @@ Vite boots clean with 0 errors
 
 Proceed to Build 005 — Watching Price Engine once user confirms.
 
+📘 CHANGELOG — BUILD 004.1
+✅ Build Title:
+
+Build 004.1 — Module 1 Subsection Accordions
+
+🗓 Date:
+
+28–29 Nov 2025
+
+🟩 1. WHAT WAS IMPLEMENTED
+A) Sub-Accordions added to Module 1
+
+Each previously static section in Module 1 was wrapped in its own collapsible sub-accordion:
+
+Levels Marked
+
+News Checked
+
+HTF Check
+
+LTF Alignment
+
+NY Opening Impulse Expectation
+
+Emotional Baseline
+
+B) Full compatibility with existing autosave system
+
+No logic changes
+
+Underlying storage preserved
+
+All Module 1 fields still autosave + restore correctly
+
+C) Scenario Engine fully preserved
+
+Scenario cards NOT wrapped in accordions
+
+Behavior untouched (ID, collapse, delete, autosave)
+
+D) Layout + theme styling updated
+
+Matches dark navy V1 theme
+
+Clean spacing and consistent UI hierarchy
+
+🟧 2. ISSUES ENCOUNTERED DURING BUILD
+
+Build 004.1 triggered several regressions that needed deep investigation:
+
+1. Entire page went blank
+
+Cause:
+
+The Vite dev server was loading stale compiled code due to hot module replacement (HMR) corruption.
+
+Fix:
+
+Rebuilt accordion HTML in app.js
+
+Restarted Vite server
+
+Ensured clean mount of #app
+
+2. Scenario engine collapse + delete broke
+
+Cause:
+
+Missing event bindings after restructuring DOM
+
+Collision between old and new class names
+
+Fix:
+
+Restored original Build-003 scenario card UI
+
+Rewrote full scenarioCard.js
+
+Rebound collapse + delete listeners
+
+Ensured autosave + restore persisted
+
+3. Scenario delete button turned blue instead of red
+
+Cause:
+
+New global button styles in modules.css were overriding Build-003 scenario styles.
+
+Fix:
+
+Restored original Build-003 scenario header + delete button UI
+
+Added strong CSS isolation for scenario components
+
+4. Checkbox alignment COMPLETELY BROKE (biggest issue)
+
+Cause:
+
+NOT caused by app.js
+
+NOT caused by modules.css
+
+NOT caused by accordions
+
+Actually caused by:
+
+A global label { display:block; } rule from components.css
+
+Combined with accordion parent flex structures
+
+Combined with Chrome flex heuristics
+
+This made checkboxes:
+
+Stack incorrectly
+
+Ignore our .checkbox-row styling
+
+Drift far right
+
+Or jump below labels
+
+Fix (final working solution):
+
+Added specific, isolated, nuclear-override CSS for checkbox rows:
+
+inline-flex for label
+
+inline-flex for .checkbox-row
+
+isolation from parent flex
+
+nowrap enforcement
+
+override inherited global label styling
+
+ensure width/flow is preserved
+
+End result:
+Checkboxes now display EXACTLY like they did in Build 002–003.
+
+5. Vite cached stale app.js
+
+Symptoms:
+
+Checkbox HTML never updated
+
+Scenario engine updated correctly
+
+Sub-accordions updated correctly
+
+Cause:
+
+The browser was showing HMR-stale DOM nodes
+
+app.js changes weren’t taking effect until server was restarted
+
+Fix:
+
+Full restart of dev server
+
+Forced refresh
+
+File rewrite provided clean mount structure
+
+Entire Module 1 layout rebuilt with known-good markup
+
+6. Model drift during debugging
+
+Cause:
+
+Long debugging session with dozens of code replacements
+
+Large context blending
+
+Confusion between old vs new accordion HTML
+
+Fix:
+
+Generated new “Zero Regression Catch-Up Protocol”
+
+Future sessions now fully protected from accidental drift
+
+🟩 3. WHAT IS WORKING (VERIFIED)
+Module 1
+
+All 6 subsections collapse/expand properly
+
+All checkboxes, selects, textareas, and tags autosave & restore
+
+Styles consistent with V1 theme
+
+No UI regressions remaining
+
+Checkbox alignment fixed permanently
+
+Scenario Engine
+
+S1/S2/S3 numbering
+
+Collapse/expand
+
+Delete
+
+Autosave
+
+Restore
+
+Header styling (blue/white)
+
+Delete button red
+
+Chevron direction
+
+Zero regressions
+
+Global
+
+No console errors
+
+Reset Day clears Module 1 + scenarios correctly
+
+App loads cleanly after refresh
+
+🟦 4. BUILD STATUS
+
+Build 004.1 — COMPLETE
+All features meet or exceed expected functionality.
+All regressions have been identified, documented, and fixed.
+
+
+
